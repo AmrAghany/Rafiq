@@ -109,7 +109,66 @@ Work in this order. Finish, test and summarise each phase before starting the ne
 
 ## Status
 
-### Phase 3: Daily experience — done (2026-10-06), waiting for approval to start phase 4
+### Phase 4: AI features — done (2026-10-06), waiting for approval to start phase 5
+
+**Built**
+
+- **Edge Functions** (`supabase/functions`, Deno, `@anthropic-ai/sdk` 0.131.0). Each one:
+  - verifies the member's JWT and reads data through their own RLS-scoped client;
+  - checks the tier and takes one unit of today's quota (atomic SQL), refunding it if the AI call fails or finds nothing;
+  - never logs message text or images.
+- **`coach-chat`**: streams the reply as SSE.
+  - Model: `claude-haiku-4-5-20251001`, as in the brief.
+  - System prompt: stable rules first (reply in the member's language and dialect, about 120 words, no diagnosis, refer pain, injury, medication, pregnancy and eating-disorder concerns, never below BMR or extreme diets), then member data built on the server. That data covers the profile, today's workout with loads (lighter on a low-readiness day), the carb day and food eaten so far, readiness, Ramadan and local time. Careful flags remove every calorie number from the prompt.
+  - Sends the last 20 messages as history. Both turns are saved to `chat_messages` with the model name and token counts.
+  - Stops generating if the member leaves mid-reply.
+- **`meal-estimate`**: text and/or a photo from the private `meal-photos` bucket.
+  - Haiku with JSON structured output (name, kcal, protein, carbs, fat, confidence, is_food).
+  - The server rejects implausible numbers. Careful members get the name only.
+- **`scan-read`**: InBody photo from `scan-photos` to weight, body fat, skeletal muscle and BMR.
+  - `claude-sonnet-5-5` at low effort with structured output. Server-side refusal fallback is on (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`): if Sonnet 5.5 declines, the API retries on a suitable model in the same call.
+  - Out-of-range values become null. The member always confirms or corrects the numbers.
+- **`export-data`** (all of the member's rows plus 1-hour photo links) and **`delete-account`** (removes Storage photos, then the auth user; every row cascades).
+- **Database** (migration `20261006210000_ai_features.sql`):
+  - `consume_ai_quota` / `refund_ai_quota` (service role only).
+  - `complete_onboarding` now stores the scan photo path and what the AI read, and only accepts photos from the member's own folder.
+- **App**:
+  - Coach tab: history, streaming bubbles with per-message text direction, multilingual suggestion chips, stop button, and plain-language errors (limit reached, refused, offline, upgrade). Free members see a locked card and no chat data is loaded.
+  - Food: "Estimate with AI" by description, camera or photo library. The estimate fills the log form for the member to edit; source, photo path and raw estimate are saved with the meal.
+  - Onboarding scan step: read the scan from a photo, for Pro members. Free members are asked to type the numbers, and nothing is uploaded.
+  - Me: Export my data (share sheet) and Delete my account (with confirmation).
+- **Tier for display**: `useTier()` reads the member's own subscription row. The server always re-checks before any AI call.
+- **Daily limits** (`_shared/entitlements.ts`, my suggested defaults): Free 0; Pro 50 coach / 20 meal / 5 scan; Elite 150 / 50 / 10. Days are UTC.
+- **New dependency**: `expo-image-picker`, a first-party Expo module. Camera and photo-library permission text is in `app.json`.
+- **Tests**:
+  - 566 Jest tests, including the SSE parser, streaming client, photo upload, tier, and the Coach, Food-AI, scan-photo and privacy screens.
+  - 12 Deno tests. 11 are unit tests for prompts and schema checks. The 12th runs every function's handler against the real local Supabase with a fake Messages API in 17 steps: auth, free → 402, the 50/day limit → 429, refunds on refusal and errors, streaming, history, image input, Sonnet 5.5 with low effort and fallbacks, other members' photos refused, careful members, export, and deletion.
+  - 54 pgTAP tests, including quotas and the photo folder rule.
+  - 5 local-Supabase integration tests.
+- **Verified**:
+  - `npm run check` and `npm run fn:check` pass. The iOS and Android bundles export.
+  - `coach-chat`'s real entry point was served over HTTP under Deno and streamed chunked SSE to curl; both turns were saved.
+  - In a temporary web preview (not committed) against the real handlers and a fake Claude, the Coach tab worked in English and Arabic: locked for free members, streaming, and correct per-message direction.
+
+**Not verified**
+
+- No real Claude call was made, because there's no Anthropic key in this environment. Request shapes were checked against the SDK types and a fake API. The first real run should check reply quality, Arabic dialect matching, and InBody reading accuracy on real sheets.
+- The Supabase Edge Runtime container couldn't be pulled (Docker Hub rate limit), so the functions were run under plain Deno 2.9 instead. Run `npm run fn:serve` once before deploying.
+- Camera and photo picking need a device build.
+
+**Decisions**
+
+- Prompt caching: the request sets top-level `cache_control`. Haiku 4.5 only caches prompts of at least 4,096 tokens, so short chats won't cache yet; long conversations will.
+- Photo reading is a paid feature, including during onboarding, so free members never upload scan photos. Phase 5's free trial will unlock it during onboarding.
+- Data export uses React Native's built-in share sheet with the JSON as text. Saving it as a `.json` file would need `expo-file-system` + `expo-sharing`. Do you want those?
+
+**Open questions for phase 5**
+
+1. Product IDs and prices for Pro and Elite (the prototype shows $12.99 and $49 per month). Should the 7-day trial apply to Pro only?
+2. A RevenueCat project, plus App Store Connect and Google Play Console access, for real purchases. Until then, testing uses RevenueCat's sandbox or a hand-set `subscriptions.tier`.
+3. Should the trial be offered during onboarding, so new members can use photo scan reading straight away?
+
+### Phase 3: Daily experience — done (2026-10-06)
 
 **Built**
 

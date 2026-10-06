@@ -9,6 +9,27 @@ const mockAdd = jest.fn();
 const mockRemove = jest.fn();
 let mockFlags: HealthFlag[] = [];
 let mockMeals: MealLog[] = [];
+let mockPaid = false;
+const mockCall = jest.fn();
+const mockPick = jest.fn();
+const mockUpload = jest.fn();
+
+jest.mock('@/features/membership/useTier', () => ({
+  useTier: () => ({ tier: mockPaid ? 'pro' : 'free', isPaid: mockPaid, isLoading: false }),
+}));
+jest.mock('@/features/auth/AuthProvider', () => ({
+  useAuth: () => ({ session: { user: { id: 'u1' } } }),
+}));
+jest.mock('@/lib/supabase', () => ({ supabase: {} }));
+jest.mock('@/features/ai/api', () => ({ callFunction: (...a: unknown[]) => mockCall(...a) }));
+jest.mock('@/features/ai/photos', () => {
+  const actual = jest.requireActual('@/features/ai/photos');
+  return {
+    ...actual,
+    pickPhoto: (...a: unknown[]) => mockPick(...a),
+    uploadPhoto: (...a: unknown[]) => mockUpload(...a),
+  };
+});
 
 jest.mock('@/features/today/api', () => {
   const { buildPlan } = jest.requireActual('@/features/plan/engine');
@@ -57,6 +78,8 @@ beforeEach(() => {
   mockRemove.mockReset();
   mockFlags = [];
   mockMeals = [];
+  mockPaid = false;
+  [mockCall, mockPick, mockUpload].forEach((m) => m.mockReset());
 });
 
 describe('Food screen', () => {
@@ -83,6 +106,8 @@ describe('Food screen', () => {
       fat_g: null,
       source: 'manual',
       template_key: null,
+      photo_path: null,
+      ai_estimate: null,
     });
   });
 
@@ -120,5 +145,94 @@ describe('Food screen', () => {
     expect(JSON.stringify(screen.toJSON())).not.toMatch(/kcal|\b550\b|2880/);
     await fireEvent.press(screen.getAllByText('Log this meal')[0]);
     expect(mockAdd).toHaveBeenCalledWith(expect.objectContaining({ kcal: null, protein_g: null }));
+  });
+
+  it('keeps AI estimates behind Pro', async () => {
+    await render(<FoodScreen />);
+    expect(screen.queryByTestId('ai-estimate')).toBeNull();
+    expect(screen.getByText(/part of Pro/)).toBeTruthy();
+  });
+
+  it('pre-fills the form from a text estimate for the member to check', async () => {
+    mockPaid = true;
+    const estimate = {
+      name: 'Chicken shawarma wrap',
+      kcal: 550,
+      protein_g: 32,
+      carbs_g: 48,
+      fat_g: 24,
+      confidence: 'medium',
+    };
+    mockCall.mockResolvedValue({ estimate });
+    await render(<FoodScreen />);
+    await fireEvent.changeText(screen.getByTestId('ai-describe'), 'shawarma wrap');
+    await fireEvent.press(screen.getByTestId('ai-estimate'));
+    expect(mockCall).toHaveBeenCalledWith('meal-estimate', {
+      text: 'shawarma wrap',
+      photoPath: undefined,
+    });
+    expect(await screen.findByText(/Check the estimate/)).toBeTruthy();
+    expect(screen.getByTestId('meal-name').props.value).toBe('Chicken shawarma wrap');
+    expect(screen.getByTestId('meal-kcal').props.value).toBe('550');
+    // The member corrects the calories before adding.
+    await fireEvent.changeText(screen.getByTestId('meal-kcal'), '600');
+    await fireEvent.press(screen.getByTestId('meal-add'));
+    expect(mockAdd).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'Chicken shawarma wrap',
+        kcal: 600,
+        source: 'text',
+        ai_estimate: estimate,
+      }),
+    );
+  });
+
+  it('estimates from a photo uploaded to the member’s folder', async () => {
+    mockPaid = true;
+    mockPick.mockResolvedValue({ base64: 'abc', uri: 'file://x.jpg' });
+    mockUpload.mockResolvedValue('u1/photo.jpg');
+    mockCall.mockResolvedValue({
+      estimate: {
+        name: 'Mandi',
+        kcal: 900,
+        protein_g: 45,
+        carbs_g: 100,
+        fat_g: 30,
+        confidence: 'low',
+      },
+    });
+    await render(<FoodScreen />);
+    await fireEvent.press(screen.getByText('Take a photo'));
+    expect(await screen.findByText(/Rough estimate/)).toBeTruthy();
+    expect(mockPick).toHaveBeenCalledWith('camera');
+    expect(mockUpload).toHaveBeenCalledWith('meal-photos', 'u1', 'abc');
+    expect(mockCall).toHaveBeenCalledWith('meal-estimate', {
+      text: undefined,
+      photoPath: 'u1/photo.jpg',
+    });
+    await fireEvent.press(screen.getByTestId('meal-add'));
+    expect(mockAdd).toHaveBeenCalledWith(
+      expect.objectContaining({ source: 'photo', photo_path: 'u1/photo.jpg' }),
+    );
+  });
+
+  it('explains limits and failures', async () => {
+    mockPaid = true;
+    const { AiError } = jest.requireActual('@/features/ai/errors');
+    mockCall.mockRejectedValue(new AiError('quota_exceeded'));
+    await render(<FoodScreen />);
+    await fireEvent.changeText(screen.getByTestId('ai-describe'), 'kabsa');
+    await fireEvent.press(screen.getByTestId('ai-estimate'));
+    expect(await screen.findByText(/reached today's limit/)).toBeTruthy();
+    expect(mockAdd).not.toHaveBeenCalled();
+  });
+
+  it('does nothing when the member cancels the camera', async () => {
+    mockPaid = true;
+    mockPick.mockResolvedValue(null);
+    await render(<FoodScreen />);
+    await fireEvent.press(screen.getByText('Choose a photo'));
+    expect(mockUpload).not.toHaveBeenCalled();
+    expect(mockCall).not.toHaveBeenCalled();
   });
 });

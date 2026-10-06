@@ -19,6 +19,6 @@ module.exports = defineConfig([
     },
   },
   {
-    ignores: ['dist/*', 'reference/*', 'supabase/functions/*', 'src/lib/database.types.ts'],
+    ignores: ['dist/*', 'reference/*', 'supabase/functions/**', 'src/lib/database.types.ts'],
   },
 ]);

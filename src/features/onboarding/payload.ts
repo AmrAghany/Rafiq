@@ -26,7 +26,9 @@ export function buildOnboardingPayload(
       medical_notice_accepted_at: draft.medicalNoticeAcceptedAt,
     },
     p_scan: {
-      source: 'manual',
+      source: draft.scanPhotoPath ? 'photo' : 'manual',
+      photo_path: draft.scanPhotoPath,
+      ai_extracted: draft.scanAiReading,
       weight_kg: input.weightKg,
       body_fat_pct: parseNumber(draft.bodyFatPct),
       skeletal_muscle_kg: parseNumber(draft.skeletalMuscleKg),

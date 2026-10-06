@@ -44,3 +44,6 @@ example
 
 # local env
 .env
+
+# Edge Function secrets for local serving
+supabase/functions/.env

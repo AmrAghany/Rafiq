@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 
 import { Button, Panel, Screen, Segmented, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
+import { PrivacySettings } from '@/features/settings/PrivacySettings';
 import { ScheduleSettings } from '@/features/settings/ScheduleSettings';
 import type { Language } from '@/i18n/languages';
 import { applyLayoutDirection, reloadApp } from '@/i18n/rtl';
@@ -63,6 +64,8 @@ export default function MeScreen() {
           ]}
         />
       </Panel>
+
+      <PrivacySettings />
 
       <Button
         variant="ghost"

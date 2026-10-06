@@ -61,7 +61,15 @@
       "wakeInvalid": "Enter a wake-up time like 06:30.",
       "workoutInvalid": "Enter a workout time like 17:30.",
       "workoutOutsideDay": "Pick a workout time between 1 and 15 hours after you wake up."
-    }
+    },
+    "privacy": "Your data",
+    "export": "Export my data",
+    "exportTitle": "Rafiq data export",
+    "delete": "Delete my account",
+    "deleteBody": "This permanently deletes your account, plans, logs, chats and photos. It can't be undone.",
+    "deleteConfirmTitle": "Delete your account?",
+    "deleteConfirm": "Delete",
+    "cancel": "Cancel"
   },
   "language": {
     "en": "English",
@@ -141,12 +149,19 @@
     },
     "scan": {
       "title": "Your InBody scan",
-      "subtitle": "Type the numbers from your InBody result sheet. Reading a photo of the sheet comes in a later update.",
+      "subtitle": "Upload a photo of your InBody result sheet and we'll read it for you, or type the numbers yourself.",
       "bodyFat": "Body fat (%)",
       "muscle": "Skeletal muscle (kg)",
       "bmr": "BMR (kcal)",
       "noScan": "No scan yet? Leave these empty and we'll use a typical estimate. You can add your scan later.",
-      "next": "Next: health check"
+      "next": "Next: health check",
+      "photoTitle": "Read my scan from a photo",
+      "photoCamera": "Take a photo of the sheet",
+      "photoLibrary": "Choose a photo",
+      "photoReading": "Reading your scan…",
+      "photoRead": "Here's what we read. Check each number against your sheet and correct anything that's wrong.",
+      "photoNotRecognised": "We couldn't read a body composition sheet in that photo. Try again in good light, or type the numbers.",
+      "photoLocked": "Photo reading is part of Pro. Type the numbers instead; it only takes a moment."
     },
     "health": {
       "title": "Quick health check",
@@ -376,7 +391,6 @@
     "carbsG": "Carbs (g)",
     "fatG": "Fat (g)",
     "add": "Add meal",
-    "aiLater": "Estimating meals from a photo or a description comes with the AI coach in the next update.",
     "loggedMacros": "{{kcal}} kcal, {{protein}} g protein, {{carbs}} g carbs, {{fat}} g fat",
     "mealPlan": "Meal plan",
     "mealAbout": "About {{kcal}} kcal, {{protein}} g protein, {{carbs}} g carbs",
@@ -393,6 +407,55 @@
       "suhoor": "Suhoor",
       "iftar": "Iftar",
       "recovery": "Recovery meal"
+    },
+    "aiTitle": "Estimate with AI",
+    "aiDescribe": "Describe your meal",
+    "aiDescribePlaceholder": "e.g. 2 slices of pizza and a cola",
+    "aiEstimate": "Estimate",
+    "aiCamera": "Take a photo",
+    "aiLibrary": "Choose a photo",
+    "aiWorking": "Estimating…",
+    "aiCheck": "Check the estimate and edit anything before you add it.",
+    "aiConfidenceLow": "Rough estimate: portion size was hard to judge.",
+    "aiNotRecognised": "That doesn't look like a meal. Try another photo or describe it.",
+    "aiLocked": "Estimating meals from a photo or description is part of Pro."
+  },
+  "membership": {
+    "comingSoon": "Pro and Elite subscriptions, with a 7-day free trial, arrive in the next update."
+  },
+  "coach": {
+    "greeting": "Hi {{name}}! I'm your coach. Ask me anything about today's workout, your meals or how you feel, in any language.",
+    "thinking": "Thinking…",
+    "placeholder": "Message your coach…",
+    "send": "Send",
+    "stop": "Stop",
+    "chips": [
+      "The bench is busy, what can I do instead?",
+      "أنا في مطعم الآن، ماذا أطلب؟",
+      "Je suis fatigué aujourd'hui, je m'entraîne ?",
+      "¿Puedo comer pizza hoy?",
+      "Make my program harder"
+    ],
+    "lockedTitle": "Your AI coach is part of Pro",
+    "lockedBody": "Chat with a coach who knows your plan, your scan and your day, in any language."
+  },
+  "ai": {
+    "errors": {
+      "unauthorized": "Please sign in again.",
+      "bad_request": "That didn't work. Please try again.",
+      "payload_too_large": "That photo is too large. Try again with a smaller one.",
+      "upgrade_required": "This is part of Pro. Subscriptions arrive in the next update.",
+      "quota_exceeded": "You've reached today's limit for this. It resets tomorrow.",
+      "not_found": "We couldn't find that photo. Please try again.",
+      "ai_refused": "I can't help with that one. Try asking another way, or talk to a doctor or physiotherapist.",
+      "ai_unavailable": "The coach is busy right now. Please try again in a minute.",
+      "network": "No connection. Check your internet and try again.",
+      "internal": "Something went wrong. Please try again."
+    },
+    "photoErrors": {
+      "permission": "Rafiq needs access to your camera or photos. You can allow it in your phone's settings.",
+      "too_large": "That photo is too large. Try again with a smaller one.",
+      "upload": "We couldn't upload the photo. Check your connection and try again."
     }
   }
 }

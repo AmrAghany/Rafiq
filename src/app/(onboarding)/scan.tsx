@@ -12,6 +12,7 @@ import {
   Text,
   TextField,
 } from '@/components/ui';
+import { ScanPhoto } from '@/features/onboarding/ScanPhoto';
 import { useOnboarding } from '@/features/onboarding/store';
 import {
   hasErrors,
@@ -52,6 +53,7 @@ export default function ScanStep() {
       </Text>
       <Text color="muted">{t('onboarding.scan.subtitle')}</Text>
       <Panel style={{ gap: spacing.md }}>
+        <ScanPhoto />
         {FIELDS.map(({ field, label, keyboard }) => (
           <TextField
             key={field}

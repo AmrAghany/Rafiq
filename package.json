@@ -10,6 +10,7 @@
     "expo-constants": "~57.0.21",
     "expo-crypto": "~57.0.3",
     "expo-font": "~57.0.4",
+    "expo-image-picker": "~57.0.20",
     "expo-linking": "~57.0.12",
     "expo-localization": "~57.0.2",
     "expo-notifications": "~57.0.22",
@@ -59,7 +60,10 @@
     "db:types": "npx supabase gen types typescript --local --schema public > src/lib/database.types.ts && prettier --write src/lib/database.types.ts",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm test",
     "db:seed:generate": "node scripts/seed.js",
-    "test:integration": "jest -c jest.integration.config.js"
+    "test:integration": "jest -c jest.integration.config.js",
+    "fn:check": "cd supabase/functions && deno check */index.ts tests/*.ts",
+    "fn:test": "cd supabase/functions && deno task test",
+    "fn:serve": "npx supabase functions serve --env-file supabase/functions/.env"
   },
   "private": true,
   "jest": {

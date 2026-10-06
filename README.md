@@ -27,6 +27,32 @@ npm start                     # Expo dev server (press i / a, or scan the QR cod
 Scan the QR code with **Expo Go** on your phone for a quick look (email sign-in works there).
 Native Sign in with Apple, and anything else that needs native config, needs a real build.
 
+## AI features (Edge Functions)
+
+The coach chat, meal estimates and InBody photo reading run in Supabase Edge Functions
+(`supabase/functions`), so the Anthropic key never ships in the app. Each request checks the
+member's tier and daily limit on the server first.
+
+```bash
+# Hosted project
+npx supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
+npx supabase functions deploy coach-chat meal-estimate scan-read export-data delete-account
+
+# Local
+echo "ANTHROPIC_API_KEY=sk-ant-..." > supabase/functions/.env
+npm run fn:serve
+```
+
+AI features need a Pro or Elite tier. Until RevenueCat is connected (phase 5), give a test
+account Pro by hand: `update public.subscriptions set tier = 'pro' where user_id = '<id>';`
+
+Function tests need [Deno](https://deno.com) 2 and the local stack:
+
+```bash
+npm run db:start
+eval "$(npx supabase status -o env)" && npm run fn:test
+```
+
 ## Building the Android and iOS apps
 
 Builds run in the cloud with [EAS Build](https://docs.expo.dev/build/introduction/), so no Mac is
@@ -62,6 +88,9 @@ and an iOS build for registered test devices. `production` makes store builds.
 | `npm run db:test`          | pgTAP tests for RLS and triggers (`supabase/tests/database`)   |
 | `npm run db:types`         | Regenerate `src/lib/database.types.ts` from the local database |
 | `npm run db:seed:generate` | Regenerate `supabase/seed.sql` from the plan JSON data         |
+| `npm run fn:check`         | Type-check the Edge Functions (Deno)                           |
+| `npm run fn:test`          | Edge Function tests (Deno; needs the local stack env)          |
+| `npm run fn:serve`         | Serve Edge Functions locally                                   |
 
 ## Project layout
 
@@ -78,14 +107,19 @@ src/
   features/train/      Progression (pure), session/set hooks, exercise card, rest timer
   features/food/       Meal plan and intake maths (pure), meal log hooks
   features/reminders/  Reminder schedule (pure) and expo-notifications scheduling
-  features/settings/   Daily schedule and reminders settings
+  features/settings/   Daily schedule, reminders, data export and account deletion
+  features/ai/         Edge Function client (JSON + streaming), SSE parser, photo upload
+  features/coach/      Chat history and streaming hooks
+  features/membership/ Tier (display only; the server enforces it)
   i18n/                i18next setup, en/ar strings, RTL handling
   lib/                 Supabase client, secure storage, env, generated DB types
   stores/              Zustand stores for device-local UI state
   theme/               Design tokens (light/dark) and ThemeProvider
 supabase/
   migrations/          Database schema, RLS policies, storage buckets, complete_onboarding()
-  seed.sql             Generated exercise library and workout templates
+  seed.sql             Generated exercise library, workout and meal templates
+  functions/           Edge Functions: coach-chat, meal-estimate, scan-read, export-data,
+                       delete-account; _shared/ (auth, tiers and quotas, prompts, schemas)
   tests/database/      pgTAP tests
 reference/             Original HTML prototypes (source of truth for behaviour and UX)
 ```

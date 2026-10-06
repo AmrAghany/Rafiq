@@ -646,9 +646,21 @@ export type Database = {
         };
         Returns: string;
       };
+      consume_ai_quota: {
+        Args: {
+          p_feature: Database['public']['Enums']['ai_feature'];
+          p_limit: number;
+          p_user_id: string;
+        };
+        Returns: number;
+      };
       current_tier: {
         Args: { p_user_id: string };
         Returns: Database['public']['Enums']['subscription_tier'];
+      };
+      refund_ai_quota: {
+        Args: { p_feature: Database['public']['Enums']['ai_feature']; p_user_id: string };
+        Returns: undefined;
       };
     };
     Enums: {

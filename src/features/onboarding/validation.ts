@@ -32,6 +32,9 @@ export interface OnboardingDraft {
   bmrKcal: string;
   healthFlags: HealthFlag[];
   medicalNoticeAcceptedAt: string | null;
+  /** Set when the scan numbers were read from a photo (kept with what the AI read). */
+  scanPhotoPath: string | null;
+  scanAiReading: Record<string, number | null> | null;
 }
 
 export const emptyDraft: OnboardingDraft = {
@@ -50,6 +53,8 @@ export const emptyDraft: OnboardingDraft = {
   bmrKcal: '',
   healthFlags: [],
   medicalNoticeAcceptedAt: null,
+  scanPhotoPath: null,
+  scanAiReading: null,
 };
 
 /**

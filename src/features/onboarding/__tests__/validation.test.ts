@@ -162,6 +162,8 @@ describe('toPlanInput and the save payload', () => {
     });
     expect(payload.p_scan).toEqual({
       source: 'manual',
+      photo_path: null,
+      ai_extracted: null,
       weight_kg: 82,
       body_fat_pct: 18.4,
       skeletal_muscle_kg: 38.2,

@@ -15,8 +15,9 @@ function flatten(tree: Tree, prefix = ''): Record<string, string> {
 const placeholders = (s: string) => (s.match(/{{\s*\w+\s*}}/g) ?? []).sort();
 
 describe('translations', () => {
-  const flatEn = flatten(en);
-  const flatAr = flatten(ar);
+  // Arrays (e.g. chat suggestion chips) flatten by index.
+  const flatEn = flatten(en as unknown as Tree);
+  const flatAr = flatten(ar as unknown as Tree);
 
   it('Arabic has exactly the same keys as English', () => {
     expect(Object.keys(flatAr).sort()).toEqual(Object.keys(flatEn).sort());

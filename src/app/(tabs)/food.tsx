@@ -13,10 +13,12 @@ import {
   TextField,
 } from '@/components/ui';
 import { useMealActions, useMealLogs, type MealLog } from '@/features/food/api';
+import { MealEstimate, type Estimate } from '@/features/food/MealEstimate';
 import { mealsForDay, progress, sumMeals } from '@/features/food/meals';
 import { parseNumber } from '@/features/onboarding/validation';
 import { localName } from '@/features/plan/names';
 import { WeekStrip } from '@/features/plan/WeekStrip';
+import { useTier } from '@/features/membership/useTier';
 import { useToday } from '@/features/today/api';
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -35,6 +37,13 @@ export default function FoodScreen() {
   const { add, remove } = useMealActions(dateKey);
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<Record<'name' | Field, string>>>({});
+  // Set when the form was pre-filled by an AI estimate, so the log records where it came from.
+  const [origin, setOrigin] = useState<{
+    source: 'text' | 'photo';
+    photoPath: string | null;
+    estimate: Estimate;
+  } | null>(null);
+  const { isPaid } = useTier();
 
   if (plan.isPending || meals.isPending) {
     return (
@@ -83,10 +92,13 @@ export default function FoodScreen() {
       protein_g: values.protein,
       carbs_g: values.carbs,
       fat_g: values.fat,
-      source: 'manual',
+      source: origin?.source ?? 'manual',
       template_key: null,
+      photo_path: origin?.photoPath ?? null,
+      ai_estimate: origin?.estimate ?? null,
     });
     setForm(EMPTY_FORM);
+    setOrigin(null);
   }
 
   const bars = [
@@ -139,6 +151,22 @@ export default function FoodScreen() {
         <Text variant="heading" accessibilityRole="header">
           {t('food.logTitle')}
         </Text>
+        {isPaid ? (
+          <MealEstimate
+            onEstimate={(estimate, o) => {
+              const n = (v: number | null) => (v == null ? '' : String(v));
+              setForm({
+                name: estimate.name,
+                kcal: n(estimate.kcal),
+                protein: n(estimate.protein_g),
+                carbs: n(estimate.carbs_g),
+                fat: n(estimate.fat_g),
+              });
+              setErrors({});
+              setOrigin({ ...o, estimate });
+            }}
+          />
+        ) : null}
         <TextField
           testID="meal-name"
           label={t('food.mealName')}
@@ -170,9 +198,11 @@ export default function FoodScreen() {
           </View>
         )}
         <Button testID="meal-add" label={t('food.add')} onPress={submit} />
-        <Text variant="small" color="muted">
-          {t('food.aiLater')}
-        </Text>
+        {isPaid ? null : (
+          <Text variant="small" color="muted">
+            {t('food.aiLocked')}
+          </Text>
+        )}
         {logged.map((m) => (
           <LoggedMealRow
             key={m.id}

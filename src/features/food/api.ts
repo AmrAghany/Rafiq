@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useAuth } from '@/features/auth/AuthProvider';
+import type { Json } from '@/lib/database.types';
 import { supabase } from '@/lib/supabase';
 
 export interface MealLog {
@@ -12,6 +13,8 @@ export interface MealLog {
   fat_g: number | null;
   source: 'plan' | 'text' | 'photo' | 'manual';
   template_key: string | null;
+  photo_path?: string | null;
+  ai_estimate?: unknown;
   eaten_at: string;
 }
 
@@ -48,9 +51,12 @@ export function useMealActions(date: string) {
 
   const add = useMutation({
     mutationFn: async (meal: NewMeal) => {
-      const { error } = await supabase
-        .from('meal_logs')
-        .insert({ ...meal, user_id: uid!, log_date: date });
+      const { error } = await supabase.from('meal_logs').insert({
+        ...meal,
+        ai_estimate: (meal.ai_estimate ?? null) as Json,
+        user_id: uid!,
+        log_date: date,
+      });
       if (error) throw error;
     },
     onMutate: async (meal) => {
