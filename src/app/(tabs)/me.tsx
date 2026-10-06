@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
@@ -32,6 +33,8 @@ export default function MeScreen() {
       {session?.user.email ? (
         <Text color="muted">{t('me.signedInAs', { email: session.user.email })}</Text>
       ) : null}
+
+      <Button testID="view-plan" label={t('me.viewPlan')} onPress={() => router.push('/plan')} />
 
       <Panel>
         <Text variant="heading" accessibilityRole="header">

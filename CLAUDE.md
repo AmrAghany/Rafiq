@@ -17,7 +17,7 @@ Target market starts with Arabic- and English-speaking members (Middle East firs
 
 ## Tech stack
 
-- **App:** React Native with Expo (managed workflow), TypeScript in strict mode, Expo Router for navigation.
+- **App:** React Native with Expo (managed workflow), TypeScript in strict mode, Expo Router for navigation. **Native iOS and Android only; there is no web target** (decided 2026-10-06). Builds go through EAS (`eas.json`).
 - **State and data fetching:** TanStack Query for server data, Zustand for local UI state.
 - **Backend:** Supabase (Postgres, Auth, Storage, Edge Functions). Row Level Security on every table.
 - **AI:** Anthropic Claude API, called ONLY from Supabase Edge Functions. The API key must never ship in the app bundle.
@@ -109,7 +109,59 @@ Work in this order. Finish, test and summarise each phase before starting the ne
 
 ## Status
 
-### Phase 1: Foundation — done (2026-10-06), waiting for approval to start phase 2
+### Phase 2: Plan engine and onboarding — done (2026-10-06), waiting for approval to start phase 3
+
+**Mobile only**: the web target has been removed (`react-native-web`, the `web` config and the web-only code paths). The app builds for iOS and Android only. `eas.json` has `preview` (an installable Android APK, plus an iOS build for test devices), `preview-simulator` and `production` (store builds) profiles. See README, "Building the Android and iOS apps".
+
+**Built**
+
+- **Plan engine** (`src/features/plan/engine.ts`): pure TypeScript, `ENGINE_VERSION` 1.0.0. It covers:
+  - Lean body mass and BMR (from the scan, or Katch-McArdle).
+  - TDEE, goal calories and protein.
+  - High, medium and low carb days.
+  - Splits, starting weights rounded to 2.5 kg, and goal rep schemes.
+  - The readiness score (40–100); below 60 is a light day with one less set and 10% less weight.
+  - Safety overrides.
+- **Content as data**: `src/features/plan/data/{exercises,workouts,splits}.json` (English and Arabic names). `scripts/seed.js` generates `supabase/seed.sql` from these files for the `exercises` and `workout_templates` tables. A test fails if the seed file is out of date.
+- **Onboarding** (`src/app/(onboarding)`):
+  - Welcome screen with the not-medical-advice notice (must be accepted).
+  - About you, with an 18+ block based on date of birth.
+  - Manual InBody entry; every scan field is optional.
+  - Health check.
+  - Plan summary.
+
+  "Start my day" saves everything in one transaction through a new `complete_onboarding()` database function (migration `20261006120000`). The function runs with the member's own permissions. Re-running it keeps scan and plan history and switches the active plan.
+
+- **Routing**: a signed-in member without `onboarding_completed_at` is sent to onboarding; otherwise they go to the tabs. Me tab, then "View my plan", opens the saved active plan.
+- The onboarding draft is kept in memory only and is never written to the device, because it contains health answers. It is cleared on sign-out.
+- Number fields accept Arabic-Indic digits and the Arabic decimal separator (٨٢٫٥).
+- **Tests**: 245 Jest, 1 integration and 38 pgTAP.
+  - Jest: 46 for the engine, including a verbatim copy of the prototype's `plan()` run against the engine over 8,100 input combinations, plus a starting-weight parity check. The rest cover onboarding validation, the save payload, the screens, and a check that no calorie number renders for the pregnancy or eating-disorder flags.
+  - Integration: `npm run test:integration` signs up and onboards against a local Supabase.
+  - pgTAP: 24 for RLS and 14 for onboarding and the seed.
+- **Verified**:
+  - `npm run check` passes.
+  - The iOS and Android JS bundles export.
+  - Integration and database tests pass against a local Supabase.
+  - The full onboarding flow worked in English and Arabic in a temporary web preview, which was not committed. That run found three layout bugs, now fixed: stale validation errors, the Arabic title direction, and carb rows wrapping.
+
+**Not verified**: no Android emulator or APK build in this environment (no KVM, and the Android SDK download is blocked). The first real device test will be an EAS `preview` build.
+
+**Decisions**
+
+- Missing body fat now defaults by sex (20% men, 28% women, as in the prototype's onboarding), and the summary says it was assumed.
+- "Keep training moderate" (heart, diabetes or injury) is defined as 10% lighter starting loads and at least 8 reps on main lifts. Nutrition is unchanged. **Please confirm or adjust.**
+- The pregnancy and eating-disorder flags set the calorie factor to 1 for every goal, as the prototype did, so there's no deficit and no surplus.
+- Calf raise counts as a main lift (prototype rule: ratio ≥ 0.6), so it gets 4 × 6 for recomp. Coaches can change `isMain` in `exercises.json`.
+- Splits live only in app JSON, with no DB table yet. Meal templates are phase 3.
+
+**Open questions for phase 3** (the phase 1 questions about bundle id, fonts, `expo-updates`, native Google sign-in, account deletion and email confirmation are still open)
+
+1. Is the moderate-training rule above acceptable?
+2. The Arabic carb-day letters are ع (high), و (medium) and م (low). Are these OK, or should we show coloured dots only?
+3. Do you have an Expo account and Apple Developer account for EAS builds?
+
+### Phase 1: Foundation — done (2026-10-06)
 
 **Built**
 

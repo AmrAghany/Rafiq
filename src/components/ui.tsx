@@ -164,7 +164,8 @@ export function TextField({ label, error, style, ...rest }: TextFieldProps) {
 
 interface SegmentedProps<T extends string> {
   label: string;
-  value: T;
+  value: T | null;
+  error?: string;
   options: readonly { value: T; label: string }[];
   onChange: (value: T) => void;
 }
@@ -174,6 +175,7 @@ export function Segmented<T extends string>({
   value,
   options,
   onChange,
+  error,
 }: SegmentedProps<T>) {
   const { colors, radius, spacing } = useTheme();
   return (
@@ -187,9 +189,11 @@ export function Segmented<T extends string>({
               key={o.value}
               accessibilityRole="radio"
               accessibilityState={{ selected }}
+              accessibilityLabel={o.label}
               onPress={() => onChange(o.value)}
               style={{
                 flex: 1,
+                paddingHorizontal: spacing.xs,
                 minHeight: 44,
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -198,13 +202,129 @@ export function Segmented<T extends string>({
                 borderColor: selected ? colors.accent : colors.line,
                 backgroundColor: selected ? colors.accent : 'transparent',
               }}>
-              <Text variant="label" color={selected ? 'onAccent' : 'ink'}>
+              <Text
+                variant="label"
+                color={selected ? 'onAccent' : 'ink'}
+                style={{ textAlign: 'center' }}>
                 {o.label}
               </Text>
             </Pressable>
           );
         })}
       </View>
+      {error ? (
+        <Text variant="small" color="warn" accessibilityLiveRegion="polite">
+          {error}
+        </Text>
+      ) : null}
     </View>
+  );
+}
+
+/** Highlighted notice (prototype .alert). */
+export function Notice({ children, tone = 'high' }: PropsWithChildren<{ tone?: keyof Palette }>) {
+  const { colors, radius, spacing } = useTheme();
+  return (
+    <View
+      accessibilityRole="alert"
+      style={{
+        borderStartWidth: 5,
+        borderStartColor: colors[tone],
+        backgroundColor: colors.soft,
+        borderRadius: radius.sm,
+        padding: spacing.md,
+      }}>
+      <Text variant="body" style={{ fontSize: 15 }}>
+        {children}
+      </Text>
+    </View>
+  );
+}
+
+export function Checkbox({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  const { colors, radius, spacing } = useTheme();
+  return (
+    <Pressable
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked }}
+      accessibilityLabel={label}
+      onPress={() => onChange(!checked)}
+      style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 44 }}>
+      <View
+        style={{
+          width: 24,
+          height: 24,
+          borderRadius: radius.sm / 2,
+          borderWidth: 2,
+          borderColor: checked ? colors.accent : colors.line,
+          backgroundColor: checked ? colors.accent : 'transparent',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        {checked ? (
+          <Text variant="label" color="onAccent" style={{ lineHeight: 18 }}>
+            ✓
+          </Text>
+        ) : null}
+      </View>
+      <Text style={{ flex: 1 }}>{label}</Text>
+    </Pressable>
+  );
+}
+
+export function StepHeader({
+  current,
+  total,
+  label,
+}: {
+  current: number;
+  total: number;
+  label: string;
+}) {
+  const { colors, spacing } = useTheme();
+  return (
+    <View
+      accessible
+      accessibilityLabel={label}
+      style={{ flexDirection: 'row', gap: spacing.xs + 2, marginBottom: spacing.xs }}>
+      {Array.from({ length: total }, (_, i) => (
+        <View
+          key={i}
+          style={{
+            flex: 1,
+            height: 5,
+            borderRadius: 3,
+            backgroundColor: i < current ? colors.accent : colors.line,
+          }}
+        />
+      ))}
+    </View>
+  );
+}
+
+export function LinkButton({ label, onPress }: { label: string; onPress: () => void }) {
+  const { spacing } = useTheme();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={{
+        paddingVertical: spacing.sm,
+        alignSelf: 'flex-start',
+        minHeight: 44,
+        justifyContent: 'center',
+      }}>
+      <Text variant="label" color="accent">
+        {label}
+      </Text>
+    </Pressable>
   );
 }

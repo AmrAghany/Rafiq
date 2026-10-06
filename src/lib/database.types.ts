@@ -610,6 +610,16 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      complete_onboarding: {
+        Args: {
+          p_engine_version: string;
+          p_plan: Json;
+          p_plan_inputs: Json;
+          p_profile: Json;
+          p_scan: Json;
+        };
+        Returns: string;
+      };
       current_tier: {
         Args: { p_user_id: string };
         Returns: Database['public']['Enums']['subscription_tier'];

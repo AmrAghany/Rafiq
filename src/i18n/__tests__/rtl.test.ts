@@ -2,7 +2,7 @@ import { I18nManager } from 'react-native';
 
 import { applyLayoutDirection } from '../rtl';
 
-describe('applyLayoutDirection (native)', () => {
+describe('applyLayoutDirection', () => {
   const forceRTL = jest.spyOn(I18nManager, 'forceRTL').mockImplementation(() => {});
   jest.spyOn(I18nManager, 'allowRTL').mockImplementation(() => {});
 

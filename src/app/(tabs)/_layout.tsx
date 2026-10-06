@@ -1,18 +1,17 @@
 import { Tabs } from 'expo-router';
 import { SymbolView, type SymbolViewProps } from 'expo-symbols';
 import { useTranslation } from 'react-i18next';
-import { Platform } from 'react-native';
 
 import { useTheme } from '@/theme/ThemeProvider';
 
 type SymbolName = SymbolViewProps['name'];
 
 const ICONS: Record<string, SymbolName> = {
-  index: { ios: 'sun.max', android: 'light_mode', web: 'light_mode' },
-  train: { ios: 'dumbbell', android: 'fitness_center', web: 'fitness_center' },
-  food: { ios: 'fork.knife', android: 'restaurant', web: 'restaurant' },
-  coach: { ios: 'bubble.left', android: 'chat_bubble', web: 'chat_bubble' },
-  me: { ios: 'person', android: 'person', web: 'person' },
+  index: { ios: 'sun.max', android: 'light_mode' },
+  train: { ios: 'dumbbell', android: 'fitness_center' },
+  food: { ios: 'fork.knife', android: 'restaurant' },
+  coach: { ios: 'bubble.left', android: 'chat_bubble' },
+  me: { ios: 'person', android: 'person' },
 };
 
 export default function TabsLayout() {
@@ -33,12 +32,7 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.muted,
-        tabBarStyle: {
-          backgroundColor: colors.surface,
-          borderTopColor: colors.line,
-          // Web dev preview only: the default bar height clips label descenders.
-          ...(Platform.OS === 'web' && { height: 56 }),
-        },
+        tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.line },
         tabBarLabelStyle: { fontWeight: '600' },
       }}>
       {tabs.map(({ name, title }) => (

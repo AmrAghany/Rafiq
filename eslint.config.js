@@ -7,6 +7,18 @@ module.exports = defineConfig([
   expoConfig,
   prettierConfig,
   {
+    files: ['scripts/**/*.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        __dirname: 'readonly',
+        require: 'readonly',
+        module: 'writable',
+        console: 'readonly',
+      },
+    },
+  },
+  {
     ignores: ['dist/*', 'reference/*', 'supabase/functions/*', 'src/lib/database.types.ts'],
   },
 ]);

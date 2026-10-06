@@ -50,7 +50,8 @@
     "themeSystem": "System",
     "themeLight": "Light",
     "themeDark": "Dark",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "viewPlan": "View my plan"
   },
   "language": {
     "en": "English",
@@ -59,5 +60,123 @@
     "restartBody": "Rafiq needs to restart to switch between left-to-right and right-to-left layout.",
     "restartNow": "Restart now",
     "later": "Later"
+  },
+  "common": {
+    "next": "Next",
+    "back": "Back",
+    "retry": "Try again",
+    "optional": "optional",
+    "kg": "kg",
+    "cm": "cm",
+    "kcal": "kcal",
+    "g": "g"
+  },
+  "days": {
+    "short": {
+      "0": "Mon",
+      "1": "Tue",
+      "2": "Wed",
+      "3": "Thu",
+      "4": "Fri",
+      "5": "Sat",
+      "6": "Sun"
+    }
+  },
+  "dayType": {
+    "high": "High-carb day",
+    "medium": "Medium-carb day",
+    "low": "Low-carb day",
+    "letter": {
+      "high": "H",
+      "medium": "M",
+      "low": "L"
+    }
+  },
+  "onboarding": {
+    "step": "Step {{current}} of {{total}}",
+    "welcome": {
+      "title": "Let's build your plan",
+      "body": "Three quick steps: about you, your body scan and a short health check. It takes about two minutes.",
+      "noticeTitle": "Before you start",
+      "noticeBody": "Rafiq gives general fitness and nutrition guidance. It is not medical advice and does not replace a doctor, dietitian or physiotherapist. Stop and get help if you feel pain, dizziness or chest discomfort.",
+      "accept": "I understand, let's start"
+    },
+    "about": {
+      "title": "About you",
+      "subtitle": "This shapes your training and food plan.",
+      "name": "First name",
+      "sex": "Sex",
+      "male": "Male",
+      "female": "Female",
+      "birthDate": "Date of birth",
+      "day": "Day",
+      "month": "Month",
+      "year": "Year",
+      "height": "Height (cm)",
+      "weight": "Weight (kg)",
+      "goal": "Main goal",
+      "goalLose": "Lose fat",
+      "goalBuild": "Build muscle",
+      "goalRecomp": "Both",
+      "days": "Training days per week",
+      "daysOption": "{{count}} days",
+      "experience": "Experience",
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "next": "Next: body scan"
+    },
+    "scan": {
+      "title": "Your InBody scan",
+      "subtitle": "Type the numbers from your InBody result sheet. Reading a photo of the sheet comes in a later update.",
+      "bodyFat": "Body fat (%)",
+      "muscle": "Skeletal muscle (kg)",
+      "bmr": "BMR (kcal)",
+      "noScan": "No scan yet? Leave these empty and we'll use a typical estimate. You can add your scan later.",
+      "next": "Next: health check"
+    },
+    "health": {
+      "title": "Quick health check",
+      "subtitle": "So your plan stays safe. Tick anything that applies.",
+      "injury": "Injury or joint pain",
+      "heart": "Heart or blood pressure condition",
+      "diabetes": "Diabetes",
+      "pregnancy": "Pregnant or breastfeeding",
+      "eating_disorder": "Past or current eating disorder",
+      "next": "Build my plan"
+    },
+    "errors": {
+      "nameRequired": "Add your first name.",
+      "sexRequired": "Choose one.",
+      "birthDateInvalid": "Check your date of birth.",
+      "underage": "Rafiq is for adults 18 and over. Younger athletes should train with a qualified coach and a parent.",
+      "heightInvalid": "Enter a height between {{min}} and {{max}} cm.",
+      "weightInvalid": "Enter a weight between {{min}} and {{max}} kg.",
+      "goalRequired": "Choose your main goal.",
+      "daysRequired": "Choose how many days you can train.",
+      "experienceRequired": "Choose your experience level.",
+      "outOfRange": "Enter a number between {{min}} and {{max}}, or leave it empty.",
+      "saveFailed": "We couldn't save your plan. Check your connection and try again."
+    }
+  },
+  "plan": {
+    "readyTitle": "{{name}}, your plan is ready",
+    "myPlan": "My plan",
+    "builtFrom": "Built from your scan: {{bodyFat}}% body fat, {{leanMass}} kg lean mass, {{bmr}} kcal resting burn.",
+    "builtFromNoCalories": "Built from your scan: {{bodyFat}}% body fat, {{leanMass}} kg lean mass.",
+    "bodyFatAssumed": "We assumed {{bodyFat}}% body fat because no scan was entered. Add your scan for a more accurate plan.",
+    "carefulNotice": "Because of your health answers, your food plan focuses on regular, balanced meals with no calorie cut. Please check the plan with your doctor before starting.",
+    "doctorNotice": "Training starts moderate. Get your doctor's or physio's OK, and tell your coach about any pain.",
+    "training": "Training",
+    "trainingSummary": "{{split}}, {{sets}} × {{reps}} on main lifts.",
+    "train": "Train",
+    "rest": "Rest",
+    "today": "today",
+    "carbCycle": "Carb cycle",
+    "dayMacros": "{{kcal}} kcal, {{carbs}} g carbs",
+    "proteinNote": "Protein stays at {{protein}} g every day. More carbs on heavy leg days, fewer on rest days.",
+    "balancedMeals": "Eat regular, balanced meals with protein, vegetables and whole grains at each one.",
+    "start": "Start my day",
+    "notFound": "No plan yet."
   }
 }

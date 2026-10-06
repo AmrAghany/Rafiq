@@ -10,7 +10,8 @@ values
   ('11111111-1111-1111-1111-111111111111', 'a@example.com', '{"full_name": "Amal"}'),
   ('22222222-2222-2222-2222-222222222222', 'b@example.com', '{}');
 
-insert into public.exercises (key, name_en, name_ar) values ('squat', 'Back squat', 'سكوات خلفي');
+insert into public.exercises (key, name_en, name_ar) values ('back_squat', 'Back squat', 'سكوات خلفي')
+on conflict (key) do nothing;
 
 -- ---------------------------------------------------------------------------
 -- Structure
@@ -51,7 +52,7 @@ select is((select count(*)::int from public.profiles), 1, 'a member sees only th
 select is((select count(*)::int from public.subscriptions), 1, 'a member sees only their own subscription');
 select is((select count(*)::int from public.body_scans), 0, 'a member cannot see another member''s scans');
 select is((select count(*)::int from public.workout_sessions), 0, 'a member cannot see another member''s sessions');
-select is((select count(*)::int from public.exercises), 1, 'members can read exercise content');
+select ok((select count(*) from public.exercises) >= 1, 'members can read exercise content');
 
 select lives_ok(
   $$insert into public.body_scans (user_id, source, body_fat_pct)
@@ -111,7 +112,7 @@ select throws_ok(
 
 select throws_ok(
   $$insert into public.set_logs (session_id, user_id, exercise_key, set_number)
-    values ('33333333-3333-3333-3333-333333333333', '11111111-1111-1111-1111-111111111111', 'squat', 1)$$,
+    values ('33333333-3333-3333-3333-333333333333', '11111111-1111-1111-1111-111111111111', 'back_squat', 1)$$,
   '23503',
   null,
   'a set cannot be attached to another member''s session'

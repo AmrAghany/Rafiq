@@ -1,12 +1,11 @@
 import * as SecureStore from 'expo-secure-store';
-import { Platform } from 'react-native';
 
 /**
  * Async key-value storage backed by the device keychain/keystore.
  *
  * SecureStore rejects values over ~2 KB, and a Supabase session (JWT plus
  * refresh token and user metadata) is often larger, so values are split into
- * chunks. On web (dev only) it falls back to localStorage.
+ * chunks.
  */
 export interface KeyValueStorage {
   getItem(key: string): Promise<string | null>;
@@ -68,17 +67,4 @@ export function createChunkedSecureStorage(store: SecureStoreLike): KeyValueStor
   };
 }
 
-const webStorage: KeyValueStorage = {
-  async getItem(key) {
-    return typeof localStorage === 'undefined' ? null : localStorage.getItem(key);
-  },
-  async setItem(key, value) {
-    if (typeof localStorage !== 'undefined') localStorage.setItem(key, value);
-  },
-  async removeItem(key) {
-    if (typeof localStorage !== 'undefined') localStorage.removeItem(key);
-  },
-};
-
-export const secureStorage: KeyValueStorage =
-  Platform.OS === 'web' ? webStorage : createChunkedSecureStorage(SecureStore);
+export const secureStorage: KeyValueStorage = createChunkedSecureStorage(SecureStore);

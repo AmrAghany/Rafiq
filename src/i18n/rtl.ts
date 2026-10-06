@@ -1,4 +1,4 @@
-import { DevSettings, I18nManager, Platform } from 'react-native';
+import { DevSettings, I18nManager } from 'react-native';
 
 import { isRTLLanguage, type Language } from './languages';
 
@@ -9,12 +9,6 @@ import { isRTLLanguage, type Language } from './languages';
  */
 export function applyLayoutDirection(language: Language): boolean {
   const rtl = isRTLLanguage(language);
-
-  // Web (dev preview only): react-native-web follows the document's dir attribute live.
-  if (Platform.OS === 'web') {
-    if (typeof document !== 'undefined') document.documentElement.dir = rtl ? 'rtl' : 'ltr';
-    return false;
-  }
 
   I18nManager.allowRTL(true);
   if (Boolean(I18nManager.isRTL) === rtl) return false;

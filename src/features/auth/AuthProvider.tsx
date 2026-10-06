@@ -2,6 +2,7 @@ import type { Session } from '@supabase/supabase-js';
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useEffect, useState, type PropsWithChildren } from 'react';
 
+import { useOnboarding } from '@/features/onboarding/store';
 import { supabase } from '@/lib/supabase';
 
 interface AuthState {
@@ -26,7 +27,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       setState({ session, isLoaded: true });
       // Never let one member's cached health data survive into another session.
-      if (event === 'SIGNED_OUT') queryClient.clear();
+      if (event === 'SIGNED_OUT') {
+        queryClient.clear();
+        useOnboarding.getState().reset();
+      }
     });
     return () => {
       active = false;

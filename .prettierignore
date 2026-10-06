@@ -4,3 +4,4 @@ dist
 reference
 supabase/.temp
 package-lock.json
+supabase/seed.sql
