@@ -10,6 +10,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { Button, Notice, Screen } from '@/components/ui';
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
+import { PurchasesSync } from '@/features/membership/PurchasesSync';
 import { useProfile } from '@/features/profile/api';
 import { useLanguageSync } from '@/i18n/useLanguageSync';
 import { useSettings } from '@/stores/settings';
@@ -46,6 +47,7 @@ function RootNavigator() {
   return (
     <>
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+      <PurchasesSync />
       <Stack
         screenOptions={{
           headerShown: false,
@@ -60,6 +62,14 @@ function RootNavigator() {
         </Stack.Protected>
         <Stack.Protected guard={signedIn && !onboarded}>
           <Stack.Screen name="(onboarding)" />
+        </Stack.Protected>
+        {/* Declared after the onboarding and tab groups: when a guard changes, the router
+            opens the first allowed screen, which must never be the paywall. */}
+        <Stack.Protected guard={signedIn}>
+          <Stack.Screen
+            name="paywall"
+            options={{ headerShown: true, presentation: 'modal', title: t('paywall.header') }}
+          />
         </Stack.Protected>
         <Stack.Protected guard={!signedIn}>
           <Stack.Screen name="(auth)" />

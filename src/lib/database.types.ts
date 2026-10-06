@@ -516,39 +516,48 @@ export type Database = {
         Row: {
           current_period_ends_at: string | null;
           is_trial: boolean;
+          management_url: string | null;
           product_id: string | null;
           raw_event: Json | null;
           revenuecat_app_user_id: string | null;
           status: string;
           store: string | null;
+          synced_at: string | null;
           tier: Database['public']['Enums']['subscription_tier'];
           updated_at: string;
           user_id: string;
+          will_renew: boolean;
         };
         ComputedFields: never;
         Insert: {
           current_period_ends_at?: string | null;
           is_trial?: boolean;
+          management_url?: string | null;
           product_id?: string | null;
           raw_event?: Json | null;
           revenuecat_app_user_id?: string | null;
           status?: string;
           store?: string | null;
+          synced_at?: string | null;
           tier?: Database['public']['Enums']['subscription_tier'];
           updated_at?: string;
           user_id: string;
+          will_renew?: boolean;
         };
         Update: {
           current_period_ends_at?: string | null;
           is_trial?: boolean;
+          management_url?: string | null;
           product_id?: string | null;
           raw_event?: Json | null;
           revenuecat_app_user_id?: string | null;
           status?: string;
           store?: string | null;
+          synced_at?: string | null;
           tier?: Database['public']['Enums']['subscription_tier'];
           updated_at?: string;
           user_id?: string;
+          will_renew?: boolean;
         };
         Relationships: [];
       };

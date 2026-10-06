@@ -11,10 +11,11 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Button, Notice, Panel, Text } from '@/components/ui';
+import { Button, Notice, Text } from '@/components/ui';
 import { textDirection } from '@/features/ai/sse';
 import { useChatHistory, useCoachChat } from '@/features/coach/api';
-import { useTier } from '@/features/membership/useTier';
+import { LockedCard } from '@/features/membership/LockedCard';
+import { useEntitlements } from '@/features/membership/useTier';
 import { useProfile } from '@/features/profile/api';
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -58,10 +59,11 @@ function Bubble({
 export default function CoachScreen() {
   const { t } = useTranslation();
   const { colors, radius, spacing } = useTheme();
-  const { tier, isPaid, isLoading: tierLoading } = useTier();
+  const { can, isLoading: tierLoading } = useEntitlements();
+  const unlocked = can('ai_coach');
   const { data: profile } = useProfile();
   // Free members see the locked card; don't load chat history for them.
-  const history = useChatHistory({ enabled: isPaid });
+  const history = useChatHistory({ enabled: unlocked });
   const { send, stop, pending, error, clearError } = useCoachChat();
   const [draft, setDraft] = useState('');
   const scroll = useRef<ScrollView>(null);
@@ -81,7 +83,7 @@ export default function CoachScreen() {
     );
   }
 
-  if (tier === 'free') {
+  if (!unlocked) {
     return (
       <SafeAreaView
         edges={['top']}
@@ -89,13 +91,7 @@ export default function CoachScreen() {
         <Text variant="title" accessibilityRole="header">
           {t('tabs.coach')}
         </Text>
-        <Panel>
-          <Text variant="heading" accessibilityRole="header">
-            {t('coach.lockedTitle')}
-          </Text>
-          <Text color="muted">{t('coach.lockedBody')}</Text>
-          <Notice tone="medium">{t('membership.comingSoon')}</Notice>
-        </Panel>
+        <LockedCard title={t('coach.lockedTitle')} body={t('coach.lockedBody')} />
       </SafeAreaView>
     );
   }

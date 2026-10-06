@@ -10,7 +10,15 @@ const mockCall = jest.fn();
 const mockPick = jest.fn();
 const mockUpload = jest.fn();
 
-jest.mock('@/features/membership/useTier', () => ({ useTier: () => ({ isPaid: mockPaid }) }));
+jest.mock('@/features/membership/useTier', () => ({
+  useEntitlements: () => ({
+    tier: mockPaid ? 'pro' : 'free',
+    isPaid: mockPaid,
+    can: () => mockPaid,
+    isLoading: false,
+  }),
+}));
+jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('@/features/auth/AuthProvider', () => ({
   useAuth: () => ({ session: { user: { id: 'u1' } } }),
 }));
@@ -74,7 +82,8 @@ describe('ScanPhoto', () => {
   it('asks free members to type the numbers and uploads nothing', async () => {
     mockPaid = false;
     await render(<ScanPhoto />);
-    expect(screen.getByText(/Photo reading is part of Pro/)).toBeTruthy();
+    expect(screen.getByText(/Reading the sheet from a photo is part of Pro/)).toBeTruthy();
+    expect(screen.getByText('Try Pro free')).toBeTruthy();
     expect(screen.queryByTestId('scan-camera')).toBeNull();
     expect(mockUpload).not.toHaveBeenCalled();
   });

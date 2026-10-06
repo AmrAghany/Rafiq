@@ -18,7 +18,8 @@ import { mealsForDay, progress, sumMeals } from '@/features/food/meals';
 import { parseNumber } from '@/features/onboarding/validation';
 import { localName } from '@/features/plan/names';
 import { WeekStrip } from '@/features/plan/WeekStrip';
-import { useTier } from '@/features/membership/useTier';
+import { LockedCard } from '@/features/membership/LockedCard';
+import { useEntitlements } from '@/features/membership/useTier';
 import { useToday } from '@/features/today/api';
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -43,7 +44,7 @@ export default function FoodScreen() {
     photoPath: string | null;
     estimate: Estimate;
   } | null>(null);
-  const { isPaid } = useTier();
+  const { can } = useEntitlements();
 
   if (plan.isPending || meals.isPending) {
     return (
@@ -69,6 +70,18 @@ export default function FoodScreen() {
   }
 
   const careful = p.safety.hideCalories;
+  // Carb cycling and meal plans are Pro. Members whose plan is "balanced meals, no numbers"
+  // keep the simple version for free (as in the prototype).
+  if (!can('meal_plans') && !careful) {
+    return (
+      <Screen>
+        <Text variant="title" accessibilityRole="header">
+          {t('tabs.food')}
+        </Text>
+        <LockedCard title={t('food.lockedTitle')} body={t('food.lockedBody')} />
+      </Screen>
+    );
+  }
   const dayType = p.week[todayIndex].dayType;
   const target = p.macros[dayType];
   const logged = meals.data ?? [];
@@ -151,7 +164,7 @@ export default function FoodScreen() {
         <Text variant="heading" accessibilityRole="header">
           {t('food.logTitle')}
         </Text>
-        {isPaid ? (
+        {can('meal_ai') ? (
           <MealEstimate
             onEstimate={(estimate, o) => {
               const n = (v: number | null) => (v == null ? '' : String(v));
@@ -198,7 +211,7 @@ export default function FoodScreen() {
           </View>
         )}
         <Button testID="meal-add" label={t('food.add')} onPress={submit} />
-        {isPaid ? null : (
+        {can('meal_ai') ? null : (
           <Text variant="small" color="muted">
             {t('food.aiLocked')}
           </Text>

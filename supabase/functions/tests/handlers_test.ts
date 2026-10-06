@@ -14,6 +14,8 @@ import {
 import type { Deps } from '../_shared/context.ts';
 import { Anthropic, createClient, type SupabaseClient } from '../_shared/deps.ts';
 import { startFakeAnthropic } from './fake_anthropic.ts';
+import { startFakeRevenueCat } from './fake_revenuecat.ts';
+import { revenueCatClient } from '../_shared/revenuecat.ts';
 
 const URL_ = Deno.env.get('API_URL') ?? Deno.env.get('SUPABASE_URL');
 const ANON = Deno.env.get('ANON_KEY') ?? Deno.env.get('SUPABASE_ANON_KEY');
@@ -149,6 +151,7 @@ Deno.test({
   sanitizeResources: false,
   async fn(t) {
     const fake = startFakeAnthropic();
+    const rc = startFakeRevenueCat();
     const service = createClient(URL_!, SERVICE!, noSession);
     const deps: Deps = {
       userClient: (jwt) =>
@@ -158,6 +161,7 @@ Deno.test({
         }),
       serviceClient: () => service,
       anthropic: () => new Anthropic({ apiKey: 'test-key', baseURL: fake.baseURL, maxRetries: 0 }),
+      revenuecat: () => revenueCatClient(rc.secret, rc.baseUrl),
       now: () => new Date('2026-10-06T09:00:00Z'),
     };
     const coach = coachHandler(deps);
@@ -564,6 +568,7 @@ Deno.test({
       }
       const { data } = await service.auth.admin.getUserById(pro.id);
       assertEquals(data.user, null);
+      assertEquals(rc.deleted, [pro.id]);
       // The other member is untouched.
       const { count } = await service
         .from('profiles')
@@ -573,5 +578,6 @@ Deno.test({
     });
 
     await fake.close();
+    await rc.close();
   },
 });

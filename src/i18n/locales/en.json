@@ -66,7 +66,7 @@
     "export": "Export my data",
     "exportTitle": "Rafiq data export",
     "delete": "Delete my account",
-    "deleteBody": "This permanently deletes your account, plans, logs, chats and photos. It can't be undone.",
+    "deleteBody": "This permanently deletes your account, plans, logs, chats and photos. It can't be undone. If you have a subscription, cancel it in your App Store or Google Play settings first, or it will keep renewing.",
     "deleteConfirmTitle": "Delete your account?",
     "deleteConfirm": "Delete",
     "cancel": "Cancel"
@@ -161,7 +161,7 @@
       "photoReading": "Reading your scan…",
       "photoRead": "Here's what we read. Check each number against your sheet and correct anything that's wrong.",
       "photoNotRecognised": "We couldn't read a body composition sheet in that photo. Try again in good light, or type the numbers.",
-      "photoLocked": "Photo reading is part of Pro. Type the numbers instead; it only takes a moment."
+      "photoLocked": "Reading the sheet from a photo is part of Pro. Try it free, or type the numbers; it only takes a moment."
     },
     "health": {
       "title": "Quick health check",
@@ -418,10 +418,24 @@
     "aiCheck": "Check the estimate and edit anything before you add it.",
     "aiConfidenceLow": "Rough estimate: portion size was hard to judge.",
     "aiNotRecognised": "That doesn't look like a meal. Try another photo or describe it.",
-    "aiLocked": "Estimating meals from a photo or description is part of Pro."
+    "aiLocked": "Estimating meals from a photo or description is part of Pro.",
+    "lockedTitle": "Carb cycling and meal plans are part of Pro",
+    "lockedBody": "Pro builds your meals around your training days and can read your plate from a photo."
   },
   "membership": {
-    "comingSoon": "Pro and Elite subscriptions, with a 7-day free trial, arrive in the next update."
+    "title": "Membership",
+    "yourPlan": "Your plan: {{plan}}",
+    "tiers": {
+      "free": "Free",
+      "pro": "Pro",
+      "elite": "Elite"
+    },
+    "trialEnds": "Free trial ends on {{date}}.",
+    "renews": "Renews on {{date}}.",
+    "ends": "Ends on {{date}}. It won't renew.",
+    "billingIssue": "There's a problem with your payment. Update it in your store settings to keep your plan.",
+    "change": "Change plan",
+    "manage": "Manage subscription"
   },
   "coach": {
     "greeting": "Hi {{name}}! I'm your coach. Ask me anything about today's workout, your meals or how you feel, in any language.",
@@ -456,6 +470,52 @@
       "permission": "Rafiq needs access to your camera or photos. You can allow it in your phone's settings.",
       "too_large": "That photo is too large. Try again with a smaller one.",
       "upload": "We couldn't upload the photo. Check your connection and try again."
+    }
+  },
+  "paywall": {
+    "header": "Rafiq Pro",
+    "cta": "Try Pro free",
+    "title": "Choose your plan",
+    "titleTrial": "Try Pro free for {{days}} days",
+    "subtitle": "Your AI coach, a program built from your InBody scan, carb cycling and meal plans.",
+    "perMonth": "{{price}} / month",
+    "trialThen": "{{days}} days free, then {{price}} / month",
+    "current": "Your current plan",
+    "startTrial": "Start free trial",
+    "subscribe": "Subscribe",
+    "restore": "Restore purchases",
+    "done": "Done",
+    "success": "Welcome to {{plan}}! Everything is unlocked.",
+    "pending": "Your payment is pending. We'll unlock {{plan}} as soon as the store confirms it.",
+    "restored": "Purchases restored.",
+    "unavailable": "Subscriptions aren't available in this build. They work in store and preview builds of the app.",
+    "terms": "Terms of use",
+    "privacy": "Privacy policy",
+    "legalIos": "Payment is charged to your Apple ID when you confirm. Subscriptions renew automatically unless cancelled at least 24 hours before the end of the current period, and your account is charged for renewal within 24 hours before it ends. You can manage or cancel in your App Store account settings. Any unused part of a free trial ends when you buy a subscription.",
+    "legalAndroid": "Payment is charged to your Google Play account when you confirm. Subscriptions renew automatically unless cancelled before the end of the current period. You can manage or cancel in the Google Play Store under Payments and subscriptions. Any unused part of a free trial ends when you buy a subscription.",
+    "errors": {
+      "offerings": "We couldn't load the plans. Check your connection and try again.",
+      "network": "No connection. Check your internet and try again.",
+      "not_allowed": "Purchases aren't allowed on this device or account.",
+      "store": "The store couldn't complete the purchase. You haven't been charged twice; please try again.",
+      "sync": "Your purchase went through, but we couldn't update your plan yet. It will update shortly; you can also tap Restore purchases."
+    },
+    "pro": {
+      "name": "Pro",
+      "features": [
+        "AI coach in any language",
+        "Training program from your InBody scan",
+        "Carb cycle and meal plans",
+        "Meal logging by photo or text"
+      ]
+    },
+    "elite": {
+      "name": "Elite",
+      "features": [
+        "Everything in Pro",
+        "Monthly review of your plan by a real coach (coming soon)",
+        "Higher daily AI limits"
+      ]
     }
   }
 }

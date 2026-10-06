@@ -27,6 +27,14 @@ export function createHandler(deps: Deps) {
       }
     }
 
+    // Remove the member's purchase history from RevenueCat too (best effort; this does not
+    // cancel a store subscription, which only the member can do in their store settings).
+    try {
+      await deps.revenuecat()?.deleteSubscriber(user.id);
+    } catch {
+      console.error('revenuecat_delete_failed');
+    }
+
     const { error } = await service.auth.admin.deleteUser(user.id);
     if (error) throw new HttpError('internal');
     return json({ deleted: true });

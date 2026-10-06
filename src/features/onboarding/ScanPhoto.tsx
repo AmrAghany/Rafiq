@@ -1,13 +1,14 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
 
-import { Button, Notice, Text } from '@/components/ui';
+import { Button, LinkButton, Notice, Text } from '@/components/ui';
 import { callFunction } from '@/features/ai/api';
 import { AiError } from '@/features/ai/errors';
 import { pickPhoto, PhotoError, uploadPhoto, type PhotoSource } from '@/features/ai/photos';
 import { useAuth } from '@/features/auth/AuthProvider';
-import { useTier } from '@/features/membership/useTier';
+import { useEntitlements } from '@/features/membership/useTier';
 import { useTheme } from '@/theme/ThemeProvider';
 
 import { useOnboarding } from './store';
@@ -27,15 +28,20 @@ export function ScanPhoto() {
   const { t } = useTranslation();
   const { spacing } = useTheme();
   const { session } = useAuth();
-  const { isPaid } = useTier();
+  const { can } = useEntitlements();
   const update = useOnboarding((s) => s.update);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: 'warn' | 'medium' | 'ok'; text: string } | null>(
     null,
   );
 
-  if (!isPaid) {
-    return <Notice tone="medium">{t('onboarding.scan.photoLocked')}</Notice>;
+  if (!can('scan_photo')) {
+    return (
+      <View style={{ gap: spacing.xs }}>
+        <Notice tone="medium">{t('onboarding.scan.photoLocked')}</Notice>
+        <LinkButton label={t('paywall.cta')} onPress={() => router.push('/paywall')} />
+      </View>
+    );
   }
 
   async function read(source: PhotoSource) {

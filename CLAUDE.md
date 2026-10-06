@@ -109,7 +109,54 @@ Work in this order. Finish, test and summarise each phase before starting the ne
 
 ## Status
 
-### Phase 4: AI features — done (2026-10-06), waiting for approval to start phase 5
+### Phase 5: Monetisation — done (2026-10-06), waiting for approval to start phase 6
+
+**Built**
+
+- **RevenueCat** (`react-native-purchases` 10.11, as named in the brief): members are identified by their Supabase user id. `PurchasesSync` logs them in and out of RevenueCat with the session, and resyncs whenever RevenueCat reports a change while the app is open.
+- **Server mirror**:
+  - `revenuecat-webhook` checks the shared secret in the Authorization header with a constant-time comparison. It treats every event only as a trigger: it reads the subscriber's current state from RevenueCat's v1 API, so events arriving out of order can't apply stale state.
+  - `sync-subscription` (called by the app after a purchase or restore) does the same for the caller, so the tier updates at once.
+  - Both write `subscriptions` with the service role. Members still can't write their own tier.
+  - Migration `20261006230000` adds `will_renew`, `management_url` and `synced_at`, plus a check constraint on `status`.
+  - `delete-account` also deletes the member's RevenueCat record (best effort). The delete text now tells members to cancel any store subscription first.
+- **Mapping** (`_shared/revenuecat.ts`, pure and tested): active entitlement `elite` → Elite, `pro` → Pro, otherwise Free. Billing grace periods keep access. Status is one of trial, active, cancelled (still active, won't renew), billing_issue, expired or none.
+- **One entitlements helper** (`src/features/membership/entitlements.ts`): `can(tier, feature)` covers `ai_coach`, `scan_photo`, `meal_plans`, `meal_ai` and `coach_review` (Elite only, a later phase). `useEntitlements()` reads the server mirror. The Edge Functions keep their own tier and quota checks.
+- **Gating** (as in the prototype):
+  - Coach tab and scan-photo reading are Pro.
+  - The Food tab (carb cycle and meal plans) is Pro, except for members whose plan is "balanced meals, no numbers", who keep the simple version for free.
+  - Meal AI is Pro.
+  - Every locked spot has a "Try Pro free" button that opens the paywall.
+- **Paywall** (modal):
+  - Pro and Elite with localized store prices and the trial length read from the store (iOS intro offer or the Google Play free phase).
+  - Purchase, restore, a pending-payment state, plain-language errors, the store-required auto-renewal text for each platform, and terms and privacy links.
+  - Disables the plan the member already has.
+- **Me → Membership**: current plan, trial end, renewal or end date, a billing-issue warning, change plan, and manage subscription (store page).
+- **Tests**:
+  - 638 Jest tests, including the entitlements map, plan/trial parsing for both stores, the purchases wrapper (configure/logIn, cancel/pending/errors, sync after purchase and restore), the paywall, the membership panel, and `PurchasesSync`.
+  - A **routing test that renders the real route files**: sign-up must land on onboarding, never the paywall. It fails if the bug below comes back.
+  - 17 Deno tests (26 steps), including the webhook against local Supabase with a fake RevenueCat API: secret check, test events, trial → Pro unlocking AI quotas, out-of-order events, expiry → free, 500 on a RevenueCat outage so RevenueCat retries, anonymous ids ignored, sync after purchase, and members still unable to set their own tier.
+  - 54 pgTAP tests and 5 integration tests.
+- **Bug found and fixed**: the preview showed new members landing on the paywall instead of onboarding right after sign-up. Expo Router opens the first allowed screen when a guard changes, and the paywall route had been declared first.
+- **Verified**:
+  - All checks pass and the iOS and Android bundles export.
+  - In a temporary web preview (not committed, with fake store plans), these all worked in English and Arabic: the locked Food tab, the paywall, Me before and after a trial, and Food unlocking once the mirror says Pro.
+
+**Not verified**: real purchases. These need App Store Connect / Play Console products, a RevenueCat project and a device build (`preview` profile). The RevenueCat v1 subscriber response shape is coded from RevenueCat's documented format; confirm with a sandbox purchase.
+
+**Decisions (defaults, since the open questions weren't answered)**
+
+- Product ids `rafiq_pro_monthly` and `rafiq_elite_monthly`; entitlements `pro` and `elite`; one `default` offering. Prices come from the stores (the prototype showed $12.99 and $49).
+- The 7-day free trial is set on Pro only, as a store introductory offer.
+- No forced paywall after onboarding. Members meet it at locked features.
+
+**Open questions for phase 6**
+
+1. Confirm the prices per country (Saudi Arabia, UAE, Egypt, …) and whether to offer annual plans.
+2. Terms of use and privacy policy URLs, which are required before store review.
+3. Should the paywall also appear once, right after onboarding, offering the trial?
+
+### Phase 4: AI features — done (2026-10-06)
 
 **Built**
 

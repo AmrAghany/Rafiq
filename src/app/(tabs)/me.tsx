@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 
 import { Button, Panel, Screen, Segmented, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
+import { MembershipPanel } from '@/features/membership/MembershipPanel';
 import { PrivacySettings } from '@/features/settings/PrivacySettings';
 import { ScheduleSettings } from '@/features/settings/ScheduleSettings';
 import type { Language } from '@/i18n/languages';
@@ -37,6 +38,8 @@ export default function MeScreen() {
       ) : null}
 
       <Button testID="view-plan" label={t('me.viewPlan')} onPress={() => router.push('/plan')} />
+
+      <MembershipPanel />
 
       <ScheduleSettings />
 

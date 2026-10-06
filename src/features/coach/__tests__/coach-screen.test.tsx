@@ -9,8 +9,14 @@ let mockHistory: { id: string; role: 'user' | 'assistant'; content: string }[] =
 const mockStream = jest.fn();
 
 jest.mock('@/features/membership/useTier', () => ({
-  useTier: () => ({ tier: mockPaid ? 'pro' : 'free', isPaid: mockPaid, isLoading: false }),
+  useEntitlements: () => ({
+    tier: mockPaid ? 'pro' : 'free',
+    isPaid: mockPaid,
+    can: () => mockPaid,
+    isLoading: false,
+  }),
 }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('@/features/profile/api', () => ({
   useProfile: () => ({ data: { display_name: 'Layla A' } }),
 }));
@@ -52,6 +58,7 @@ describe('Coach screen', () => {
     mockPaid = false;
     await renderCoach();
     expect(screen.getByText('Your AI coach is part of Pro')).toBeTruthy();
+    expect(screen.getByTestId('open-paywall')).toBeTruthy();
     expect(screen.queryByTestId('coach-input')).toBeNull();
   });
 

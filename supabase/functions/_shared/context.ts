@@ -2,6 +2,7 @@
 
 import { Anthropic, createClient, type SupabaseClient, type User } from './deps.ts';
 import { HttpError } from './http.ts';
+import { revenueCatClient, type RevenueCatClient } from './revenuecat.ts';
 
 export interface Deps {
   /** A client acting as the member (their JWT): every query goes through RLS. */
@@ -9,6 +10,8 @@ export interface Deps {
   /** Service-role client for tier checks, quotas and account deletion only. */
   serviceClient(): SupabaseClient;
   anthropic(): Anthropic;
+  /** Null when no RevenueCat secret key is configured (e.g. local development). */
+  revenuecat(): RevenueCatClient | null;
   now(): Date;
 }
 
@@ -31,6 +34,10 @@ export function realDeps(): Deps {
         baseURL: Deno.env.get('ANTHROPIC_BASE_URL') || undefined,
         maxRetries: 2,
       }),
+    revenuecat: () => {
+      const key = Deno.env.get('REVENUECAT_SECRET_API_KEY');
+      return key ? revenueCatClient(key, Deno.env.get('REVENUECAT_API_BASE') || undefined) : null;
+    },
     now: () => new Date(),
   };
 }

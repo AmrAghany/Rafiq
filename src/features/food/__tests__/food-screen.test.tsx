@@ -15,7 +15,12 @@ const mockPick = jest.fn();
 const mockUpload = jest.fn();
 
 jest.mock('@/features/membership/useTier', () => ({
-  useTier: () => ({ tier: mockPaid ? 'pro' : 'free', isPaid: mockPaid, isLoading: false }),
+  useEntitlements: () => ({
+    tier: mockPaid ? 'pro' : 'free',
+    isPaid: mockPaid,
+    can: () => mockPaid,
+    isLoading: false,
+  }),
 }));
 jest.mock('@/features/auth/AuthProvider', () => ({
   useAuth: () => ({ session: { user: { id: 'u1' } } }),
@@ -78,7 +83,7 @@ beforeEach(() => {
   mockRemove.mockReset();
   mockFlags = [];
   mockMeals = [];
-  mockPaid = false;
+  mockPaid = true;
   [mockCall, mockPick, mockUpload].forEach((m) => m.mockReset());
 });
 
@@ -147,14 +152,23 @@ describe('Food screen', () => {
     expect(mockAdd).toHaveBeenCalledWith(expect.objectContaining({ kcal: null, protein_g: null }));
   });
 
-  it('keeps AI estimates behind Pro', async () => {
+  it('locks carb cycling and meal plans for free members', async () => {
+    mockPaid = false;
     await render(<FoodScreen />);
+    expect(screen.getByText('Carb cycling and meal plans are part of Pro')).toBeTruthy();
+    expect(screen.getByTestId('open-paywall')).toBeTruthy();
+    expect(screen.queryByTestId('meal-add')).toBeNull();
+  });
+
+  it('keeps balanced-meal logging free for careful plans, without AI', async () => {
+    mockPaid = false;
+    mockFlags = ['eating_disorder'];
+    await render(<FoodScreen />);
+    expect(screen.getByTestId('meal-add')).toBeTruthy();
     expect(screen.queryByTestId('ai-estimate')).toBeNull();
-    expect(screen.getByText(/part of Pro/)).toBeTruthy();
   });
 
   it('pre-fills the form from a text estimate for the member to check', async () => {
-    mockPaid = true;
     const estimate = {
       name: 'Chicken shawarma wrap',
       kcal: 550,

@@ -43,8 +43,8 @@ echo "ANTHROPIC_API_KEY=sk-ant-..." > supabase/functions/.env
 npm run fn:serve
 ```
 
-AI features need a Pro or Elite tier. Until RevenueCat is connected (phase 5), give a test
-account Pro by hand: `update public.subscriptions set tier = 'pro' where user_id = '<id>';`
+AI features need a Pro or Elite tier (see Subscriptions below). For local testing without a
+store, give an account Pro by hand: `update public.subscriptions set tier = 'pro' where user_id = '<id>';`
 
 Function tests need [Deno](https://deno.com) 2 and the local stack:
 
@@ -52,6 +52,38 @@ Function tests need [Deno](https://deno.com) 2 and the local stack:
 npm run db:start
 eval "$(npx supabase status -o env)" && npm run fn:test
 ```
+
+## Subscriptions (RevenueCat)
+
+Purchases go through RevenueCat (App Store and Google Play in-app subscriptions). The app
+identifies each member to RevenueCat by their Supabase user id. The server mirrors RevenueCat
+into `public.subscriptions`, and that mirror is the only thing that unlocks features: the
+app's entitlements helper reads it, and every Edge Function checks it again.
+
+One-time setup:
+
+1. **Stores**: create two auto-renewing monthly subscriptions in one subscription group:
+   `rafiq_pro_monthly` and `rafiq_elite_monthly` (on Google Play, the same product ids with a
+   monthly base plan). Add a **7-day free trial** introductory offer to Pro. Trials are set in
+   the stores, and the paywall reads them from the store.
+2. **RevenueCat**: add both apps. Create entitlements `pro` (attach both products) and `elite`
+   (attach the Elite product). Make a `default` offering with both packages.
+3. **Keys**: put the public SDK keys in `EXPO_PUBLIC_REVENUECAT_IOS_KEY` /
+   `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` (EAS environment variables for builds). Set the server
+   secrets:
+   ```bash
+   npx supabase secrets set REVENUECAT_SECRET_API_KEY=sk_... REVENUECAT_WEBHOOK_AUTH_TOKEN=<random>
+   npx supabase functions deploy revenuecat-webhook --no-verify-jwt
+   npx supabase functions deploy sync-subscription
+   ```
+4. **Webhook**: in RevenueCat → Integrations → Webhooks, set the URL to
+   `https://<project>.supabase.co/functions/v1/revenuecat-webhook` and the Authorization
+   header to the same `<random>` value.
+5. Set `EXPO_PUBLIC_TERMS_URL` and `EXPO_PUBLIC_PRIVACY_URL` (the stores require both on the
+   paywall).
+
+Test purchases with App Store sandbox or Play license-test accounts on a `preview` build.
+Purchases don't work in Expo Go.
 
 ## Building the Android and iOS apps
 
@@ -110,7 +142,8 @@ src/
   features/settings/   Daily schedule, reminders, data export and account deletion
   features/ai/         Edge Function client (JSON + streaming), SSE parser, photo upload
   features/coach/      Chat history and streaming hooks
-  features/membership/ Tier (display only; the server enforces it)
+  features/membership/ Entitlements helper (tier → features), RevenueCat purchases, paywall
+                       helpers, membership panel
   i18n/                i18next setup, en/ar strings, RTL handling
   lib/                 Supabase client, secure storage, env, generated DB types
   stores/              Zustand stores for device-local UI state
@@ -119,7 +152,7 @@ supabase/
   migrations/          Database schema, RLS policies, storage buckets, complete_onboarding()
   seed.sql             Generated exercise library, workout and meal templates
   functions/           Edge Functions: coach-chat, meal-estimate, scan-read, export-data,
-                       delete-account; _shared/ (auth, tiers and quotas, prompts, schemas)
+                       delete-account, revenuecat-webhook, sync-subscription; _shared/
   tests/database/      pgTAP tests
 reference/             Original HTML prototypes (source of truth for behaviour and UX)
 ```

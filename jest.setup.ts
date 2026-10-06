@@ -14,3 +14,25 @@ jest.mock('expo-notifications', () => ({
   AndroidImportance: { DEFAULT: 3 },
   SchedulableTriggerInputTypes: { DATE: 'date', TIME_INTERVAL: 'timeInterval' },
 }));
+
+// RevenueCat's native module isn't available in Jest.
+jest.mock('react-native-purchases', () => ({
+  __esModule: true,
+  default: {
+    configure: jest.fn(),
+    logIn: jest.fn(async () => ({})),
+    logOut: jest.fn(async () => ({})),
+    getOfferings: jest.fn(async () => ({ current: null, all: {} })),
+    purchasePackage: jest.fn(async () => ({})),
+    restorePurchases: jest.fn(async () => ({})),
+    addCustomerInfoUpdateListener: jest.fn(),
+    removeCustomerInfoUpdateListener: jest.fn(),
+    showManageSubscriptions: jest.fn(async () => undefined),
+  },
+  PURCHASES_ERROR_CODE: {
+    PURCHASE_CANCELLED_ERROR: '1',
+    PURCHASE_NOT_ALLOWED_ERROR: '3',
+    NETWORK_ERROR: '10',
+    PAYMENT_PENDING_ERROR: '20',
+  },
+}));
