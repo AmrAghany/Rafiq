@@ -51,7 +51,17 @@
     "themeLight": "Light",
     "themeDark": "Dark",
     "signOut": "Sign out",
-    "viewPlan": "View my plan"
+    "viewPlan": "View my plan",
+    "schedule": "Daily schedule",
+    "scheduleHint": "24-hour time, like 06:30. Your timeline and reminders follow these times.",
+    "wake": "Wake-up time",
+    "workout": "Workout time",
+    "saveSchedule": "Save schedule",
+    "scheduleErrors": {
+      "wakeInvalid": "Enter a wake-up time like 06:30.",
+      "workoutInvalid": "Enter a workout time like 17:30.",
+      "workoutOutsideDay": "Pick a workout time between 1 and 15 hours after you wake up."
+    }
   },
   "language": {
     "en": "English",
@@ -69,7 +79,10 @@
     "kg": "kg",
     "cm": "cm",
     "kcal": "kcal",
-    "g": "g"
+    "g": "g",
+    "save": "Save",
+    "saved": "Saved",
+    "remove": "Remove"
   },
   "days": {
     "short": {
@@ -178,5 +191,208 @@
     "balancedMeals": "Eat regular, balanced meals with protein, vegetables and whole grains at each one.",
     "start": "Start my day",
     "notFound": "No plan yet."
+  },
+  "timeline": {
+    "restDay": "rest day",
+    "now": "now",
+    "openWorkout": "Open workout",
+    "seeMeal": "See meal",
+    "markDone": "Mark {{item}} done",
+    "checkin": {
+      "title": "Morning check-in",
+      "body": "Sleep and energy. Your workout adjusts to you."
+    },
+    "breakfast": {
+      "title": "Breakfast",
+      "body": "See today's meal."
+    },
+    "move": {
+      "title": "Move and drink",
+      "body": "Stand up, 3-minute stretch, 2 glasses of water."
+    },
+    "lunch": {
+      "title": "Lunch",
+      "body": "See today's meal."
+    },
+    "pre_workout": {
+      "title": "Pre-workout snack",
+      "body": "Eat 60–90 minutes before training."
+    },
+    "snack": {
+      "title": "Afternoon snack",
+      "body": "Protein-focused snack."
+    },
+    "workout": {
+      "title": "Workout: {{workout}}",
+      "body": "{{count}} exercises, about 60 minutes."
+    },
+    "active_recovery": {
+      "title": "Active recovery",
+      "body": "30-minute walk. Rest days build the muscle."
+    },
+    "dinner": {
+      "title": "Dinner",
+      "body": "Your recovery meal."
+    },
+    "wind_down": {
+      "title": "Wind down",
+      "body": "Screens off soon. Tomorrow: {{tomorrow}}."
+    },
+    "sleep": {
+      "title": "Sleep",
+      "body": "7–9 hours is part of your program."
+    },
+    "suhoor": {
+      "title": "Suhoor",
+      "body": "Slow carbs, protein and 2 glasses of water before the fast."
+    },
+    "walk": {
+      "title": "Easy walk",
+      "body": "10 minutes, low effort while fasting."
+    },
+    "iftar": {
+      "title": "Iftar",
+      "body": "Break the fast with 3 dates and water, then your main meal."
+    },
+    "stretch": {
+      "title": "Light stretching",
+      "body": "15 minutes of mobility."
+    },
+    "recovery_meal": {
+      "title": "Recovery meal",
+      "body": "Protein-focused meal."
+    }
+  },
+  "today": {
+    "greeting": {
+      "morning": "Good morning, {{name}}",
+      "afternoon": "Good afternoon, {{name}}",
+      "evening": "Good evening, {{name}}"
+    },
+    "preview": "{{day}} preview",
+    "backToToday": "Back to today",
+    "ramadanMode": "Ramadan mode",
+    "balancedDay": "Balanced eating day",
+    "restDay": "Rest day",
+    "kcal": "kcal",
+    "protein": "protein",
+    "carbs": "carbs",
+    "yourDay": "Your day",
+    "thatDay": "That day"
+  },
+  "checkin": {
+    "title": "Morning check-in",
+    "sleep": "How did you sleep?",
+    "sleep1": "Badly",
+    "sleep2": "OK",
+    "sleep3": "Great",
+    "energy": "Energy right now?",
+    "energy1": "Low",
+    "energy2": "Normal",
+    "energy3": "High",
+    "soreness": "Muscle soreness?",
+    "soreness1": "A lot",
+    "soreness2": "A little",
+    "soreness3": "None",
+    "submit": "See my readiness",
+    "readiness": "Readiness",
+    "light": "Light day: one less set per exercise and 10% lighter weights. Recovery is training too.",
+    "fresh": "You're fresh. Go for a strong session today.",
+    "normal": "Normal day. Train as planned.",
+    "redo": "Redo check-in"
+  },
+  "water": {
+    "title": "Water",
+    "count": "{{count}} / {{goal}} glasses",
+    "add": "Add a glass",
+    "remove": "Remove a glass"
+  },
+  "reminders": {
+    "title": "Daily reminders",
+    "body": "Get a nudge for your check-in, meals, movement breaks and workout.",
+    "enable": "Turn on reminders",
+    "denied": "Notifications are off for Rafiq. Turn them on in your phone's settings.",
+    "toggle": "Reminders",
+    "on": "On",
+    "off": "Off"
+  },
+  "train": {
+    "today": "Today",
+    "restTitle": "Rest day",
+    "restBody": "No gym today. A 30-minute walk and good sleep help your muscles grow.",
+    "nextWorkout": "Next workout: {{day}}, {{workout}}",
+    "lightNotice": "Low readiness this morning, so today is lighter: one less set and 10% less weight.",
+    "checkinNudge": "Do your morning check-in on the Today tab and the workout adjusts to how you feel.",
+    "progress": "{{done}} of {{total}} sets done",
+    "prescription": "{{sets}} × {{reps}} reps, {{kg}} kg",
+    "prescriptionBodyweight": "{{sets}} × {{reps}} reps, bodyweight",
+    "prescriptionTimed": "{{sets}} × {{seconds}} s",
+    "perHand": "per hand",
+    "smartStation": "Auto-tracked at {{station}}",
+    "lastTime": "Last time: {{summary}}",
+    "suggestion": "You hit every rep two sessions in a row. Ready for {{kg}} kg?",
+    "useSuggestion": "Use {{kg}} kg",
+    "set": "Set {{n}}",
+    "weightLabel": "Set {{n}} weight in kg",
+    "repsLabel": "Set {{n}} reps",
+    "secondsLabel": "Set {{n}} seconds",
+    "markSet": "Mark set {{n}} done",
+    "swap": "Machine busy? Swap for {{name}}",
+    "swapBack": "Back to {{name}}",
+    "completeTitle": "Workout complete",
+    "completeBody": "Great work. Have your recovery meal within 2 hours. Tomorrow is a {{dayType}}.",
+    "history": "Workout history",
+    "smartNote": "Barbell lifts at partner smart stations will log themselves in a later update.",
+    "rest": "Rest {{time}}",
+    "skip": "Skip",
+    "restOverTitle": "Rest over",
+    "restOverBody": "Time for your next set."
+  },
+  "history": {
+    "title": "Workout history",
+    "empty": "No workouts logged yet. Your sessions will show up here.",
+    "sets": "{{count}} sets done",
+    "completed": "Completed",
+    "unfinished": "Not finished",
+    "best": "{{exercise}}: {{kg}} kg × {{reps}}"
+  },
+  "food": {
+    "eatenToday": "Eaten today",
+    "kcalProgress": "{{eaten}} / {{target}} kcal",
+    "gramsProgress": "{{eaten}} / {{target}} g",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "dayNote": {
+      "high": "Heavy training day: carbs fuel your session and refill your muscles.",
+      "medium": "Moderate day: balanced carbs around your workout.",
+      "low": "Rest day: fewer carbs, more healthy fats, same protein."
+    },
+    "carefulNotice": "Your plan uses regular meals without calorie targets. Your coach and a doctor or dietitian can help you go further.",
+    "logTitle": "Log a meal",
+    "mealName": "What did you eat?",
+    "kcal": "Calories (kcal)",
+    "proteinG": "Protein (g)",
+    "carbsG": "Carbs (g)",
+    "fatG": "Fat (g)",
+    "add": "Add meal",
+    "aiLater": "Estimating meals from a photo or a description comes with the AI coach in the next update.",
+    "loggedMacros": "{{kcal}} kcal, {{protein}} g protein, {{carbs}} g carbs, {{fat}} g fat",
+    "mealPlan": "Meal plan",
+    "mealAbout": "About {{kcal}} kcal, {{protein}} g protein, {{carbs}} g carbs",
+    "logThis": "Log this meal",
+    "loggedThis": "Logged",
+    "nameRequired": "Add a name for the meal.",
+    "numberInvalid": "Enter a number, or leave it empty.",
+    "slots": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "pre_workout": "Pre-workout",
+      "snack": "Snack",
+      "dinner": "Dinner",
+      "suhoor": "Suhoor",
+      "iftar": "Iftar",
+      "recovery": "Recovery meal"
+    }
   }
 }

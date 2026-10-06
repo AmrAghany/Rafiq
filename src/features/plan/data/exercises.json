@@ -6,7 +6,8 @@
     "bodyweightRatio": 1.0,
     "isMain": true,
     "smartStation": "Rack 3",
-    "alternativeKey": "leg_press"
+    "alternativeKey": "leg_press",
+    "progressionKg": 5
   },
   {
     "key": "leg_press",
@@ -14,7 +15,8 @@
     "nameAr": "دفع الأرجل بالجهاز",
     "bodyweightRatio": 1.8,
     "isMain": true,
-    "alternativeKey": "back_squat"
+    "alternativeKey": "back_squat",
+    "progressionKg": 5
   },
   {
     "key": "deadlift",
@@ -23,7 +25,8 @@
     "bodyweightRatio": 1.2,
     "isMain": true,
     "smartStation": "Platform 1",
-    "alternativeKey": "romanian_deadlift"
+    "alternativeKey": "romanian_deadlift",
+    "progressionKg": 5
   },
   {
     "key": "romanian_deadlift",
@@ -31,7 +34,8 @@
     "nameAr": "الرفعة الرومانية",
     "bodyweightRatio": 0.85,
     "isMain": true,
-    "alternativeKey": "leg_curl"
+    "alternativeKey": "leg_curl",
+    "progressionKg": 5
   },
   {
     "key": "walking_lunge",

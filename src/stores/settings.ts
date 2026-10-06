@@ -10,7 +10,10 @@ export type { ThemePreference };
 interface SettingsState {
   language: Language;
   themePreference: ThemePreference;
+  /** The member turned on daily reminders (OS permission is checked separately). */
+  remindersEnabled: boolean;
   hasHydrated: boolean;
+  setRemindersEnabled: (enabled: boolean) => void;
   setLanguage: (language: Language) => void;
   setThemePreference: (preference: ThemePreference) => void;
 }
@@ -21,14 +24,20 @@ export const useSettings = create<SettingsState>()(
     (set) => ({
       language: getDeviceLanguage(),
       themePreference: 'system',
+      remindersEnabled: false,
       hasHydrated: false,
+      setRemindersEnabled: (remindersEnabled) => set({ remindersEnabled }),
       setLanguage: (language) => set({ language }),
       setThemePreference: (themePreference) => set({ themePreference }),
     }),
     {
       name: 'rafiq.settings',
       storage: createJSONStorage(() => secureStorage),
-      partialize: ({ language, themePreference }) => ({ language, themePreference }),
+      partialize: ({ language, themePreference, remindersEnabled }) => ({
+        language,
+        themePreference,
+        remindersEnabled,
+      }),
       onRehydrateStorage: () => () => useSettings.setState({ hasHydrated: true }),
     },
   ),

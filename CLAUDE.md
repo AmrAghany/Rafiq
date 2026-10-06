@@ -109,7 +109,66 @@ Work in this order. Finish, test and summarise each phase before starting the ne
 
 ## Status
 
-### Phase 2: Plan engine and onboarding — done (2026-10-06), waiting for approval to start phase 3
+### Phase 3: Daily experience — done (2026-10-06), waiting for approval to start phase 4
+
+**Built**
+
+- **Today tab**:
+  - Date, greeting and the week strip. Tap a day to preview its timeline.
+  - The day-type card with kcal, protein and carbs, hidden for careful flags.
+  - Morning check-in, which gives the 40–100 readiness score.
+  - Water tracker (10 glasses, or 8 in Ramadan).
+  - The full-day timeline, with "now" highlighted and tap-to-complete. Ticking the check-in or finishing a workout marks it done automatically.
+  - Timeline times follow the member's wake-up and workout times. With the defaults (06:30 and 17:30) the times are exactly the prototype's. A Ramadan variant exists; the toggle comes in phase 6.
+  - Logic lives in `src/features/today/timeline.ts`.
+- **Train tab**:
+  - Today's workout from the plan. A light day (readiness below 60) means one less set and 10% less weight.
+  - Each set row has an editable weight and reps (Arabic digits accepted) and a tick.
+  - A 90-second rest timer, which also sends a local notification if the app is in the background.
+  - "Machine busy?" swaps to the alternative exercise, saved on the session.
+  - Smart-station badges, a "last time" line, and a workout-complete card.
+  - A workout history screen.
+- **Progression** (`src/features/train/progression.ts`): weights start from the last working weight, or the plan's starting weight if there's no history. When every prescribed set hit its target reps at the current weight in two sessions in a row, the app suggests +2.5 kg (+5 kg for squat, deadlift, RDL and leg press, set in `exercises.json` → `progressionKg`) with a "Use X kg" button. It never suggests on a light day.
+- **Food tab**:
+  - Today's targets against what's been eaten, with progress bars.
+  - The meal plan for the day type, using local dishes from `meals.json` (English and Arabic). Each meal has its share of the day's macros and a one-tap "Log this meal".
+  - Manual meal logging (name plus optional kcal and macros) and remove.
+  - Careful flags hide every number and the number fields. AI estimation from text and photos is phase 4.
+- **Reminders** (`expo-notifications`, listed in the brief):
+  - The member opts in from a Today card or the Me tab.
+  - Reminders are scheduled locally for the next 6 days and capped at 60 (iOS allows 64). They resync whenever the plan, schedule, language or completed items change.
+  - Sleep is never reminded, and reminder text contains no health numbers.
+  - Tapping a reminder opens Today or Train.
+- **Me tab**: daily schedule (wake-up and workout times, checked to be 1–15 h apart) and a reminders switch.
+- **Database**: migration `20261006180000_daily_experience.sql`:
+  - One session per member, day and workout; `swaps` on sessions.
+  - `meal_templates.key`, `share` and `ramadan_slot`; `meal_logs.template_key`; `exercises.progression_kg`.
+  - The default workout time is now 17:30.
+  - `seed.sql` now also seeds meal templates.
+- **Tests**:
+  - 480 Jest tests, including the timeline, progression, meals and reminder schedule.
+  - Screen tests for Today, Train, Food and settings, including no calorie numbers for careful flags.
+  - 5 integration tests, 45 pgTAP tests.
+- **Verified**:
+  - `npm run check` passes, including on a cold Jest cache.
+  - The iOS and Android bundles export.
+  - Integration tests pass against a local Supabase: the embedded session and set reads, the upserts, and the schedule round trip.
+  - In a temporary web preview (not committed), the full day ran in English and Arabic: check-in, water, timeline, logging sets with an edited weight, the rest timer, and logging planned and manual meals. Everything was still there after a reload. The preview found one Arabic layout bug, now fixed: the Today stats ran together.
+
+**Not verified**: actual notification delivery and permission prompts. Those need a device build (EAS `preview`). Expo Go on Android doesn't support push; local reminders should still work there, but this is untested.
+
+**Decisions**
+
+- Timeline offsets from wake-up: breakfast +0:30, move +3:30, lunch +6:30, dinner +13:00, wind-down +15:30, sleep +16:30. The pre-workout snack is 90 min before the workout; if that would fall within an hour of waking, the afternoon snack is used instead.
+- The training session is created on the first logged set, so just opening the Train tab writes nothing.
+- Account deletion and data export move to phase 4, because they need a service-role Edge Function, which phase 4 introduces.
+
+**Open questions for phase 4**
+
+1. Daily AI limits per tier for coach chat, meal estimates and scan reads. Suggestion: Pro 50 / 20 / 5 per day, Elite 150 / 50 / 10.
+2. A Supabase project, plus an Anthropic API key to store as an Edge Function secret, for real testing of the AI features.
+
+### Phase 2: Plan engine and onboarding — done (2026-10-06)
 
 **Mobile only**: the web target has been removed (`react-native-web`, the `web` config and the web-only code paths). The app builds for iOS and Android only. `eas.json` has `preview` (an installable Android APK, plus an iOS build for test devices), `preview-simulator` and `production` (store builds) profiles. See README, "Building the Android and iOS apps".
 

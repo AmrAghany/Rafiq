@@ -1,6 +1,10 @@
-import { Tabs } from 'expo-router';
+import * as Notifications from 'expo-notifications';
+import { router, Tabs } from 'expo-router';
 import { SymbolView, type SymbolViewProps } from 'expo-symbols';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useReminderSync } from '@/features/reminders/useReminderSync';
 
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -17,6 +21,14 @@ const ICONS: Record<string, SymbolName> = {
 export default function TabsLayout() {
   const { t } = useTranslation();
   const { colors } = useTheme();
+  useReminderSync();
+
+  // Tapping a reminder opens the screen it is about.
+  const response = Notifications.useLastNotificationResponse();
+  useEffect(() => {
+    const url = response?.notification.request.content.data?.url;
+    if (typeof url === 'string' && (url === '/' || url === '/train')) router.navigate(url);
+  }, [response]);
 
   const tabs = [
     { name: 'index', title: t('tabs.today') },

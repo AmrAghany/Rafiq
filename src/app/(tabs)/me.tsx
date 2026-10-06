@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 
 import { Button, Panel, Screen, Segmented, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
+import { ScheduleSettings } from '@/features/settings/ScheduleSettings';
 import type { Language } from '@/i18n/languages';
 import { applyLayoutDirection, reloadApp } from '@/i18n/rtl';
 import { supabase } from '@/lib/supabase';
@@ -35,6 +36,8 @@ export default function MeScreen() {
       ) : null}
 
       <Button testID="view-plan" label={t('me.viewPlan')} onPress={() => router.push('/plan')} />
+
+      <ScheduleSettings />
 
       <Panel>
         <Text variant="heading" accessibilityRole="header">

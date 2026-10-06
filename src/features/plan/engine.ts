@@ -41,6 +41,8 @@ export interface Exercise {
   timedSeconds?: number;
   smartStation?: string;
   alternativeKey?: string;
+  /** Weight step when suggesting a heavier load (default 2.5 kg). */
+  progressionKg?: number;
 }
 
 export interface Workout {

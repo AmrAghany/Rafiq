@@ -68,12 +68,17 @@ and an iOS build for registered test devices. `production` makes store builds.
 ```
 src/
   app/                 Expo Router routes: (auth) sign-in, (onboarding) 3 steps + summary,
-                       (tabs) Today/Train/Food/Coach/Me, plan (my plan)
+                       (tabs) Today/Train/Food/Coach/Me, plan (my plan), history
   components/          Shared UI primitives (RTL-safe: start/end, never left/right)
   features/auth/       Session provider, Apple/Google/email sign-in
   features/plan/       Plan engine (pure, tested), exercise/workout/split JSON, plan summary UI
   features/onboarding/ Onboarding draft, validation and save payload
   features/profile/    TanStack Query hooks for profile, active plan and onboarding save
+  features/today/      Timeline (pure), check-in/water/timeline hooks and cards
+  features/train/      Progression (pure), session/set hooks, exercise card, rest timer
+  features/food/       Meal plan and intake maths (pure), meal log hooks
+  features/reminders/  Reminder schedule (pure) and expo-notifications scheduling
+  features/settings/   Daily schedule and reminders settings
   i18n/                i18next setup, en/ar strings, RTL handling
   lib/                 Supabase client, secure storage, env, generated DB types
   stores/              Zustand stores for device-local UI state

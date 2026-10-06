@@ -20,7 +20,9 @@ export function useProfile() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, display_name, onboarding_completed_at, health_flags')
+        .select(
+          'id, display_name, onboarding_completed_at, health_flags, wake_time, workout_time, ramadan_mode, locale',
+        )
         .eq('id', uid!)
         .single();
       if (error) throw error;

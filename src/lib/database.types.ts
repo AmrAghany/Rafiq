@@ -152,6 +152,7 @@ export type Database = {
           key: string;
           name_ar: string;
           name_en: string;
+          progression_kg: number;
           smart_station: string | null;
           timed_seconds: number | null;
           updated_at: string;
@@ -166,6 +167,7 @@ export type Database = {
           key: string;
           name_ar: string;
           name_en: string;
+          progression_kg?: number;
           smart_station?: string | null;
           timed_seconds?: number | null;
           updated_at?: string;
@@ -179,6 +181,7 @@ export type Database = {
           key?: string;
           name_ar?: string;
           name_en?: string;
+          progression_kg?: number;
           smart_station?: string | null;
           timed_seconds?: number | null;
           updated_at?: string;
@@ -208,6 +211,7 @@ export type Database = {
           protein_g: number | null;
           slot: string | null;
           source: Database['public']['Enums']['meal_source'];
+          template_key: string | null;
           user_id: string;
         };
         ComputedFields: never;
@@ -225,6 +229,7 @@ export type Database = {
           protein_g?: number | null;
           slot?: string | null;
           source: Database['public']['Enums']['meal_source'];
+          template_key?: string | null;
           user_id: string;
         };
         Update: {
@@ -241,9 +246,18 @@ export type Database = {
           protein_g?: number | null;
           slot?: string | null;
           source?: Database['public']['Enums']['meal_source'];
+          template_key?: string | null;
           user_id?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'meal_logs_template_key_fkey';
+            columns: ['template_key'];
+            isOneToOne: false;
+            referencedRelation: 'meal_templates';
+            referencedColumns: ['key'];
+          },
+        ];
       };
       meal_templates: {
         Row: {
@@ -256,10 +270,13 @@ export type Database = {
           id: string;
           is_ramadan: boolean;
           kcal: number | null;
+          key: string | null;
           name_ar: string;
           name_en: string;
           protein_g: number | null;
+          ramadan_slot: string | null;
           region: string | null;
+          share: number | null;
           slot: string;
           sort_order: number;
           updated_at: string;
@@ -275,10 +292,13 @@ export type Database = {
           id?: string;
           is_ramadan?: boolean;
           kcal?: number | null;
+          key?: string | null;
           name_ar: string;
           name_en: string;
           protein_g?: number | null;
+          ramadan_slot?: string | null;
           region?: string | null;
+          share?: number | null;
           slot: string;
           sort_order?: number;
           updated_at?: string;
@@ -293,10 +313,13 @@ export type Database = {
           id?: string;
           is_ramadan?: boolean;
           kcal?: number | null;
+          key?: string | null;
           name_ar?: string;
           name_en?: string;
           protein_g?: number | null;
+          ramadan_slot?: string | null;
           region?: string | null;
+          share?: number | null;
           slot?: string;
           sort_order?: number;
           updated_at?: string;
@@ -539,6 +562,7 @@ export type Database = {
           plan_id: string | null;
           readiness_score: number | null;
           started_at: string;
+          swaps: NonNullable<Json>;
           user_id: string;
           workout_key: string;
         };
@@ -552,6 +576,7 @@ export type Database = {
           plan_id?: string | null;
           readiness_score?: number | null;
           started_at?: string;
+          swaps?: NonNullable<Json>;
           user_id: string;
           workout_key: string;
         };
@@ -564,6 +589,7 @@ export type Database = {
           plan_id?: string | null;
           readiness_score?: number | null;
           started_at?: string;
+          swaps?: NonNullable<Json>;
           user_id?: string;
           workout_key?: string;
         };

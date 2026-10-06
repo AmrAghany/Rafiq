@@ -44,7 +44,13 @@
       ],
       "expo-secure-store",
       "expo-apple-authentication",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-notifications",
+        {
+          "color": "#1F5FBF"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

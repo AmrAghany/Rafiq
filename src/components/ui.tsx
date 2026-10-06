@@ -82,6 +82,8 @@ interface ButtonProps {
   disabled?: boolean;
   icon?: ReactNode;
   testID?: string;
+  /** Defaults to the visible label. */
+  accessibilityLabel?: string;
 }
 
 export function Button({
@@ -92,6 +94,7 @@ export function Button({
   disabled,
   icon,
   testID,
+  accessibilityLabel,
 }: ButtonProps) {
   const { colors, radius, spacing } = useTheme();
   const primary = variant === 'primary';
@@ -100,7 +103,7 @@ export function Button({
     <Pressable
       testID={testID}
       accessibilityRole="button"
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
       accessibilityState={{ disabled: !!inactive, busy: !!loading }}
       disabled={inactive}
       onPress={onPress}
@@ -325,6 +328,123 @@ export function LinkButton({ label, onPress }: { label: string; onPress: () => v
       <Text variant="label" color="accent">
         {label}
       </Text>
+    </Pressable>
+  );
+}
+
+export function ProgressBar({
+  value,
+  color = 'ok',
+  height = 10,
+  label,
+}: {
+  /** 0 to 1 */
+  value: number;
+  color?: keyof Palette;
+  height?: number;
+  label?: string;
+}) {
+  const { colors } = useTheme();
+  const pct = Math.round(Math.min(1, Math.max(0, value)) * 100);
+  return (
+    <View
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel={label}
+      accessibilityValue={{ min: 0, max: 100, now: pct }}
+      style={{
+        height,
+        backgroundColor: colors.soft,
+        borderRadius: height / 2,
+        overflow: 'hidden',
+      }}>
+      <View
+        style={{
+          width: `${pct}%`,
+          height: '100%',
+          backgroundColor: colors[color],
+          borderRadius: height / 2,
+        }}
+      />
+    </View>
+  );
+}
+
+export function Stat({ value, label }: { value: string | number; label: string }) {
+  return (
+    <View accessible accessibilityLabel={`${value} ${label}`} style={{ flex: 1 }}>
+      <Text variant="title" style={{ fontSize: 26, lineHeight: 30 }}>
+        {value}
+      </Text>
+      <Text variant="small" color="muted">
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+export function Pill({ label, dot }: { label: string; dot?: keyof Palette }) {
+  const { colors, radius, spacing } = useTheme();
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing.xs + 2,
+        alignSelf: 'flex-start',
+        backgroundColor: colors.soft,
+        borderRadius: radius.pill,
+        paddingVertical: spacing.xs,
+        paddingHorizontal: spacing.md - 2,
+      }}>
+      {dot ? (
+        <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: colors[dot] }} />
+      ) : null}
+      <Text variant="label" style={{ fontSize: 14 }}>
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+/** Round check button (prototype .chk). */
+export function CheckButton({
+  checked,
+  onPress,
+  label,
+  size = 32,
+  testID,
+}: {
+  checked: boolean;
+  onPress: () => void;
+  label: string;
+  size?: number;
+  testID?: string;
+}) {
+  const { colors } = useTheme();
+  return (
+    <Pressable
+      testID={testID}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked }}
+      accessibilityLabel={label}
+      hitSlop={8}
+      onPress={onPress}
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        borderWidth: 2,
+        borderColor: checked ? colors.ok : colors.line,
+        backgroundColor: checked ? colors.ok : 'transparent',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      {checked ? (
+        <Text variant="label" color="onAccent">
+          ✓
+        </Text>
+      ) : null}
     </Pressable>
   );
 }
