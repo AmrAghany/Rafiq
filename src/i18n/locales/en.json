@@ -1,0 +1,63 @@
+{
+  "app": {
+    "name": "Rafiq",
+    "tagline": "Your trainer, from wake-up to sleep",
+    "notMedicalAdvice": "Rafiq gives general fitness and nutrition guidance. It is not medical advice.",
+    "configMissing": "The app is not connected to a server yet. Add your Supabase URL and anon key to .env."
+  },
+  "tabs": {
+    "today": "Today",
+    "train": "Train",
+    "food": "Food",
+    "coach": "Coach",
+    "me": "Me"
+  },
+  "placeholder": {
+    "comingSoon": "Coming in a later build.",
+    "today": "Your day: check-in, meals, workout and reminders.",
+    "train": "Today's workout, sets, rest timer and history.",
+    "food": "Macro targets, meal plan and meal logging.",
+    "coach": "Chat with your AI coach in any language."
+  },
+  "auth": {
+    "welcomeTitle": "A personal trainer that stays with you all day.",
+    "signInTitle": "Sign in",
+    "signUpTitle": "Create your account",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "continueWithApple": "Continue with Apple",
+    "continueWithGoogle": "Continue with Google",
+    "or": "or",
+    "noAccount": "New to Rafiq? Create an account",
+    "haveAccount": "Already have an account? Sign in",
+    "checkEmail": "Check your email to confirm your account, then sign in.",
+    "errors": {
+      "emailInvalid": "Enter a valid email address.",
+      "passwordShort": "Use at least {{min}} characters.",
+      "generic": "Something went wrong. Please try again.",
+      "invalidCredentials": "The email or password is not right.",
+      "cancelled": "Sign-in was cancelled."
+    }
+  },
+  "me": {
+    "title": "Me",
+    "signedInAs": "Signed in as {{email}}",
+    "settings": "Settings",
+    "language": "Language",
+    "appearance": "Appearance",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "signOut": "Sign out"
+  },
+  "language": {
+    "en": "English",
+    "ar": "العربية",
+    "restartTitle": "Restart to switch layout",
+    "restartBody": "Rafiq needs to restart to switch between left-to-right and right-to-left layout.",
+    "restartNow": "Restart now",
+    "later": "Later"
+  }
+}

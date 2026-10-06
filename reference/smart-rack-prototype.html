@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smart Rack – prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9ECEF; --surface:#FFFFFF; --ink:#1A1F29; --muted:#5D6675; --line:#D5DAE0;
+  --red:#D7263D; --blue:#1F5FBF; --yellow:#E9A800; --green:#2E9E5B;
+  --cam:#1C222D; --camline:#3A4352;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12161D; --surface:#1C222C; --ink:#EEF1F5; --muted:#9AA4B3; --line:#2D3542;
+    --red:#F0475C; --blue:#5B93E8; --yellow:#F5C033; --green:#4CC27E; --cam:#0C0F14; --camline:#2A313D;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12161D; --surface:#1C222C; --ink:#EEF1F5; --muted:#9AA4B3; --line:#2D3542;
+  --red:#F0475C; --blue:#5B93E8; --yellow:#F5C033; --green:#4CC27E; --cam:#0C0F14; --camline:#2A313D;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.45}
+.app{max-width:440px;margin:0 auto;padding:12px 16px 32px}
+.num,h1,h2,.big{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
+h1{font-size:30px;line-height:1.05;margin:4px 0 6px;font-weight:700}
+h2{font-size:21px;margin:0 0 8px;font-weight:600}
+p{margin:0 0 10px}
+.muted{color:var(--muted)}
+.switch{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;margin-bottom:16px}
+.switch button{flex:1;border:0;background:none;color:var(--muted);font:600 15px "Barlow",sans-serif;padding:9px;border-radius:999px;cursor:pointer}
+.switch button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:15px;font:600 17px "Barlow",sans-serif;cursor:pointer;background:var(--blue);color:#fff;margin-top:10px}
+.btn.ghost{background:none;border:1.5px solid var(--line);color:var(--ink)}
+.btn.stop{background:var(--red)}
+button:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.rack{display:flex;align-items:center;gap:14px}
+.plate{width:56px;height:56px;border-radius:50%;flex:none;display:grid;place-items:center;border:7px solid var(--red);font:700 18px "Barlow Condensed",sans-serif}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.stat .big{font-size:40px;line-height:1;font-weight:700}
+.stat small{display:block;color:var(--muted);font-size:13px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stepper{display:flex;align-items:center;justify-content:space-between;margin:14px 0}
+.stepper button{width:56px;height:56px;border-radius:50%;border:1.5px solid var(--line);background:none;color:var(--ink);font-size:28px;cursor:pointer}
+.stepper .big{font-size:64px;font-weight:700;line-height:1}
+.goal{display:flex;gap:8px;flex-wrap:wrap}
+.goal button{border:1.5px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:8px 14px;font:500 15px "Barlow",sans-serif;cursor:pointer}
+.goal button[aria-pressed="true"]{border-color:var(--blue);background:var(--blue);color:#fff}
+.cam{background:var(--cam);border-radius:16px;padding:10px;color:#E6EAF0;position:relative;margin-bottom:12px}
+.cam svg{display:block;width:100%;height:auto}
+.rec{position:absolute;top:12px;left:14px;font-size:13px;display:flex;align-items:center;gap:6px;color:#C9D1DC}
+.rec i{width:9px;height:9px;border-radius:50%;background:var(--red);display:inline-block}
+.camstats{position:absolute;top:10px;right:14px;text-align:right}
+.camstats .big{font-size:44px;font-weight:700;line-height:1}
+.cue{border-radius:12px;padding:12px 14px;font-weight:600;margin-bottom:12px;border-left:6px solid var(--green);background:var(--surface);border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cue.warn{border-left-color:var(--red)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:110px;padding-top:6px}
+.bars div{flex:1;border-radius:6px 6px 2px 2px;position:relative;min-width:0}
+.bars span{position:absolute;top:-19px;left:0;right:0;text-align:center;font:600 13px "Barlow Condensed",sans-serif;color:var(--ink)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.hbar{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:15px}
+.hbar .track{flex:1;height:12px;background:var(--bg);border-radius:6px;overflow:hidden}
+.hbar .fill{height:100%;background:var(--blue);border-radius:6px}
+.list{list-style:none;padding:0;margin:0}
+.list li{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.list li:first-child{border-top:0}
+.chip{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:none;color:var(--ink);cursor:pointer}
+.note{font-size:13px;color:var(--muted);text-align:center;margin-top:14px}
+.hidden{display:none}
+.exbtn{all:unset;box-sizing:border-box;display:flex;justify-content:space-between;align-items:center;width:100%;cursor:pointer;gap:10px}
+.exbtn:focus-visible{outline:3px solid var(--yellow);outline-offset:2px;border-radius:6px}
+.exmax{font-size:22px;white-space:nowrap}.exmax small{font-size:13px;color:var(--muted);font-family:"Barlow",sans-serif}
+.list li:has(.exbtn){padding:12px 0}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="switch" role="group" aria-label="View">
+    <button id="tabMember" aria-pressed="true">Member app</button>
+    <button id="tabOwner" aria-pressed="false">Gym owner</button>
+  </div>
+  <main id="view"></main>
+  <p class="note">Prototype with simulated data. In the real product, a fixed camera at each station does the tracking.</p>
+</div>
+
+<script>
+const EX = {
+  squat:{name:'Back squat',station:'Rack 3',w:100,v0:.62,slope:.014,mvt:.30,prev:118,jump:5,check:'Depth: below parallel ✓',checkLabel:'Reps below parallel',props:'rack',
+    t0:{ank:[120,218],knee:[120,170],hip:[120,124],sh:[120,72],el:[106,90],ha:[114,70],hd:[122,50]},
+    t1:{ank:[120,218],knee:[146,178],hip:[90,170],sh:[114,120],el:[100,136],ha:[110,118],hd:[118,98]}},
+  front:{name:'Front squat',station:'Rack 1',w:80,v0:.60,slope:.017,mvt:.32,prev:95,jump:5,check:'Depth: below parallel ✓',checkLabel:'Reps below parallel',props:'rack',
+    t0:{ank:[120,218],knee:[120,170],hip:[120,124],sh:[120,72],el:[140,76],ha:[128,70],hd:[122,50]},
+    t1:{ank:[120,218],knee:[146,178],hip:[94,170],sh:[118,118],el:[138,122],ha:[126,116],hd:[120,96]}},
+  flat:{name:'Flat bench press',station:'Bench 1',w:80,v0:.55,slope:.016,mvt:.17,prev:100,jump:2.5,check:'Bar touched chest ✓',checkLabel:'Reps to the chest',props:'flat',
+    t0:{ank:[190,218],knee:[184,160],hip:[150,162],sh:[82,162],el:[84,130],ha:[86,98],hd:[62,158]},
+    t1:{ank:[190,218],knee:[184,160],hip:[150,162],sh:[82,162],el:[58,160],ha:[88,142],hd:[62,158]}},
+  incline:{name:'Incline bench press',station:'Bench 2',w:65,v0:.52,slope:.019,mvt:.17,prev:82,jump:2.5,check:'Bar touched chest ✓',checkLabel:'Reps to the chest',props:'incline',
+    t0:{ank:[186,218],knee:[176,166],hip:[140,170],sh:[95,120],el:[102,90],ha:[100,58],hd:[84,102]},
+    t1:{ank:[186,218],knee:[176,166],hip:[140,170],sh:[95,120],el:[72,138],ha:[104,116],hd:[84,102]}},
+  dead:{name:'Deadlift',station:'Platform 1',w:140,v0:.50,slope:.010,mvt:.15,prev:172,jump:5,check:'Full lockout ✓',checkLabel:'Reps locked out',props:'platform',
+    t0:{ank:[120,218],knee:[120,170],hip:[120,124],sh:[122,72],el:[122,100],ha:[124,128],hd:[124,50]},
+    t1:{ank:[120,218],knee:[138,182],hip:[88,152],sh:[132,116],el:[134,150],ha:[134,200],hd:[150,104]}},
+  ohp:{name:'Overhead press',station:'Rack 2',w:50,v0:.58,slope:.026,mvt:.20,prev:63,jump:2.5,check:'Full lockout overhead ✓',checkLabel:'Reps locked out',props:'rack',
+    t0:{ank:[120,218],knee:[120,170],hip:[120,124],sh:[120,72],el:[122,48],ha:[122,24],hd:[112,52]},
+    t1:{ank:[120,218],knee:[120,170],hip:[120,124],sh:[120,72],el:[108,92],ha:[128,70],hd:[116,50]}},
+  row:{name:'Barbell row',station:'Platform 2',w:70,v0:.70,slope:.012,mvt:.40,prev:92,jump:5,check:'Bar reached torso ✓',checkLabel:'Full-range reps',props:'platform',
+    t0:{ank:[120,218],knee:[132,178],hip:[100,142],sh:[158,112],el:[140,128],ha:[150,140],hd:[176,100]},
+    t1:{ank:[120,218],knee:[132,178],hip:[100,142],sh:[158,112],el:[160,140],ha:[160,170],hd:[176,100]}}
+};
+const GROUPS=[['Legs',['squat','front','dead']],['Chest',['flat','incline']],['Shoulders and back',['ohp','row']]];
+const S = {screen:'home', ex:'squat', weight:100, goal:'Strength', set:1, history:[], reps:[], anim:null};
+const ZONES = {Strength:[0.45,0.60], Power:[0.75,1.0], Muscle:[0.50,0.75]};
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id);
+const view = $('view');
+const E = () => EX[S.ex];
+
+function zoneColor(v){ if(v>=0.75) return 'var(--green)'; if(v>=0.55) return 'var(--blue)'; if(v>=0.45) return 'var(--yellow)'; return 'var(--red)'; }
+function e1rm(key,w,v){ const e=EX[key]; return Math.round(w + (v-e.mvt)/e.slope); }
+function setsDone(key){ return S.history.filter(h=>h.ex===key).length; }
+function simulateSet(){
+  const e=E(), first=+Math.max(0.2, e.v0 - (S.weight-e.w)*e.slope).toFixed(2);
+  const out=[]; let v=first;
+  for(let i=0;i<10;i++){ out.push(+v.toFixed(2)); if((first-v)/first>=0.2) break; v*= (0.955 - i*0.004); }
+  return out;
+}
+function render(){
+  cancelAnimationFrame(S.anim);
+  const f = {home,tap,setup,live,summary,done}[S.screen];
+  view.innerHTML = f(); bind[S.screen] && bind[S.screen]();
+  window.scrollTo(0,0);
+}
+
+function home(){ return `
+  <h1>${S.history.length?'What next, Sam?':'Good evening, Sam'}</h1>
+  <p class="muted">${S.history.length?`${S.history.length} set${S.history.length>1?'s':''} done so far. Pick another exercise or finish.`:'Choose what you want to train. The app finds a free smart station.'}</p>
+  ${GROUPS.map(([g,keys])=>`
+    <div class="panel"><h2>${g}</h2><ul class="list">
+      ${keys.map(k=>`<li><button class="exbtn" data-ex="${k}">
+        <span><b>${EX[k].name}</b><br><small class="muted">${EX[k].station} is free${setsDone(k)?`, ${setsDone(k)} set${setsDone(k)>1?'s':''} done today`:''}</small></span>
+        <span class="num exmax">${EX[k].prev}<small> kg max</small></span></button></li>`).join('')}
+    </ul></div>`).join('')}
+  ${S.history.length?'<button class="btn ghost" id="end">Finish and see my session</button>':''}`; }
+
+function tap(){ const e=E(); return `
+  <div class="panel" style="text-align:center;padding:32px 16px">
+    <div class="plate" style="margin:0 auto 14px;width:84px;height:84px;font-size:20px">${e.station.split(' ')[1]}</div>
+    <h1>Connected to ${e.station}</h1>
+    <p class="muted">${e.name}. The camera is on for you only. It saves numbers, never video, and switches off when you leave.</p>
+    <button class="btn" id="go">Set up my lift</button>
+    <button class="btn ghost" id="back">Choose a different exercise</button>
+  </div>`; }
+
+function setup(){ const e=E(); return `
+  <p class="muted" style="margin:0">${e.station}, ${e.name.toLowerCase()}, set ${setsDone(S.ex)+1}</p>
+  <h1>Load the bar</h1>
+  <div class="panel">
+    <div class="stepper">
+      <button id="minus" aria-label="Remove 2.5 kg">−</button>
+      <div style="text-align:center"><div class="big">${S.weight}</div><div class="muted">kg on the bar</div></div>
+      <button id="plus" aria-label="Add 2.5 kg">+</button>
+    </div>
+    <h2>Today's goal</h2>
+    <div class="goal">${Object.keys(ZONES).map(g=>`<button data-g="${g}" aria-pressed="${g===S.goal}">${g}</button>`).join('')}</div>
+    <p class="muted" style="margin-top:10px;font-size:14px">The app stops your set when bar speed drops 20%, so you build strength without grinding into exhaustion.</p>
+    <button class="btn" id="go">Start set</button>
+  </div>`; }
+
+function propsSVG(p){
+  const c='var(--camline)';
+  if(p==='rack') return `<rect x="196" y="30" width="6" height="192" fill="${c}"/><rect x="186" y="80" width="16" height="5" fill="${c}"/>`;
+  if(p==='flat') return `<rect x="56" y="172" width="134" height="9" rx="3" fill="${c}"/><rect x="74" y="181" width="6" height="41" fill="${c}"/><rect x="166" y="181" width="6" height="41" fill="${c}"/><rect x="40" y="70" width="5" height="152" fill="${c}"/>`;
+  if(p==='incline') return `<line x1="146" y1="182" x2="84" y2="112" stroke="${c}" stroke-width="10" stroke-linecap="round"/><line x1="140" y1="182" x2="176" y2="182" stroke="${c}" stroke-width="9" stroke-linecap="round"/><rect x="120" y="186" width="6" height="36" fill="${c}"/><rect x="60" y="40" width="5" height="182" fill="${c}"/>`;
+  return `<rect x="30" y="218" width="200" height="6" fill="${c}"/>`;
+}
+function live(){ return `
+  <div class="cam">
+    <div class="rec"><i></i>${E().station}, tracking</div>
+    <div class="camstats"><div class="big num" id="vel">0.00</div><div style="font-size:13px;color:#C9D1DC">m/s bar speed</div></div>
+    <svg viewBox="0 0 260 240" aria-label="${E().name} being tracked">
+      <line x1="10" y1="222" x2="250" y2="222" stroke="var(--camline)" stroke-width="2"/>
+      ${propsSVG(E().props)}
+      <path id="trail" fill="none" stroke="#F5C033" stroke-width="2" stroke-dasharray="3 4"/>
+      <g stroke="#E6EAF0" stroke-linecap="round" fill="none">
+        <line id="shin" stroke-width="7"/><line id="thigh" stroke-width="7"/><line id="torso" stroke-width="8"/>
+        <line id="uarm" stroke-width="5"/><line id="farm" stroke-width="5"/>
+      </g>
+      <circle id="head" r="11" fill="#E6EAF0"/>
+      <g id="plate"><circle r="16" fill="#D7263D"/><circle r="4" fill="#C9D1DC"/></g>
+    </svg>
+    <div class="row" style="padding:0 6px 4px;font-size:15px"><span>Rep <b class="num" id="rep" style="font-size:22px">0</b></span><span id="check">Range: waiting</span></div>
+  </div>
+  <div class="cue" id="cue">Get set. Tracking starts on your first rep.</div>
+  <div class="panel"><h2>Speed per rep</h2><div class="bars" id="bars"></div>
+    <div class="legend"><span><i style="background:var(--green)"></i>Fast</span><span><i style="background:var(--blue)"></i>Strong</span><span><i style="background:var(--yellow)"></i>Slowing</span><span><i style="background:var(--red)"></i>Fatigued</span></div>
+  </div>`; }
+
+function suggestion(){
+  const v=S.reps[0], [lo,hi]=ZONES[S.goal], j=E().jump;
+  if(v>hi) return {w:S.weight+j, text:`Your first rep was faster than your ${S.goal.toLowerCase()} zone. You're strong today, so add ${j} kg.`};
+  if(v<lo) return {w:S.weight-j, text:`The bar moved slower than your ${S.goal.toLowerCase()} zone. Take off ${j} kg to keep quality high.`};
+  return {w:S.weight, text:`Right in your ${S.goal.toLowerCase()} zone. Stay at ${S.weight} kg for the next set.`};
+}
+function summary(){
+  const r=S.reps, drop=Math.round((r[0]-r[r.length-1])/r[0]*100), sug=suggestion();
+  return `
+  <p class="muted" style="margin:0">${E().name}, set ${setsDone(S.ex)+1} complete</p>
+  <h1>${r.length} reps at ${S.weight} kg</h1>
+  <div class="grid2">
+    <div class="panel stat"><div class="big num">${r[0].toFixed(2)}</div><small>Best rep, m/s</small></div>
+    <div class="panel stat"><div class="big num">${drop}%</div><small>Speed drop, stopped at 20%</small></div>
+    <div class="panel stat"><div class="big num">${e1rm(S.ex,S.weight,r[0])}</div><small>Today's estimated max, kg</small></div>
+    <div class="panel stat"><div class="big num">${r.length}/${r.length}</div><small>${E().checkLabel}</small></div>
+  </div>
+  <div class="cue">${sug.text}</div>
+  <button class="btn" id="next">Next set at ${sug.w} kg</button>
+  <button class="btn ghost" id="switch">Switch exercise</button>
+  <button class="btn ghost" id="end">Finish and tap out</button>`;
+}
+function done(){
+  const keys=[...new Set(S.history.map(h=>h.ex))];
+  const total=S.history.reduce((a,h)=>a+h.v.length*h.w,0);
+  const rows=keys.map(k=>{const best=Math.max(...S.history.filter(h=>h.ex===k).map(h=>e1rm(k,h.w,h.v[0])));return {k,best,diff:best-EX[k].prev};});
+  const up=rows.filter(r=>r.diff>0);
+  return `
+  <h1>Session saved</h1>
+  <p class="muted">${S.history.length} sets across ${keys.length} exercise${keys.length>1?'s':''}. Cameras are off.</p>
+  <div class="panel stat"><div class="big num">${total.toLocaleString()}</div><small>Total kg lifted</small></div>
+  <div class="panel"><h2>Estimated max by exercise</h2><ul class="list">
+    ${rows.map(r=>`<li><span>${EX[r.k].name}<br><small class="muted">Was ${EX[r.k].prev} kg</small></span><span class="num" style="font-size:20px;color:${r.diff>0?'var(--green)':'var(--ink)'}">${r.best} kg${r.diff>0?` (+${r.diff})`:''}</span></li>`).join('')}
+  </ul></div>
+  <div class="panel"><h2>All sets</h2><ul class="list">
+    ${S.history.map(h=>`<li><span>${EX[h.ex].name}: ${h.v.length} × ${h.w} kg</span><span class="num" style="font-size:18px">${h.v[0].toFixed(2)} m/s</span></li>`).join('')}
+  </ul></div>
+  <div class="cue">${up.length?`New strength on ${up.map(r=>EX[r.k].name.toLowerCase()).join(' and ')}. Keep the same plan next session.`:'Strength is steady. Sleep and recovery will show up in your bar speed next time.'}</div>
+  <button class="btn" id="restart">Start over</button>`;
+}
+
+function pushSet(){ S.history.push({ex:S.ex,w:S.weight,v:S.reps}); }
+const bind = {
+  home(){
+    view.querySelectorAll('.exbtn').forEach(b=>b.onclick=()=>{S.ex=b.dataset.ex;const last=[...S.history].reverse().find(h=>h.ex===S.ex);S.weight=last?last.w:E().w;S.screen='tap';render();});
+    $('end')&&($('end').onclick=()=>{S.screen='done';render();});
+  },
+  tap(){ $('go').onclick=()=>{S.screen='setup';render();}; $('back').onclick=()=>{S.screen='home';render();}; },
+  setup(){
+    $('minus').onclick=()=>{S.weight=Math.max(20,S.weight-2.5);render();};
+    $('plus').onclick=()=>{S.weight=Math.min(300,S.weight+2.5);render();};
+    view.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{S.goal=b.dataset.g;render();});
+    $('go').onclick=()=>{S.reps=simulateSet();S.screen='live';render();};
+  },
+  live(){ runSet(); },
+  summary(){
+    $('next').onclick=()=>{pushSet();S.weight=suggestion().w;S.screen='setup';render();};
+    $('switch').onclick=()=>{pushSet();S.screen='home';render();};
+    $('end').onclick=()=>{pushSet();S.screen='done';render();};
+  },
+  done(){ $('restart').onclick=()=>{Object.assign(S,{screen:'home',ex:'squat',weight:100,history:[],reps:[]});render();}; }
+};
+
+function pose(t){
+  const a=E().t0,b=E().t1,p={};
+  for(const k in a) p[k]=[a[k][0]+(b[k][0]-a[k][0])*t, a[k][1]+(b[k][1]-a[k][1])*t];
+  return p;
+}
+function draw(t){
+  const p=pose(t), set=(id,a,b)=>{const e=$(id);e.setAttribute('x1',a[0]);e.setAttribute('y1',a[1]);e.setAttribute('x2',b[0]);e.setAttribute('y2',b[1]);};
+  set('shin',p.ank,p.knee); set('thigh',p.knee,p.hip); set('torso',p.hip,p.sh); set('uarm',p.sh,p.el); set('farm',p.el,p.ha);
+  $('head').setAttribute('cx',p.hd[0]); $('head').setAttribute('cy',p.hd[1]);
+  $('plate').setAttribute('transform',`translate(${p.ha[0]},${p.ha[1]})`);
+  const s=E().t0.ha; $('trail').setAttribute('d',`M${s[0]} ${s[1]} L${p.ha[0]} ${p.ha[1]}`);
+}
+function addBar(v,i){
+  const d=document.createElement('div');
+  d.style.height=Math.round(v/0.8*100)+'%'; d.style.background=zoneColor(v);
+  d.innerHTML=`<span>${v.toFixed(2)}</span>`; d.setAttribute('aria-label',`Rep ${i+1}: ${v} metres per second`);
+  $('bars').appendChild(d);
+}
+function runSet(){
+  const reps=S.reps; let i=0, phase='down', start=null; draw(0);
+  const cue=$('cue');
+  const step=ts=>{
+    if(start===null) start=ts;
+    const v=reps[i], downMs=reduce?150:900, upMs=reduce?150:(380/v);
+    const el=ts-start;
+    if(phase==='down'){ draw(Math.min(1,el/downMs)); if(el>=downMs){phase='up';start=ts;$('check').textContent=E().check;} }
+    else{
+      draw(1-Math.min(1,el/upMs)); $('vel').textContent=v.toFixed(2);
+      if(el>=upMs){
+        $('rep').textContent=i+1; addBar(v,i);
+        const drop=(reps[0]-v)/reps[0];
+        if(i===0) cue.textContent = v>ZONES[S.goal][1] ? 'Bar is flying. Strong day.' : 'Good first rep. Keep that speed.';
+        else if(drop>=0.2){ cue.className='cue warn'; cue.textContent='Speed dropped 20%. Rack the bar, set done.'; }
+        else if(drop>=0.12){ cue.className='cue warn'; cue.textContent='Slowing down. One or two more.'; }
+        else cue.textContent='Speed holding. Keep going.';
+        i++; phase='down'; start=ts;
+        if(i>=reps.length){ setTimeout(()=>{S.screen='summary';render();}, reduce?300:1600); return; }
+      }
+    }
+    S.anim=requestAnimationFrame(step);
+  };
+  setTimeout(()=>{S.anim=requestAnimationFrame(step);}, reduce?100:900);
+}
+
+function owner(){
+  cancelAnimationFrame(S.anim);
+  const racks=[['Rack 1, squat',62],['Rack 2, press',44],['Rack 3, squat',81],['Bench 1, flat',73],['Bench 2, incline',58],['Platform 1',49],['Platform 2',35]];
+  const pop=[['Back squat',118],['Flat bench press',104],['Deadlift',71],['Incline bench press',63],['Overhead press',34],['Barbell row',22]];
+  view.innerHTML=`
+  <h1>Iron House Gym</h1>
+  <p class="muted">Smart training overview, this week</p>
+  <div class="grid2">
+    <div class="panel stat"><div class="big num">412</div><small>Smart sets tracked</small></div>
+    <div class="panel stat"><div class="big num">64</div><small>Members using smart stations</small></div>
+    <div class="panel stat"><div class="big num">32</div><small>Paying for Smart Training (+9 this month)</small></div>
+    <div class="panel stat"><div class="big num">$480</div><small>Extra monthly revenue</small></div>
+  </div>
+  <div class="panel"><h2>Station use, % of open hours</h2>
+    ${racks.map(([n,p])=>`<div class="hbar"><span style="width:118px">${n}</span><div class="track"><div class="fill" style="width:${p}%"></div></div><span class="num" style="width:34px;text-align:right">${p}%</span></div>`).join('')}
+  </div>
+  <div class="panel"><h2>Most tracked exercises</h2><ul class="list">
+    ${pop.map(([n,c])=>`<li><span>${n}</span><span class="num" style="font-size:18px">${c} sets</span></li>`).join('')}
+  </ul></div>
+  <div class="panel"><h2>Members getting stronger</h2>
+    <p class="muted" style="font-size:14px">Smart station users raised their estimated max by 6% on average in 8 weeks.</p>
+    <ul class="list">
+      <li><span>Sam R.<br><small class="muted">Back squat</small></span><span class="num" style="font-size:18px;color:var(--green)">+11 kg</span></li>
+      <li><span>Lina K.<br><small class="muted">Incline bench press</small></span><span class="num" style="font-size:18px;color:var(--green)">+6 kg</span></li>
+      <li><span>Omar H.<br><small class="muted">Deadlift</small></span><span class="num" style="font-size:18px;color:var(--green)">+15 kg</span></li>
+    </ul>
+  </div>
+  <div class="panel"><h2>Haven't trained in 10+ days</h2>
+    <ul class="list">
+      <li><span>Nadia F.<br><small class="muted">Last session 14 days ago</small></span><button class="chip">Send nudge</button></li>
+      <li><span>Karim S.<br><small class="muted">Last session 11 days ago</small></span><button class="chip">Send nudge</button></li>
+    </ul>
+  </div>`;
+  view.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{c.textContent='Sent';c.disabled=true;});
+}
+
+$('tabMember').onclick=()=>{$('tabMember').setAttribute('aria-pressed','true');$('tabOwner').setAttribute('aria-pressed','false');render();};
+$('tabOwner').onclick=()=>{$('tabOwner').setAttribute('aria-pressed','true');$('tabMember').setAttribute('aria-pressed','false');owner();};
+render();
+</script>
+</body>
+</html>
