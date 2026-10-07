@@ -171,6 +171,8 @@ Scope (your answers): Apple Health / Health Connect, Elite coach review with a *
 - Coaches are added with SQL by an admin (README). Any coach can claim any open request; there are no assignments yet.
 - Station sets go into today's planned session. The member can still edit them on Train.
 
+**Testing builds (2026-10-07)**: the app is linked to the Expo project `gazar` (owner `amrelgazar`, project id in `app.json`). `eas.json` sets the hosted Supabase URL and anon key for `preview` and `production`. For now `production` also builds an installable **APK** so "Build from GitHub" gives a phone-installable app; **switch `production.android.buildType` back to `app-bundle` before the first Play Store upload.**
+
 **Open questions for what's next**
 
 1. The gym owner dashboard: should it live in the same web console (a new "owner" staff role) with gym branding and engagement charts?
