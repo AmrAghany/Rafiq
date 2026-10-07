@@ -202,27 +202,28 @@ and an iOS build for registered test devices. `production` makes store builds.
 
 ## Scripts
 
-| Script                     | What it does                                                   |
-| -------------------------- | -------------------------------------------------------------- |
-| `npm start`                | Expo dev server                                                |
-| `npm test`                 | Jest unit and component tests                                  |
-| `npm run test:integration` | Onboarding against a local Supabase (`src/__integration__`)    |
-| `npm run typecheck`        | TypeScript (strict)                                            |
-| `npm run lint`             | ESLint                                                         |
-| `npm run format`           | Prettier (write); `format:check` to verify                     |
-| `npm run check`            | typecheck + lint + format check + tests                        |
-| `npm run db:start`         | Start local Supabase (Docker)                                  |
-| `npm run db:reset`         | Recreate the local database from migrations                    |
-| `npm run db:test`          | pgTAP tests for RLS and triggers (`supabase/tests/database`)   |
-| `npm run db:types`         | Regenerate `src/lib/database.types.ts` from the local database |
-| `npm run db:seed:generate` | Regenerate `supabase/seed.sql` from the plan JSON data         |
-| `npm run fn:check`         | Type-check the Edge Functions (Deno)                           |
-| `npm run fn:test`          | Edge Function tests (Deno; needs the local stack env)          |
-| `npm run fn:serve`         | Serve Edge Functions locally                                   |
-| `npm run coach:dev`        | Coach console dev server (`web/coach`)                         |
-| `npm run coach:build`      | Build the coach console as static files                        |
-| `npm run coach:check`      | Coach console typecheck and tests                              |
-| `npm run station:sim`      | Smart-station simulator (signs requests like a partner)        |
+| Script                             | What it does                                                                         |
+| ---------------------------------- | ------------------------------------------------------------------------------------ |
+| `npm start`                        | Expo dev server                                                                      |
+| `npm test`                         | Jest unit and component tests                                                        |
+| `npm run test:integration`         | Onboarding against a local Supabase (`src/__integration__`)                          |
+| `npm run typecheck`                | TypeScript (strict)                                                                  |
+| `npm run lint`                     | ESLint                                                                               |
+| `npm run format`                   | Prettier (write); `format:check` to verify                                           |
+| `npm run check`                    | typecheck + lint + format check + tests                                              |
+| `npm run db:start`                 | Start local Supabase (Docker)                                                        |
+| `npm run db:reset`                 | Recreate the local database from migrations                                          |
+| `npm run db:test`                  | pgTAP tests for RLS and triggers (`supabase/tests/database`)                         |
+| `npm run db:types`                 | Regenerate `src/lib/database.types.ts` from the local database                       |
+| `npm run db:seed:generate`         | Regenerate `supabase/seed.sql` from the plan JSON data                               |
+| `npm run fn:check`                 | Type-check the Edge Functions (Deno)                                                 |
+| `npm run fn:test`                  | Edge Function tests (Deno; needs the local stack env)                                |
+| `npm run fn:serve`                 | Serve Edge Functions locally                                                         |
+| `npm run coach:dev`                | Coach console dev server (`web/coach`)                                               |
+| `npm run coach:build`              | Build the coach console as static files                                              |
+| `npm run coach:check`              | Coach console typecheck and tests                                                    |
+| `npm run station:sim`              | Smart-station simulator (signs requests like a partner)                              |
+| `node scripts/create-test-user.js` | Test super user: Elite (everything unlocked) and a coach; needs the service role key |
 
 ## Project layout
 
