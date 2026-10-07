@@ -1,0 +1,165 @@
+[
+  {
+    "key": "back_squat",
+    "nameEn": "Back squat",
+    "nameAr": "سكوات خلفي بالبار",
+    "bodyweightRatio": 1.0,
+    "isMain": true,
+    "smartStation": "Rack 3",
+    "alternativeKey": "leg_press",
+    "progressionKg": 5
+  },
+  {
+    "key": "leg_press",
+    "nameEn": "Leg press",
+    "nameAr": "دفع الأرجل بالجهاز",
+    "bodyweightRatio": 1.8,
+    "isMain": true,
+    "alternativeKey": "back_squat",
+    "progressionKg": 5
+  },
+  {
+    "key": "deadlift",
+    "nameEn": "Deadlift",
+    "nameAr": "الرفعة المميتة (ديدلفت)",
+    "bodyweightRatio": 1.2,
+    "isMain": true,
+    "smartStation": "Platform 1",
+    "alternativeKey": "romanian_deadlift",
+    "progressionKg": 5
+  },
+  {
+    "key": "romanian_deadlift",
+    "nameEn": "Romanian deadlift",
+    "nameAr": "الرفعة الرومانية",
+    "bodyweightRatio": 0.85,
+    "isMain": true,
+    "alternativeKey": "leg_curl",
+    "progressionKg": 5
+  },
+  {
+    "key": "walking_lunge",
+    "nameEn": "Walking lunges (dumbbells)",
+    "nameAr": "طعنات المشي بالدمبل",
+    "bodyweightRatio": 0.2,
+    "perHand": true,
+    "alternativeKey": "leg_press"
+  },
+  {
+    "key": "leg_curl",
+    "nameEn": "Leg curl",
+    "nameAr": "ثني الأرجل بالجهاز",
+    "bodyweightRatio": 0.45,
+    "alternativeKey": "romanian_deadlift"
+  },
+  {
+    "key": "calf_raise",
+    "nameEn": "Standing calf raise",
+    "nameAr": "رفع السمانة وقوفًا",
+    "bodyweightRatio": 0.9,
+    "isMain": true
+  },
+  {
+    "key": "bench_press",
+    "nameEn": "Flat bench press",
+    "nameAr": "ضغط البنش المستوي",
+    "bodyweightRatio": 0.75,
+    "isMain": true,
+    "smartStation": "Bench 1",
+    "alternativeKey": "dumbbell_bench_press"
+  },
+  {
+    "key": "dumbbell_bench_press",
+    "nameEn": "Dumbbell bench press",
+    "nameAr": "ضغط الدمبل على البنش",
+    "bodyweightRatio": 0.3,
+    "perHand": true,
+    "alternativeKey": "bench_press"
+  },
+  {
+    "key": "incline_bench_press",
+    "nameEn": "Incline bench press",
+    "nameAr": "ضغط البنش المائل",
+    "bodyweightRatio": 0.6,
+    "isMain": true,
+    "smartStation": "Bench 2",
+    "alternativeKey": "incline_dumbbell_press"
+  },
+  {
+    "key": "incline_dumbbell_press",
+    "nameEn": "Incline dumbbell press",
+    "nameAr": "ضغط الدمبل المائل",
+    "bodyweightRatio": 0.25,
+    "perHand": true,
+    "alternativeKey": "incline_bench_press"
+  },
+  {
+    "key": "overhead_press",
+    "nameEn": "Overhead press",
+    "nameAr": "ضغط الكتف بالبار",
+    "bodyweightRatio": 0.45,
+    "isMain": true,
+    "smartStation": "Rack 2",
+    "alternativeKey": "seated_dumbbell_press"
+  },
+  {
+    "key": "seated_dumbbell_press",
+    "nameEn": "Seated dumbbell press",
+    "nameAr": "ضغط الكتف بالدمبل جالسًا",
+    "bodyweightRatio": 0.2,
+    "perHand": true,
+    "alternativeKey": "overhead_press"
+  },
+  {
+    "key": "barbell_row",
+    "nameEn": "Barbell row",
+    "nameAr": "التجديف بالبار",
+    "bodyweightRatio": 0.65,
+    "isMain": true,
+    "smartStation": "Platform 2",
+    "alternativeKey": "seated_cable_row"
+  },
+  {
+    "key": "seated_cable_row",
+    "nameEn": "Seated cable row",
+    "nameAr": "التجديف بالكابل جالسًا",
+    "bodyweightRatio": 0.6,
+    "isMain": true,
+    "alternativeKey": "barbell_row"
+  },
+  {
+    "key": "lat_pulldown",
+    "nameEn": "Lat pulldown",
+    "nameAr": "السحب الأمامي بالكابل",
+    "bodyweightRatio": 0.6,
+    "isMain": true,
+    "alternativeKey": "seated_cable_row"
+  },
+  {
+    "key": "lateral_raise",
+    "nameEn": "Lateral raise",
+    "nameAr": "الرفرفة الجانبية",
+    "bodyweightRatio": 0.08,
+    "perHand": true
+  },
+  {
+    "key": "dumbbell_curl",
+    "nameEn": "Dumbbell curl",
+    "nameAr": "ثني الذراع بالدمبل",
+    "bodyweightRatio": 0.12,
+    "perHand": true
+  },
+  {
+    "key": "triceps_pushdown",
+    "nameEn": "Triceps pushdown",
+    "nameAr": "دفع الترايسبس بالكابل",
+    "bodyweightRatio": 0.3
+  },
+  {
+    "key": "plank",
+    "nameEn": "Plank",
+    "nameAr": "البلانك",
+    "bodyweightRatio": 0,
+    "timedSeconds": 45
+  }
+]

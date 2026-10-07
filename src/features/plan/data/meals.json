@@ -1,0 +1,110 @@
+[
+  {
+    "key": "high_breakfast",
+    "dayType": "high",
+    "slot": "breakfast",
+    "ramadanSlot": "suhoor",
+    "share": 0.25,
+    "nameEn": "Oats with banana, honey and a scoop of whey",
+    "nameAr": "شوفان مع موز وعسل ومغرفة بروتين"
+  },
+  {
+    "key": "high_lunch",
+    "dayType": "high",
+    "slot": "lunch",
+    "ramadanSlot": "iftar",
+    "share": 0.3,
+    "nameEn": "Grilled chicken, rice and salad",
+    "nameAr": "دجاج مشوي مع أرز وسلطة"
+  },
+  {
+    "key": "high_pre_workout",
+    "dayType": "high",
+    "slot": "pre_workout",
+    "ramadanSlot": "pre_workout",
+    "share": 0.15,
+    "nameEn": "Dates and Greek yogurt",
+    "nameAr": "تمر مع زبادي يوناني"
+  },
+  {
+    "key": "high_dinner",
+    "dayType": "high",
+    "slot": "dinner",
+    "ramadanSlot": "recovery",
+    "share": 0.3,
+    "nameEn": "Lean beef, potatoes and vegetables",
+    "nameAr": "لحم بقري قليل الدهن مع بطاطس وخضار"
+  },
+  {
+    "key": "medium_breakfast",
+    "dayType": "medium",
+    "slot": "breakfast",
+    "ramadanSlot": "suhoor",
+    "share": 0.25,
+    "nameEn": "Foul medames, 3 eggs and wholegrain bread",
+    "nameAr": "فول مدمس مع 3 بيضات وخبز أسمر"
+  },
+  {
+    "key": "medium_lunch",
+    "dayType": "medium",
+    "slot": "lunch",
+    "ramadanSlot": "iftar",
+    "share": 0.3,
+    "nameEn": "Chicken shawarma plate, half rice, salad",
+    "nameAr": "صحن شاورما دجاج مع نصف حصة أرز وسلطة"
+  },
+  {
+    "key": "medium_snack",
+    "dayType": "medium",
+    "slot": "snack",
+    "ramadanSlot": "snack",
+    "share": 0.15,
+    "nameEn": "Greek yogurt with berries",
+    "nameAr": "زبادي يوناني مع توت"
+  },
+  {
+    "key": "medium_dinner",
+    "dayType": "medium",
+    "slot": "dinner",
+    "ramadanSlot": "recovery",
+    "share": 0.3,
+    "nameEn": "Salmon, sweet potato and greens",
+    "nameAr": "سلمون مع بطاطا حلوة وخضار ورقية"
+  },
+  {
+    "key": "low_breakfast",
+    "dayType": "low",
+    "slot": "breakfast",
+    "ramadanSlot": "suhoor",
+    "share": 0.25,
+    "nameEn": "Omelette with cheese, cucumber and olives",
+    "nameAr": "أومليت بالجبن مع خيار وزيتون"
+  },
+  {
+    "key": "low_lunch",
+    "dayType": "low",
+    "slot": "lunch",
+    "ramadanSlot": "iftar",
+    "share": 0.3,
+    "nameEn": "Grilled fish, big salad with tahini",
+    "nameAr": "سمك مشوي مع سلطة كبيرة بالطحينة"
+  },
+  {
+    "key": "low_snack",
+    "dayType": "low",
+    "slot": "snack",
+    "ramadanSlot": "snack",
+    "share": 0.15,
+    "nameEn": "Protein shake and a handful of nuts",
+    "nameAr": "مخفوق بروتين وحفنة من المكسرات"
+  },
+  {
+    "key": "low_dinner",
+    "dayType": "low",
+    "slot": "dinner",
+    "ramadanSlot": "recovery",
+    "share": 0.3,
+    "nameEn": "Chicken or beef with vegetables and avocado",
+    "nameAr": "دجاج أو لحم مع خضار وأفوكادو"
+  }
+]

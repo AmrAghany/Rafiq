@@ -1,0 +1,101 @@
+[
+  {
+    "key": "full_body_a",
+    "nameEn": "Full body A",
+    "nameAr": "الجسم كامل (أ)",
+    "exerciseKeys": ["back_squat", "bench_press", "barbell_row", "lateral_raise", "plank"]
+  },
+  {
+    "key": "full_body_b",
+    "nameEn": "Full body B",
+    "nameAr": "الجسم كامل (ب)",
+    "exerciseKeys": [
+      "deadlift",
+      "overhead_press",
+      "lat_pulldown",
+      "incline_dumbbell_press",
+      "dumbbell_curl"
+    ]
+  },
+  {
+    "key": "full_body_c",
+    "nameEn": "Full body C",
+    "nameAr": "الجسم كامل (ج)",
+    "exerciseKeys": [
+      "leg_press",
+      "incline_bench_press",
+      "seated_cable_row",
+      "romanian_deadlift",
+      "triceps_pushdown"
+    ]
+  },
+  {
+    "key": "upper_a",
+    "nameEn": "Upper body A",
+    "nameAr": "الجزء العلوي (أ)",
+    "exerciseKeys": [
+      "bench_press",
+      "barbell_row",
+      "overhead_press",
+      "lat_pulldown",
+      "lateral_raise",
+      "triceps_pushdown"
+    ]
+  },
+  {
+    "key": "lower_a",
+    "nameEn": "Lower body A",
+    "nameAr": "الجزء السفلي (أ)",
+    "exerciseKeys": [
+      "back_squat",
+      "romanian_deadlift",
+      "walking_lunge",
+      "leg_curl",
+      "calf_raise",
+      "plank"
+    ]
+  },
+  {
+    "key": "upper_b",
+    "nameEn": "Upper body B",
+    "nameAr": "الجزء العلوي (ب)",
+    "exerciseKeys": [
+      "incline_bench_press",
+      "lat_pulldown",
+      "seated_dumbbell_press",
+      "seated_cable_row",
+      "dumbbell_curl",
+      "triceps_pushdown"
+    ]
+  },
+  {
+    "key": "lower_b",
+    "nameEn": "Lower body B",
+    "nameAr": "الجزء السفلي (ب)",
+    "exerciseKeys": ["deadlift", "walking_lunge", "leg_press", "leg_curl", "calf_raise"]
+  },
+  {
+    "key": "push",
+    "nameEn": "Push",
+    "nameAr": "تمارين الدفع",
+    "exerciseKeys": [
+      "bench_press",
+      "overhead_press",
+      "incline_dumbbell_press",
+      "lateral_raise",
+      "triceps_pushdown"
+    ]
+  },
+  {
+    "key": "pull",
+    "nameEn": "Pull",
+    "nameAr": "تمارين السحب",
+    "exerciseKeys": ["barbell_row", "lat_pulldown", "seated_cable_row", "dumbbell_curl"]
+  },
+  {
+    "key": "legs",
+    "nameEn": "Legs",
+    "nameAr": "تمارين الأرجل",
+    "exerciseKeys": ["back_squat", "romanian_deadlift", "leg_press", "leg_curl", "calf_raise"]
+  }
+]

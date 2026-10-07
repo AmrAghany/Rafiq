@@ -1,0 +1,647 @@
+{
+  "app": {
+    "name": "Rafiq",
+    "tagline": "Your trainer, from wake-up to sleep",
+    "notMedicalAdvice": "Rafiq gives general fitness and nutrition guidance. It is not medical advice.",
+    "configMissing": "The app is not connected to a server yet. Add your Supabase URL and anon key to .env."
+  },
+  "tabs": {
+    "today": "Today",
+    "train": "Train",
+    "food": "Food",
+    "coach": "Coach",
+    "me": "Me"
+  },
+  "placeholder": {
+    "comingSoon": "Coming in a later build.",
+    "today": "Your day: check-in, meals, workout and reminders.",
+    "train": "Today's workout, sets, rest timer and history.",
+    "food": "Macro targets, meal plan and meal logging.",
+    "coach": "Chat with your AI coach in any language."
+  },
+  "auth": {
+    "welcomeTitle": "A personal trainer that stays with you all day.",
+    "signInTitle": "Sign in",
+    "signUpTitle": "Create your account",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "continueWithApple": "Continue with Apple",
+    "continueWithGoogle": "Continue with Google",
+    "or": "or",
+    "noAccount": "New to Rafiq? Create an account",
+    "haveAccount": "Already have an account? Sign in",
+    "checkEmail": "Check your email to confirm your account, then sign in.",
+    "errors": {
+      "emailInvalid": "Enter a valid email address.",
+      "passwordShort": "Use at least {{min}} characters.",
+      "generic": "Something went wrong. Please try again.",
+      "invalidCredentials": "The email or password is not right.",
+      "cancelled": "Sign-in was cancelled."
+    }
+  },
+  "me": {
+    "title": "Me",
+    "signedInAs": "Signed in as {{email}}",
+    "settings": "Settings",
+    "language": "Language",
+    "appearance": "Appearance",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "signOut": "Sign out",
+    "viewPlan": "View my plan",
+    "schedule": "Daily schedule",
+    "scheduleHint": "24-hour time, like 06:30. Your timeline and reminders follow these times.",
+    "wake": "Wake-up time",
+    "workout": "Workout time",
+    "saveSchedule": "Save schedule",
+    "scheduleErrors": {
+      "wakeInvalid": "Enter a wake-up time like 06:30.",
+      "workoutInvalid": "Enter a workout time like 17:30.",
+      "workoutOutsideDay": "Pick a workout time between 1 and 15 hours after you wake up."
+    },
+    "privacy": "Your data",
+    "export": "Export my data",
+    "exportTitle": "Rafiq data export",
+    "delete": "Delete my account",
+    "deleteBody": "This permanently deletes your account, plans, logs, chats and photos. It can't be undone. If you have a subscription, cancel it in your App Store or Google Play settings first, or it will keep renewing.",
+    "deleteConfirmTitle": "Delete your account?",
+    "deleteConfirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "language": {
+    "en": "English",
+    "ar": "العربية",
+    "restartTitle": "Restart to switch layout",
+    "restartBody": "Rafiq needs to restart to switch between left-to-right and right-to-left layout.",
+    "restartNow": "Restart now",
+    "later": "Later"
+  },
+  "common": {
+    "next": "Next",
+    "back": "Back",
+    "retry": "Try again",
+    "optional": "optional",
+    "kg": "kg",
+    "cm": "cm",
+    "kcal": "kcal",
+    "g": "g",
+    "save": "Save",
+    "saved": "Saved",
+    "remove": "Remove"
+  },
+  "days": {
+    "short": {
+      "0": "Mon",
+      "1": "Tue",
+      "2": "Wed",
+      "3": "Thu",
+      "4": "Fri",
+      "5": "Sat",
+      "6": "Sun"
+    }
+  },
+  "dayType": {
+    "high": "High-carb day",
+    "medium": "Medium-carb day",
+    "low": "Low-carb day",
+    "letter": {
+      "high": "H",
+      "medium": "M",
+      "low": "L"
+    }
+  },
+  "onboarding": {
+    "step": "Step {{current}} of {{total}}",
+    "welcome": {
+      "title": "Let's build your plan",
+      "body": "Three quick steps: about you, your body scan and a short health check. It takes about two minutes.",
+      "noticeTitle": "Before you start",
+      "noticeBody": "Rafiq gives general fitness and nutrition guidance. It is not medical advice and does not replace a doctor, dietitian or physiotherapist. Stop and get help if you feel pain, dizziness or chest discomfort.",
+      "accept": "I understand, let's start"
+    },
+    "about": {
+      "title": "About you",
+      "subtitle": "This shapes your training and food plan.",
+      "name": "First name",
+      "sex": "Sex",
+      "male": "Male",
+      "female": "Female",
+      "birthDate": "Date of birth",
+      "day": "Day",
+      "month": "Month",
+      "year": "Year",
+      "height": "Height (cm)",
+      "weight": "Weight (kg)",
+      "goal": "Main goal",
+      "goalLose": "Lose fat",
+      "goalBuild": "Build muscle",
+      "goalRecomp": "Both",
+      "days": "Training days per week",
+      "daysOption": "{{count}} days",
+      "experience": "Experience",
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "next": "Next: body scan"
+    },
+    "scan": {
+      "title": "Your InBody scan",
+      "subtitle": "Upload a photo of your InBody result sheet and we'll read it for you, or type the numbers yourself.",
+      "bodyFat": "Body fat (%)",
+      "muscle": "Skeletal muscle (kg)",
+      "bmr": "BMR (kcal)",
+      "noScan": "No scan yet? Leave these empty and we'll use a typical estimate. You can add your scan later.",
+      "next": "Next: health check",
+      "photoTitle": "Read my scan from a photo",
+      "photoCamera": "Take a photo of the sheet",
+      "photoLibrary": "Choose a photo",
+      "photoReading": "Reading your scan…",
+      "photoRead": "Here's what we read. Check each number against your sheet and correct anything that's wrong.",
+      "photoNotRecognised": "We couldn't read a body composition sheet in that photo. Try again in good light, or type the numbers.",
+      "photoLocked": "Reading the sheet from a photo is part of Pro. Try it free, or type the numbers; it only takes a moment."
+    },
+    "health": {
+      "title": "Quick health check",
+      "subtitle": "So your plan stays safe. Tick anything that applies.",
+      "injury": "Injury or joint pain",
+      "heart": "Heart or blood pressure condition",
+      "diabetes": "Diabetes",
+      "pregnancy": "Pregnant or breastfeeding",
+      "eating_disorder": "Past or current eating disorder",
+      "next": "Build my plan"
+    },
+    "errors": {
+      "nameRequired": "Add your first name.",
+      "sexRequired": "Choose one.",
+      "birthDateInvalid": "Check your date of birth.",
+      "underage": "Rafiq is for adults 18 and over. Younger athletes should train with a qualified coach and a parent.",
+      "heightInvalid": "Enter a height between {{min}} and {{max}} cm.",
+      "weightInvalid": "Enter a weight between {{min}} and {{max}} kg.",
+      "goalRequired": "Choose your main goal.",
+      "daysRequired": "Choose how many days you can train.",
+      "experienceRequired": "Choose your experience level.",
+      "outOfRange": "Enter a number between {{min}} and {{max}}, or leave it empty.",
+      "saveFailed": "We couldn't save your plan. Check your connection and try again."
+    }
+  },
+  "plan": {
+    "readyTitle": "{{name}}, your plan is ready",
+    "myPlan": "My plan",
+    "builtFrom": "Built from your scan: {{bodyFat}}% body fat, {{leanMass}} kg lean mass, {{bmr}} kcal resting burn.",
+    "builtFromNoCalories": "Built from your scan: {{bodyFat}}% body fat, {{leanMass}} kg lean mass.",
+    "bodyFatAssumed": "We assumed {{bodyFat}}% body fat because no scan was entered. Add your scan for a more accurate plan.",
+    "carefulNotice": "Because of your health answers, your food plan focuses on regular, balanced meals with no calorie cut. Please check the plan with your doctor before starting.",
+    "doctorNotice": "Training starts moderate. Get your doctor's or physio's OK, and tell your coach about any pain.",
+    "training": "Training",
+    "trainingSummary": "{{split}}, {{sets}} × {{reps}} on main lifts.",
+    "train": "Train",
+    "rest": "Rest",
+    "today": "today",
+    "carbCycle": "Carb cycle",
+    "dayMacros": "{{kcal}} kcal, {{carbs}} g carbs",
+    "proteinNote": "Protein stays at {{protein}} g every day. More carbs on heavy leg days, fewer on rest days.",
+    "balancedMeals": "Eat regular, balanced meals with protein, vegetables and whole grains at each one.",
+    "start": "Start my day",
+    "notFound": "No plan yet."
+  },
+  "timeline": {
+    "restDay": "rest day",
+    "now": "now",
+    "openWorkout": "Open workout",
+    "seeMeal": "See meal",
+    "markDone": "Mark {{item}} done",
+    "checkin": {
+      "title": "Morning check-in",
+      "body": "Sleep and energy. Your workout adjusts to you."
+    },
+    "breakfast": {
+      "title": "Breakfast",
+      "body": "See today's meal."
+    },
+    "move": {
+      "title": "Move and drink",
+      "body": "Stand up, 3-minute stretch, 2 glasses of water."
+    },
+    "lunch": {
+      "title": "Lunch",
+      "body": "See today's meal."
+    },
+    "pre_workout": {
+      "title": "Pre-workout snack",
+      "body": "Eat 60–90 minutes before training."
+    },
+    "snack": {
+      "title": "Afternoon snack",
+      "body": "Protein-focused snack."
+    },
+    "workout": {
+      "title": "Workout: {{workout}}",
+      "body": "{{count}} exercises, about 60 minutes."
+    },
+    "active_recovery": {
+      "title": "Active recovery",
+      "body": "30-minute walk. Rest days build the muscle."
+    },
+    "dinner": {
+      "title": "Dinner",
+      "body": "Your recovery meal."
+    },
+    "wind_down": {
+      "title": "Wind down",
+      "body": "Screens off soon. Tomorrow: {{tomorrow}}."
+    },
+    "sleep": {
+      "title": "Sleep",
+      "body": "7–9 hours is part of your program."
+    },
+    "suhoor": {
+      "title": "Suhoor",
+      "body": "Slow carbs, protein and 2 glasses of water before the fast."
+    },
+    "walk": {
+      "title": "Easy walk",
+      "body": "10 minutes, low effort while fasting."
+    },
+    "iftar": {
+      "title": "Iftar",
+      "body": "Break the fast with 3 dates and water, then your main meal."
+    },
+    "stretch": {
+      "title": "Light stretching",
+      "body": "15 minutes of mobility."
+    },
+    "recovery_meal": {
+      "title": "Recovery meal",
+      "body": "Protein-focused meal."
+    }
+  },
+  "today": {
+    "greeting": {
+      "morning": "Good morning, {{name}}",
+      "afternoon": "Good afternoon, {{name}}",
+      "evening": "Good evening, {{name}}"
+    },
+    "preview": "{{day}} preview",
+    "backToToday": "Back to today",
+    "ramadanMode": "Ramadan mode",
+    "balancedDay": "Balanced eating day",
+    "restDay": "Rest day",
+    "kcal": "kcal",
+    "protein": "protein",
+    "carbs": "carbs",
+    "yourDay": "Your day",
+    "thatDay": "That day"
+  },
+  "checkin": {
+    "title": "Morning check-in",
+    "sleep": "How did you sleep?",
+    "sleep1": "Badly",
+    "sleep2": "OK",
+    "sleep3": "Great",
+    "energy": "Energy right now?",
+    "energy1": "Low",
+    "energy2": "Normal",
+    "energy3": "High",
+    "soreness": "Muscle soreness?",
+    "soreness1": "A lot",
+    "soreness2": "A little",
+    "soreness3": "None",
+    "submit": "See my readiness",
+    "readiness": "Readiness",
+    "light": "Light day: one less set per exercise and 10% lighter weights. Recovery is training too.",
+    "fresh": "You're fresh. Go for a strong session today.",
+    "normal": "Normal day. Train as planned.",
+    "redo": "Redo check-in"
+  },
+  "water": {
+    "title": "Water",
+    "count": "{{count}} / {{goal}} glasses",
+    "add": "Add a glass",
+    "remove": "Remove a glass"
+  },
+  "reminders": {
+    "title": "Daily reminders",
+    "body": "Get a nudge for your check-in, meals, movement breaks and workout.",
+    "enable": "Turn on reminders",
+    "denied": "Notifications are off for Rafiq. Turn them on in your phone's settings.",
+    "toggle": "Reminders",
+    "on": "On",
+    "off": "Off"
+  },
+  "train": {
+    "today": "Today",
+    "restTitle": "Rest day",
+    "restBody": "No gym today. A 30-minute walk and good sleep help your muscles grow.",
+    "nextWorkout": "Next workout: {{day}}, {{workout}}",
+    "lightNotice": "Low readiness this morning, so today is lighter: one less set and 10% less weight.",
+    "checkinNudge": "Do your morning check-in on the Today tab and the workout adjusts to how you feel.",
+    "progress": "{{done}} of {{total}} sets done",
+    "prescription": "{{sets}} × {{reps}} reps, {{kg}} kg",
+    "prescriptionBodyweight": "{{sets}} × {{reps}} reps, bodyweight",
+    "prescriptionTimed": "{{sets}} × {{seconds}} s",
+    "perHand": "per hand",
+    "smartStation": "Auto-tracked at {{station}}",
+    "lastTime": "Last time: {{summary}}",
+    "suggestion": "You hit every rep two sessions in a row. Ready for {{kg}} kg?",
+    "useSuggestion": "Use {{kg}} kg",
+    "set": "Set {{n}}",
+    "weightLabel": "Set {{n}} weight in kg",
+    "repsLabel": "Set {{n}} reps",
+    "secondsLabel": "Set {{n}} seconds",
+    "markSet": "Mark set {{n}} done",
+    "swap": "Machine busy? Swap for {{name}}",
+    "swapBack": "Back to {{name}}",
+    "completeTitle": "Workout complete",
+    "completeBody": "Great work. Have your recovery meal within 2 hours. Tomorrow is a {{dayType}}.",
+    "history": "Workout history",
+    "rest": "Rest {{time}}",
+    "skip": "Skip",
+    "restOverTitle": "Rest over",
+    "restOverBody": "Time for your next set."
+  },
+  "history": {
+    "title": "Workout history",
+    "empty": "No workouts logged yet. Your sessions will show up here.",
+    "sets": "{{count}} sets done",
+    "completed": "Completed",
+    "unfinished": "Not finished",
+    "best": "{{exercise}}: {{kg}} kg × {{reps}}"
+  },
+  "food": {
+    "eatenToday": "Eaten today",
+    "kcalProgress": "{{eaten}} / {{target}} kcal",
+    "gramsProgress": "{{eaten}} / {{target}} g",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "dayNote": {
+      "high": "Heavy training day: carbs fuel your session and refill your muscles.",
+      "medium": "Moderate day: balanced carbs around your workout.",
+      "low": "Rest day: fewer carbs, more healthy fats, same protein."
+    },
+    "carefulNotice": "Your plan uses regular meals without calorie targets. Your coach and a doctor or dietitian can help you go further.",
+    "logTitle": "Log a meal",
+    "mealName": "What did you eat?",
+    "kcal": "Calories (kcal)",
+    "proteinG": "Protein (g)",
+    "carbsG": "Carbs (g)",
+    "fatG": "Fat (g)",
+    "add": "Add meal",
+    "loggedMacros": "{{kcal}} kcal, {{protein}} g protein, {{carbs}} g carbs, {{fat}} g fat",
+    "mealPlan": "Meal plan",
+    "mealAbout": "About {{kcal}} kcal, {{protein}} g protein, {{carbs}} g carbs",
+    "logThis": "Log this meal",
+    "loggedThis": "Logged",
+    "nameRequired": "Add a name for the meal.",
+    "numberInvalid": "Enter a number, or leave it empty.",
+    "slots": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "pre_workout": "Pre-workout",
+      "snack": "Snack",
+      "dinner": "Dinner",
+      "suhoor": "Suhoor",
+      "iftar": "Iftar",
+      "recovery": "Recovery meal"
+    },
+    "aiTitle": "Estimate with AI",
+    "aiDescribe": "Describe your meal",
+    "aiDescribePlaceholder": "e.g. 2 slices of pizza and a cola",
+    "aiEstimate": "Estimate",
+    "aiCamera": "Take a photo",
+    "aiLibrary": "Choose a photo",
+    "aiWorking": "Estimating…",
+    "aiCheck": "Check the estimate and edit anything before you add it.",
+    "aiConfidenceLow": "Rough estimate: portion size was hard to judge.",
+    "aiNotRecognised": "That doesn't look like a meal. Try another photo or describe it.",
+    "aiLocked": "Estimating meals from a photo or description is part of Pro.",
+    "lockedTitle": "Carb cycling and meal plans are part of Pro",
+    "lockedBody": "Pro builds your meals around your training days and can read your plate from a photo."
+  },
+  "membership": {
+    "title": "Membership",
+    "yourPlan": "Your plan: {{plan}}",
+    "tiers": {
+      "free": "Free",
+      "pro": "Pro",
+      "elite": "Elite"
+    },
+    "trialEnds": "Free trial ends on {{date}}.",
+    "renews": "Renews on {{date}}.",
+    "ends": "Ends on {{date}}. It won't renew.",
+    "billingIssue": "There's a problem with your payment. Update it in your store settings to keep your plan.",
+    "change": "Change plan",
+    "manage": "Manage subscription"
+  },
+  "coach": {
+    "greeting": "Hi {{name}}! I'm your coach. Ask me anything about today's workout, your meals or how you feel, in any language.",
+    "thinking": "Thinking…",
+    "placeholder": "Message your coach…",
+    "send": "Send",
+    "stop": "Stop",
+    "chips": [
+      "The bench is busy, what can I do instead?",
+      "أنا في مطعم الآن، ماذا أطلب؟",
+      "Je suis fatigué aujourd'hui, je m'entraîne ?",
+      "¿Puedo comer pizza hoy?",
+      "Make my program harder"
+    ],
+    "lockedTitle": "Your AI coach is part of Pro",
+    "lockedBody": "Chat with a coach who knows your plan, your scan and your day, in any language."
+  },
+  "ai": {
+    "errors": {
+      "unauthorized": "Please sign in again.",
+      "bad_request": "That didn't work. Please try again.",
+      "payload_too_large": "That photo is too large. Try again with a smaller one.",
+      "upgrade_required": "This is part of Pro. Try it free from the Me tab.",
+      "quota_exceeded": "You've reached today's limit for this. It resets tomorrow.",
+      "not_found": "We couldn't find that photo. Please try again.",
+      "ai_refused": "I can't help with that one. Try asking another way, or talk to a doctor or physiotherapist.",
+      "ai_unavailable": "The coach is busy right now. Please try again in a minute.",
+      "network": "No connection. Check your internet and try again.",
+      "internal": "Something went wrong. Please try again."
+    },
+    "photoErrors": {
+      "permission": "Rafiq needs access to your camera or photos. You can allow it in your phone's settings.",
+      "too_large": "That photo is too large. Try again with a smaller one.",
+      "upload": "We couldn't upload the photo. Check your connection and try again."
+    }
+  },
+  "paywall": {
+    "header": "Rafiq Pro",
+    "cta": "Try Pro free",
+    "title": "Choose your plan",
+    "titleTrial": "Try Pro free for {{days}} days",
+    "subtitle": "Your AI coach, a program built from your InBody scan, carb cycling and meal plans.",
+    "perMonth": "{{price}} / month",
+    "trialThen": "{{days}} days free, then {{price}} / month",
+    "current": "Your current plan",
+    "startTrial": "Start free trial",
+    "subscribe": "Subscribe",
+    "restore": "Restore purchases",
+    "done": "Done",
+    "success": "Welcome to {{plan}}! Everything is unlocked.",
+    "pending": "Your payment is pending. We'll unlock {{plan}} as soon as the store confirms it.",
+    "restored": "Purchases restored.",
+    "unavailable": "Subscriptions aren't available in this build. They work in store and preview builds of the app.",
+    "terms": "Terms of use",
+    "privacy": "Privacy policy",
+    "legalIos": "Payment is charged to your Apple ID when you confirm. Subscriptions renew automatically unless cancelled at least 24 hours before the end of the current period, and your account is charged for renewal within 24 hours before it ends. You can manage or cancel in your App Store account settings. Any unused part of a free trial ends when you buy a subscription.",
+    "legalAndroid": "Payment is charged to your Google Play account when you confirm. Subscriptions renew automatically unless cancelled before the end of the current period. You can manage or cancel in the Google Play Store under Payments and subscriptions. Any unused part of a free trial ends when you buy a subscription.",
+    "errors": {
+      "offerings": "We couldn't load the plans. Check your connection and try again.",
+      "network": "No connection. Check your internet and try again.",
+      "not_allowed": "Purchases aren't allowed on this device or account.",
+      "store": "The store couldn't complete the purchase. You haven't been charged twice; please try again.",
+      "sync": "Your purchase went through, but we couldn't update your plan yet. It will update shortly; you can also tap Restore purchases."
+    },
+    "pro": {
+      "name": "Pro",
+      "features": [
+        "AI coach in any language",
+        "Training program from your InBody scan",
+        "Carb cycle and meal plans",
+        "Meal logging by photo or text"
+      ]
+    },
+    "elite": {
+      "name": "Elite",
+      "features": [
+        "Everything in Pro",
+        "Monthly review of your plan by a real coach",
+        "Higher daily AI limits"
+      ]
+    }
+  },
+  "ramadan": {
+    "title": "Ramadan mode",
+    "body": "Moves meals, water and training around suhoor and iftar. Your coach knows you're fasting.",
+    "toggle": "Ramadan mode",
+    "timesHint": "Set these to your local fajr and maghrib times (24-hour, like 03:45). Update them every few days as the times shift.",
+    "suhoor": "Suhoor ends",
+    "iftar": "Iftar time",
+    "save": "Save times",
+    "errors": {
+      "suhoorInvalid": "Enter a suhoor time like 03:45.",
+      "iftarInvalid": "Enter an iftar time like 18:05.",
+      "fastOutOfRange": "Iftar should be 10 to 18 hours after suhoor."
+    }
+  },
+  "progress": {
+    "title": "Progress",
+    "open": "See my progress",
+    "scanTitle": "Body scan",
+    "due": "Time for a new scan. A fresh InBody reading keeps your plan matched to your body.",
+    "dueOn": "Next scan due on {{date}}.",
+    "lastScan": "Last scan: {{date}}",
+    "newScan": "New scan",
+    "history": "All scans",
+    "fatShort": "Fat",
+    "muscleShort": "Muscle",
+    "metric": {
+      "weightKg": "Weight",
+      "bodyFatPct": "Body fat",
+      "skeletalMuscleKg": "Skeletal muscle"
+    },
+    "sinceFirst": "{{change}} since your first scan",
+    "oneScan": "Your chart starts after your next scan.",
+    "noData": "Not recorded yet.",
+    "a11ySingle": "{{title}}: {{value}}, one scan so far.",
+    "a11yTrend": "{{title}} chart: {{from}} on {{fromDate}} to {{to}} on {{toDate}}, {{change}}.",
+    "carefulNotice": "Your progress here is about how you feel and how your training goes. Your scans are saved, and your coach can talk through them with you.",
+    "reminderTitle": "Time for your monthly body scan",
+    "reminderBody": "A new scan keeps your training and nutrition matched to your body."
+  },
+  "rescan": {
+    "title": "New scan",
+    "subtitle": "Enter your latest InBody numbers. Your plan is rebuilt from them, and your earlier scans stay in your progress history.",
+    "weight": "Weight (kg)",
+    "bodyFat": "Body fat (%)",
+    "muscle": "Skeletal muscle (kg)",
+    "bmr": "BMR (kcal)",
+    "lastTime": "Last time: {{value}}",
+    "weightRequired": "Enter your weight to rebuild your plan.",
+    "newPlan": "Your new plan",
+    "change": {
+      "targetKcal": "Daily calories",
+      "proteinG": "Protein (g)",
+      "bmrKcal": "BMR (kcal)",
+      "leanMassKg": "Lean mass (kg)"
+    },
+    "fromTo": "{{from}} → {{to}}",
+    "unchanged": "{{value}} (no change)",
+    "keepsHistory": "Your goal, training days and health answers stay the same. Your logged workout weights carry on.",
+    "save": "Save scan and update my plan"
+  },
+  "health": {
+    "provider": {
+      "apple_health": "Apple Health",
+      "health_connect": "Health Connect"
+    },
+    "body": "Rafiq can read your sleep and steps from {{source}}. Your sleep suggests your morning check-in answer, and your coach sees both. Rafiq never writes to {{source}}.",
+    "connect": "Connect {{source}}",
+    "toggle": "Read from {{source}}",
+    "manageIos": "To remove access, go to Settings › Health › Data Access & Devices › Rafiq.",
+    "manageAndroid": "To remove access, open Health Connect › App permissions › Rafiq.",
+    "problems": {
+      "unsupported": "{{source}} isn't available on this device.",
+      "not_installed": "Install Health Connect from Google Play, then try again.",
+      "update_required": "Update Health Connect from Google Play, then try again.",
+      "denied": "Rafiq didn't get access. You can allow it in {{source}}."
+    },
+    "duration": "{{h}} h {{m}} min",
+    "sleepSuggested": "{{duration}} of sleep from {{source}}. Change the answer if it doesn't feel right.",
+    "lastNight": "sleep last night",
+    "stepsToday": "steps today",
+    "from": "From {{source}}"
+  },
+  "review": {
+    "title": "Coach review",
+    "lockedTitle": "A monthly review by a real coach",
+    "lockedBody": "With Elite, a certified coach looks at your month (training, scans, check-ins and food) and writes you a personal review.",
+    "lockedCta": "See Elite",
+    "intro": "Ask your coach to review {{month}}. They'll look at your training, scans, check-ins, sleep and food, and write back with what to change.",
+    "noteLabel": "Anything you want your coach to look at?",
+    "notePlaceholder": "e.g. my bench press has stalled",
+    "consent": "Your coach will see your plan, scans, workouts, check-ins, sleep, steps and food logs for this review. Your coach never sees your chats.",
+    "request": "Request my review",
+    "requested": "Your {{month}} review is requested. A coach will pick it up soon, usually within 3 days.",
+    "inReview": "{{coach}} is reviewing your {{month}}.",
+    "ready": "Your {{month}} review from {{coach}} is ready.",
+    "read": "Read my review",
+    "earlier": "{{month}} review",
+    "readyTitle": "Your coach review is ready",
+    "readyBody": "{{coach}} has reviewed your month.",
+    "notReady": "This review isn't ready yet.",
+    "byCoach": "From {{coach}}",
+    "sections": {
+      "summary": "Summary",
+      "training": "Training",
+      "nutrition": "Nutrition",
+      "focus": "Focus for next month"
+    },
+    "errors": {
+      "elite_required": "Coach reviews are part of Elite.",
+      "already_requested": "You've already requested this month's review.",
+      "failed": "We couldn't send your request. Check your connection and try again."
+    }
+  },
+  "stations": {
+    "title": "Lifting at a smart station?",
+    "body": "At partner gyms, type the 6-digit code shown on the rack or bench. Your barbell sets then log themselves, with the weight and reps the station measured.",
+    "codeLabel": "Station code",
+    "pair": "Pair with station",
+    "pairedTitle": "Paired with {{station}}",
+    "pairedBody": "At {{gym}}. Your sets on {{lifts}} are being logged for you. Pairing ends after 20 minutes without a set.",
+    "end": "End pairing",
+    "setBadge": "Logged by station",
+    "errors": {
+      "invalid_code": "That code didn't work. Check the 6 digits on the station's screen; codes last 2 minutes.",
+      "failed": "We couldn't pair. Check your connection and try again."
+    }
+  }
+}

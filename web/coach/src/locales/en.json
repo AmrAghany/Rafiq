@@ -1,0 +1,106 @@
+{
+  "app": {
+    "title": "Rafiq Coach",
+    "signOut": "Sign out",
+    "language": "العربية",
+    "notCoach": "This account isn't a coach account. Ask an admin to add you, then sign in again.",
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again."
+  },
+  "signIn": {
+    "title": "Coach sign-in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "failed": "The email or password is not right."
+  },
+  "queue": {
+    "mine": "In progress",
+    "open": "Open requests",
+    "delivered": "Delivered (last 60 days)",
+    "empty": "Nothing here right now.",
+    "claim": "Take this review",
+    "open_": "Open",
+    "requested": "Requested {{date}}",
+    "delivered_": "Delivered {{date}}",
+    "month": "{{month}} review",
+    "noteLabel": "Member's note:"
+  },
+  "review": {
+    "back": "Back to the queue",
+    "member": "{{name}}, {{month}}",
+    "careful": "Careful health answer ({{flags}}): no calorie numbers, weigh-ins or weight-loss targets in your review. Focus on regular balanced meals, training and how they feel.",
+    "doctor": "Health notes: {{flags}}. Keep training moderate and send anything medical to their doctor.",
+    "ramadan": "Ramadan mode is on.",
+    "note": "Their note",
+    "profile": "Profile",
+    "plan": "Plan (version {{version}})",
+    "targets": "{{kcal}} kcal, {{protein}} g protein, BMR {{bmr}} kcal, {{days}} training days",
+    "scans": "Scans",
+    "weeks": "Week by week",
+    "lifts": "Lifts this period",
+    "noData": "Nothing logged.",
+    "write": "Your review",
+    "summary": "Summary (required)",
+    "training": "Training",
+    "nutrition": "Nutrition",
+    "focus": "Focus for next month",
+    "save": "Save draft",
+    "saved": "Draft saved",
+    "deliver": "Send to member",
+    "confirmDeliver": "Send this review to {{name}}? You can't edit it afterwards.",
+    "release": "Give back to the queue",
+    "deliveredNote": "Delivered {{date}}. The member can read it in the app.",
+    "summaryRequired": "Write a summary before sending."
+  },
+  "cols": {
+    "date": "Date",
+    "weight": "Weight",
+    "fat": "Body fat",
+    "muscle": "Muscle",
+    "bmr": "BMR",
+    "week": "Week of",
+    "readiness": "Readiness",
+    "sleep": "Sleep",
+    "steps": "Steps",
+    "workouts": "Workouts",
+    "sets": "Sets",
+    "meals": "Meals logged",
+    "kcal": "kcal / day",
+    "exercise": "Exercise",
+    "first": "First",
+    "best": "Best",
+    "sessions": "Sessions"
+  },
+  "facts": {
+    "age": "{{age}} y",
+    "height": "{{cm}} cm",
+    "weight": "{{kg}} kg",
+    "goal": {
+      "lose": "Lose fat",
+      "build": "Build muscle",
+      "recomp": "Both"
+    },
+    "experience": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "sex": {
+      "male": "Male",
+      "female": "Female"
+    },
+    "adherence": "{{done}} of {{planned}} planned workouts done"
+  },
+  "flags": {
+    "injury": "injury or joint pain",
+    "heart": "heart or blood pressure",
+    "diabetes": "diabetes",
+    "pregnancy": "pregnant or breastfeeding",
+    "eating_disorder": "eating disorder"
+  },
+  "duration": "{{h}} h {{m}} min",
+  "units": {
+    "kg": "kg"
+  }
+}

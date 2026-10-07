@@ -1,0 +1,41 @@
+{
+  "3": {
+    "nameEn": "3-day full body",
+    "nameAr": "الجسم كامل، 3 أيام",
+    "week": [
+      { "workoutKey": "full_body_a", "dayType": "high" },
+      { "workoutKey": null, "dayType": "low" },
+      { "workoutKey": "full_body_b", "dayType": "high" },
+      { "workoutKey": null, "dayType": "low" },
+      { "workoutKey": "full_body_c", "dayType": "medium" },
+      { "workoutKey": null, "dayType": "low" },
+      { "workoutKey": null, "dayType": "low" }
+    ]
+  },
+  "4": {
+    "nameEn": "4-day upper/lower",
+    "nameAr": "علوي/سفلي، 4 أيام",
+    "week": [
+      { "workoutKey": "upper_a", "dayType": "medium" },
+      { "workoutKey": "lower_a", "dayType": "high" },
+      { "workoutKey": null, "dayType": "low" },
+      { "workoutKey": "upper_b", "dayType": "medium" },
+      { "workoutKey": "lower_b", "dayType": "high" },
+      { "workoutKey": null, "dayType": "low" },
+      { "workoutKey": null, "dayType": "low" }
+    ]
+  },
+  "5": {
+    "nameEn": "5-day push/pull/legs + upper/lower",
+    "nameAr": "دفع/سحب/أرجل + علوي/سفلي، 5 أيام",
+    "week": [
+      { "workoutKey": "push", "dayType": "medium" },
+      { "workoutKey": "pull", "dayType": "medium" },
+      { "workoutKey": "legs", "dayType": "high" },
+      { "workoutKey": null, "dayType": "low" },
+      { "workoutKey": "upper_a", "dayType": "medium" },
+      { "workoutKey": "lower_b", "dayType": "high" },
+      { "workoutKey": null, "dayType": "low" }
+    ]
+  }
+}
