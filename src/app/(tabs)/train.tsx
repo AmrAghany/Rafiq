@@ -14,6 +14,8 @@ import {
   useTodaySession,
   useWorkoutHistory,
 } from '@/features/train/api';
+import { useStationPairing } from '@/features/stations/api';
+import { StationCard } from '@/features/stations/StationCard';
 import { ExerciseCard, RestTimer } from '@/features/train/components';
 import { DEFAULT_INCREMENT_KG, nextTarget } from '@/features/train/progression';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -37,7 +39,10 @@ export default function TrainScreen() {
   const readiness = log.data?.readiness_score ?? null;
   const light = isLightDay(readiness);
 
-  const sessionQuery = useTodaySession(dateKey, workoutKey);
+  const hasStationLifts =
+    !!workoutKey && WORKOUTS[workoutKey].exerciseKeys.some((k) => EXERCISES[k].smartStation);
+  const pairing = useStationPairing({ enabled: hasStationLifts });
+  const sessionQuery = useTodaySession(dateKey, workoutKey, { poll: !!pairing.data });
   const historyQuery = useWorkoutHistory(dateKey);
   const actions = useSessionActions({
     date: dateKey,
@@ -153,6 +158,9 @@ export default function TrainScreen() {
         </Text>
         {light ? <Notice>{t('train.lightNotice')}</Notice> : null}
         {readiness == null ? <Notice tone="medium">{t('train.checkinNudge')}</Notice> : null}
+        {hasStationLifts && !pairing.isPending ? (
+          <StationCard pairing={pairing.data ?? null} />
+        ) : null}
 
         <Panel>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -202,9 +210,6 @@ export default function TrainScreen() {
         ) : null}
 
         {historyLink}
-        <Text variant="small" color="muted" style={{ textAlign: 'center' }}>
-          {t('train.smartNote')}
-        </Text>
         {/* Room for the floating rest timer. */}
         <View style={{ height: restStartedAt ? 60 : 0 }} />
       </Screen>

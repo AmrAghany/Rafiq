@@ -7,6 +7,7 @@ import { parseNumber } from '@/features/onboarding/validation';
 import { EXERCISES, type PrescribedExercise } from '@/features/plan/engine';
 import { exerciseName } from '@/features/plan/names';
 import { cancelRestEnd, scheduleRestEnd } from '@/features/reminders/notifications';
+import { isolate } from '@/i18n/bidi';
 import { useTheme } from '@/theme/ThemeProvider';
 
 import type { SetLog } from './api';
@@ -49,7 +50,8 @@ function NumberCell({
       style={[
         typography.body,
         {
-          minWidth: 64,
+          // Fixed, so the set label keeps its room; wide enough for "102.5" at 1.5× text.
+          width: 76,
           textAlign: 'center',
           color: colors.ink,
           borderWidth: 1.5,
@@ -154,7 +156,7 @@ export function ExerciseCard({
           ) : null}
         </Text>
         {exercise.smartStation ? (
-          <Pill label={t('train.smartStation', { station: exercise.smartStation })} />
+          <Pill label={t('train.smartStation', { station: isolate(exercise.smartStation) })} />
         ) : null}
       </View>
       <Text color="muted" style={{ fontSize: 15 }}>
@@ -186,9 +188,14 @@ export function ExerciseCard({
           <View
             key={n}
             style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, minHeight: 44 }}>
-            <Text variant="label" style={{ flex: 1 }}>
-              {t('train.set', { n })}
-            </Text>
+            <View style={{ flex: 1, minWidth: 56 }}>
+              <Text variant="label">{t('train.set', { n })}</Text>
+              {logged?.source === 'station' ? (
+                <Text variant="small" color="muted" testID={`station-set-${exercise.key}-${n}`}>
+                  {t('stations.setBadge')}
+                </Text>
+              ) : null}
+            </View>
             {targetKg != null ? (
               <>
                 <NumberCell

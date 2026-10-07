@@ -357,7 +357,6 @@
     "completeTitle": "Workout complete",
     "completeBody": "Great work. Have your recovery meal within 2 hours. Tomorrow is a {{dayType}}.",
     "history": "Workout history",
-    "smartNote": "Barbell lifts at partner smart stations will log themselves in a later update.",
     "rest": "Rest {{time}}",
     "skip": "Skip",
     "restOverTitle": "Rest over",
@@ -513,7 +512,7 @@
       "name": "Elite",
       "features": [
         "Everything in Pro",
-        "Monthly review of your plan by a real coach (coming soon)",
+        "Monthly review of your plan by a real coach",
         "Higher daily AI limits"
       ]
     }
@@ -577,5 +576,72 @@
     "unchanged": "{{value}} (no change)",
     "keepsHistory": "Your goal, training days and health answers stay the same. Your logged workout weights carry on.",
     "save": "Save scan and update my plan"
+  },
+  "health": {
+    "provider": {
+      "apple_health": "Apple Health",
+      "health_connect": "Health Connect"
+    },
+    "body": "Rafiq can read your sleep and steps from {{source}}. Your sleep suggests your morning check-in answer, and your coach sees both. Rafiq never writes to {{source}}.",
+    "connect": "Connect {{source}}",
+    "toggle": "Read from {{source}}",
+    "manageIos": "To remove access, go to Settings › Health › Data Access & Devices › Rafiq.",
+    "manageAndroid": "To remove access, open Health Connect › App permissions › Rafiq.",
+    "problems": {
+      "unsupported": "{{source}} isn't available on this device.",
+      "not_installed": "Install Health Connect from Google Play, then try again.",
+      "update_required": "Update Health Connect from Google Play, then try again.",
+      "denied": "Rafiq didn't get access. You can allow it in {{source}}."
+    },
+    "duration": "{{h}} h {{m}} min",
+    "sleepSuggested": "{{duration}} of sleep from {{source}}. Change the answer if it doesn't feel right.",
+    "lastNight": "sleep last night",
+    "stepsToday": "steps today",
+    "from": "From {{source}}"
+  },
+  "review": {
+    "title": "Coach review",
+    "lockedTitle": "A monthly review by a real coach",
+    "lockedBody": "With Elite, a certified coach looks at your month (training, scans, check-ins and food) and writes you a personal review.",
+    "lockedCta": "See Elite",
+    "intro": "Ask your coach to review {{month}}. They'll look at your training, scans, check-ins, sleep and food, and write back with what to change.",
+    "noteLabel": "Anything you want your coach to look at?",
+    "notePlaceholder": "e.g. my bench press has stalled",
+    "consent": "Your coach will see your plan, scans, workouts, check-ins, sleep, steps and food logs for this review. Your coach never sees your chats.",
+    "request": "Request my review",
+    "requested": "Your {{month}} review is requested. A coach will pick it up soon, usually within 3 days.",
+    "inReview": "{{coach}} is reviewing your {{month}}.",
+    "ready": "Your {{month}} review from {{coach}} is ready.",
+    "read": "Read my review",
+    "earlier": "{{month}} review",
+    "readyTitle": "Your coach review is ready",
+    "readyBody": "{{coach}} has reviewed your month.",
+    "notReady": "This review isn't ready yet.",
+    "byCoach": "From {{coach}}",
+    "sections": {
+      "summary": "Summary",
+      "training": "Training",
+      "nutrition": "Nutrition",
+      "focus": "Focus for next month"
+    },
+    "errors": {
+      "elite_required": "Coach reviews are part of Elite.",
+      "already_requested": "You've already requested this month's review.",
+      "failed": "We couldn't send your request. Check your connection and try again."
+    }
+  },
+  "stations": {
+    "title": "Lifting at a smart station?",
+    "body": "At partner gyms, type the 6-digit code shown on the rack or bench. Your barbell sets then log themselves, with the weight and reps the station measured.",
+    "codeLabel": "Station code",
+    "pair": "Pair with station",
+    "pairedTitle": "Paired with {{station}}",
+    "pairedBody": "At {{gym}}. Your sets on {{lifts}} are being logged for you. Pairing ends after 20 minutes without a set.",
+    "end": "End pairing",
+    "setBadge": "Logged by station",
+    "errors": {
+      "invalid_code": "That code didn't work. Check the 6 digits on the station's screen; codes last 2 minutes.",
+      "failed": "We couldn't pair. Check your connection and try again."
+    }
   }
 }

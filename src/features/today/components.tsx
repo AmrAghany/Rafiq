@@ -22,12 +22,13 @@ import {
   type CheckinAnswer,
   type Plan,
 } from '@/features/plan/engine';
+import { hoursAndMinutes, sleepAnswer } from '@/features/health/summary';
 import { workoutName } from '@/features/plan/names';
 import { requestPermission } from '@/features/reminders/notifications';
 import { useSettings } from '@/stores/settings';
 import { useTheme } from '@/theme/ThemeProvider';
 
-import type { DailyLog } from './api';
+import type { DailyLog, HealthDay } from './api';
 import { waterGoal, type TimelineItem } from './timeline';
 import { timelineText } from './timelineText';
 
@@ -66,16 +67,29 @@ export function DayCard({ plan, dayIndex }: { plan: Plan; dayIndex: number }) {
 
 type Answers = Partial<Checkin>;
 
+/** "7 h 20 min" in the app language. */
+export function sleepText(minutes: number, t: ReturnType<typeof useTranslation>['t']) {
+  return t('health.duration', hoursAndMinutes(minutes));
+}
+
 export function CheckinCard({
   log,
   onSave,
+  sleepMinutes = null,
+  healthProvider = null,
 }: {
   log: DailyLog;
   onSave: (checkin: (Checkin & { score: number }) | null) => void;
+  /** Last night's sleep from Apple Health / Health Connect, used to suggest an answer. */
+  sleepMinutes?: number | null;
+  healthProvider?: HealthDay['health_source'];
 }) {
   const { t } = useTranslation();
   const { colors, spacing } = useTheme();
-  const [answers, setAnswers] = useState<Answers>({});
+  const [chosen, setAnswers] = useState<Answers>({});
+  // A recorded night pre-selects the sleep answer until the member picks one themselves.
+  const suggestedSleep = sleepMinutes != null ? sleepAnswer(sleepMinutes) : undefined;
+  const answers: Answers = { ...chosen, sleep: chosen.sleep ?? suggestedSleep };
 
   if (log.checkin) {
     const score = log.checkin.score;
@@ -122,6 +136,14 @@ export function CheckinCard({
         {t('checkin.title')}
       </Text>
       {question('sleep', 'sleep')}
+      {sleepMinutes != null && healthProvider ? (
+        <Text testID="sleep-from-health" variant="small" color="muted">
+          {t('health.sleepSuggested', {
+            duration: sleepText(sleepMinutes, t),
+            source: t(`health.provider.${healthProvider}`),
+          })}
+        </Text>
+      ) : null}
       {question('energy', 'energy')}
       {question('soreness', 'soreness')}
       <Button
@@ -280,5 +302,29 @@ export function Timeline({
         );
       })}
     </View>
+  );
+}
+
+/** Sleep and steps from Apple Health / Health Connect, when connected and recorded. */
+export function HealthCard({ health }: { health: HealthDay }) {
+  const { t } = useTranslation();
+  const { spacing } = useTheme();
+  if (!health.health_source || (health.sleep_minutes == null && health.steps == null)) {
+    return null;
+  }
+  return (
+    <Panel>
+      <View style={{ flexDirection: 'row', gap: spacing.lg }}>
+        {health.sleep_minutes != null ? (
+          <Stat value={sleepText(health.sleep_minutes, t)} label={t('health.lastNight')} />
+        ) : null}
+        {health.steps != null ? (
+          <Stat value={health.steps.toLocaleString('en-US')} label={t('health.stepsToday')} />
+        ) : null}
+      </View>
+      <Text variant="small" color="muted">
+        {t('health.from', { source: t(`health.provider.${health.health_source}`) })}
+      </Text>
+    </Panel>
   );
 }

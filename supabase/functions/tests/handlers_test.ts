@@ -547,6 +547,7 @@ Deno.test({
         for (const row of out[table]) assertEquals(row.user_id, pro.id);
       }
       assert(Object.keys(out.photo_links).includes(`meal-photos/${pro.id}/meal-1.jpg`));
+      assertEquals(out.coach_reviews, []);
     });
 
     await t.step('delete account removes photos, rows and the login', async () => {

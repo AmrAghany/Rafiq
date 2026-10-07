@@ -36,6 +36,12 @@ export function createHandler(deps: Deps) {
       out[table] = data;
     }
 
+    // Coach reviews aren't readable directly; this returns the member's own, with a
+    // coach's text only once delivered.
+    const reviews = await db.rpc('my_coach_reviews');
+    if (reviews.error) throw new HttpError('internal');
+    out.coach_reviews = reviews.data;
+
     const photoLinks: Record<string, string> = {};
     for (const [bucket, rows] of [
       ['scan-photos', out.body_scans],

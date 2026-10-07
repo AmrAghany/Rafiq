@@ -3,10 +3,12 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@kingstinct/react-native-healthkit": "^16.0.0",
     "@supabase/supabase-js": "^2.117.2",
     "@tanstack/react-query": "^5.104.1",
     "expo": "~57.0.27",
     "expo-apple-authentication": "~57.0.2",
+    "expo-build-properties": "~57.0.22",
     "expo-constants": "~57.0.21",
     "expo-crypto": "~57.0.3",
     "expo-font": "~57.0.4",
@@ -26,6 +28,8 @@
     "react-i18next": "^17.0.16",
     "react-native": "0.86.3",
     "react-native-gesture-handler": "~2.32.0",
+    "react-native-health-connect": "^4.1.3",
+    "react-native-nitro-modules": "^0.37.1",
     "react-native-purchases": "^10.11.0",
     "react-native-reanimated": "4.5.1",
     "react-native-safe-area-context": "~5.7.0",
@@ -64,7 +68,11 @@
     "test:integration": "jest -c jest.integration.config.js",
     "fn:check": "cd supabase/functions && deno check */index.ts tests/*.ts",
     "fn:test": "cd supabase/functions && deno task test",
-    "fn:serve": "npx supabase functions serve --env-file supabase/functions/.env"
+    "fn:serve": "npx supabase functions serve --env-file supabase/functions/.env",
+    "coach:dev": "npm --prefix web/coach run dev",
+    "coach:build": "npm --prefix web/coach run build",
+    "coach:check": "npm --prefix web/coach run typecheck && npm --prefix web/coach test",
+    "station:sim": "node scripts/station-sim.js"
   },
   "private": true,
   "jest": {
@@ -75,7 +83,8 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/supabase/",
-      "/src/__integration__/"
+      "/src/__integration__/",
+      "/web/"
     ],
     "testTimeout": 30000
   }

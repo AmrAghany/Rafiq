@@ -54,7 +54,7 @@ export function createHandler(deps: Deps) {
         db.from('plans').select('plan').eq('user_id', user.id).eq('is_active', true).maybeSingle(),
         db
           .from('daily_logs')
-          .select('readiness_score')
+          .select('readiness_score, sleep_minutes, steps')
           .eq('user_id', user.id)
           .eq('log_date', localDate)
           .maybeSingle(),
@@ -108,6 +108,8 @@ export function createHandler(deps: Deps) {
         workoutName,
         exercises,
         readiness: daily.data?.readiness_score ?? null,
+        sleepMinutes: daily.data?.sleep_minutes ?? null,
+        steps: daily.data?.steps ?? null,
         eatenKcal: (meals.data ?? []).reduce(
           (a: number, r: { kcal: number | null }) => a + (r.kcal ?? 0),
           0,

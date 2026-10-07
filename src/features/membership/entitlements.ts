@@ -9,7 +9,7 @@ export type Feature =
   | 'scan_photo' // read InBody sheets from a photo; program from InBody
   | 'meal_plans' // carb cycle targets and meal plans (Food tab)
   | 'meal_ai' // meal logging by photo or text
-  | 'coach_review'; // monthly review by a human coach (later phase)
+  | 'coach_review'; // monthly review by a human coach
 
 const FEATURES: Record<Tier, readonly Feature[]> = {
   free: [],

@@ -45,6 +45,9 @@ export interface CoachContext {
   workoutName: string | null;
   exercises: ExerciseInfo[];
   readiness: number | null;
+  /** From Apple Health / Health Connect, when the member connected it. */
+  sleepMinutes?: number | null;
+  steps?: number | null;
   eatenKcal: number;
   ramadan: boolean;
   /** "HH:MM" suhoor and iftar times, when Ramadan mode is on. */
@@ -130,7 +133,7 @@ export function buildMemberContext(c: CoachContext): string {
     );
   }
   lines.push(
-    `Readiness this morning: ${c.readiness == null ? 'not checked in yet' : `${c.readiness}/100`}. Ramadan mode: ${c.ramadan ? `on (fasting${c.fastTimes ? `; suhoor ${c.fastTimes.suhoor}, iftar ${c.fastTimes.iftar}` : ''})` : 'off'}.${c.localTime ? ` Local time: ${c.localTime}.` : ''}`,
+    `Readiness this morning: ${c.readiness == null ? 'not checked in yet' : `${c.readiness}/100`}.${c.sleepMinutes != null ? ` Sleep last night: ${Math.floor(c.sleepMinutes / 60)} h ${c.sleepMinutes % 60} min.` : ''}${c.steps != null ? ` Steps today so far: ${c.steps}.` : ''} Ramadan mode: ${c.ramadan ? `on (fasting${c.fastTimes ? `; suhoor ${c.fastTimes.suhoor}, iftar ${c.fastTimes.iftar}` : ''})` : 'off'}.${c.localTime ? ` Local time: ${c.localTime}.` : ''}`,
   );
   return lines.join('\n');
 }

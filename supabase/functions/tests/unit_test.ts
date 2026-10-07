@@ -5,8 +5,8 @@ import {
   ageFrom,
   buildMemberContext,
   COACH_RULES,
-  historyForRequest,
   type CoachContext,
+  historyForRequest,
   type StoredPlan,
 } from '../_shared/coach.ts';
 import { DAILY_LIMITS } from '../_shared/entitlements.ts';
@@ -35,7 +35,12 @@ const plan: StoredPlan = {
     { dayType: 'low', workoutKey: null },
     { dayType: 'low', workoutKey: null },
   ],
-  safety: { noDeficit: false, hideCalories: false, doctorNotice: false, moderateTraining: false },
+  safety: {
+    noDeficit: false,
+    hideCalories: false,
+    doctorNotice: false,
+    moderateTraining: false,
+  },
 };
 
 const ctx: CoachContext = {
@@ -109,6 +114,15 @@ Deno.test('member context matches the prototype data', () => {
   );
 });
 
+Deno.test('sleep and steps from Health reach the coach', () => {
+  const text = buildMemberContext({ ...ctx, sleepMinutes: 412, steps: 6240 });
+  assertStringIncludes(
+    text,
+    'Readiness this morning: 80/100. Sleep last night: 6 h 52 min. Steps today so far: 6240.',
+  );
+  assert(!/Sleep last night/.test(buildMemberContext(ctx)), 'no sleep line without Health');
+});
+
 Deno.test('Ramadan mode gives the coach the suhoor and iftar times', () => {
   const text = buildMemberContext({
     ...ctx,
@@ -124,8 +138,15 @@ Deno.test('a light day lowers sets and loads in the context', () => {
 });
 
 Deno.test('careful members get no calorie numbers in the context', () => {
-  const careful = { ...plan, safety: { ...plan.safety, noDeficit: true, hideCalories: true } };
-  const text = buildMemberContext({ ...ctx, plan: careful, healthFlags: ['eating_disorder'] });
+  const careful = {
+    ...plan,
+    safety: { ...plan.safety, noDeficit: true, hideCalories: true },
+  };
+  const text = buildMemberContext({
+    ...ctx,
+    plan: careful,
+    healthFlags: ['eating_disorder'],
+  });
   assertStringIncludes(text, 'must not get calorie targets');
   assert(!/kcal/.test(text), 'no kcal anywhere');
   assertStringIncludes(text, 'health notes: eating disorder');
@@ -138,7 +159,12 @@ Deno.test('medical flags keep training moderate; rest days say so', () => {
   };
   assertStringIncludes(buildMemberContext({ ...ctx, plan: moderate }), 'do not push intensity up');
   assertStringIncludes(
-    buildMemberContext({ ...ctx, dayIndex: 2, workoutName: null, exercises: [] }),
+    buildMemberContext({
+      ...ctx,
+      dayIndex: 2,
+      workoutName: null,
+      exercises: [],
+    }),
     'Today (Wednesday) is a rest day.',
   );
 });
@@ -232,7 +258,12 @@ Deno.test('scan readings keep only plausible values', () => {
         bmr_kcal: 1810.4,
       }),
     ),
-    { weight_kg: 82.1, body_fat_percent: 18.4, skeletal_muscle_kg: 38.2, bmr_kcal: 1810 },
+    {
+      weight_kg: 82.1,
+      body_fat_percent: 18.4,
+      skeletal_muscle_kg: 38.2,
+      bmr_kcal: 1810,
+    },
   );
   assertEquals(
     checkScan(
@@ -244,7 +275,12 @@ Deno.test('scan readings keep only plausible values', () => {
         bmr_kcal: null,
       }),
     ),
-    { weight_kg: 82, body_fat_percent: null, skeletal_muscle_kg: null, bmr_kcal: null },
+    {
+      weight_kg: 82,
+      body_fat_percent: null,
+      skeletal_muscle_kg: null,
+      bmr_kcal: null,
+    },
   );
   assertEquals(
     checkScan(

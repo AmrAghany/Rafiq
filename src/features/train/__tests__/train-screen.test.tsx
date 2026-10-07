@@ -12,6 +12,9 @@ let mockReadiness: number | null = null;
 let mockTodayIndex = 1; // Tuesday: Lower body A
 let mockSession: WorkoutSession | null = null;
 let mockHistory: WorkoutSession[] = [];
+let mockPairing: unknown = null;
+const mockSessionArgs = jest.fn();
+const mockPair = jest.fn();
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('@/lib/supabase', () => ({ supabase: {} }));
@@ -47,13 +50,23 @@ jest.mock('@/features/today/api', () => {
 });
 jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
-  useTodaySession: () => ({ data: mockSession, isPending: false }),
+  useTodaySession: (...args: unknown[]) => {
+    mockSessionArgs(...args);
+    return { data: mockSession, isPending: false };
+  },
   useWorkoutHistory: () => ({ data: mockHistory }),
   useSessionActions: () => ({
     saveSet: { mutate: mockSaveSet },
     setSwaps: { mutate: mockSetSwaps },
     complete: { mutate: mockComplete, isPending: false },
   }),
+}));
+
+jest.mock('@/features/stations/api', () => ({
+  ...jest.requireActual('@/features/stations/api'),
+  useStationPairing: () => ({ data: mockPairing, isPending: false }),
+  usePairStation: () => ({ mutate: mockPair, isPending: false, error: null }),
+  useEndPairing: () => ({ mutate: jest.fn() }),
 }));
 
 const squatSets = (date: string, kg: number): WorkoutSession => ({
@@ -82,6 +95,9 @@ beforeEach(() => {
   mockTodayIndex = 1;
   mockSession = null;
   mockHistory = [];
+  mockPairing = null;
+  mockSessionArgs.mockReset();
+  mockPair.mockReset();
 });
 afterEach(() => jest.useRealTimers());
 
@@ -90,7 +106,8 @@ describe('Train screen', () => {
     await render(<TrainScreen />);
     expect(screen.getByText('Lower body A')).toBeTruthy();
     expect(screen.getByText('4 × 6 reps, 65 kg')).toBeTruthy(); // back squat
-    expect(screen.getByText('Auto-tracked at Rack 3')).toBeTruthy();
+    // Station labels are direction-isolated so they read right inside Arabic text.
+    expect(screen.getByText('Auto-tracked at \u2068Rack 3\u2069')).toBeTruthy();
     expect(screen.getByText('3 × 45 s')).toBeTruthy(); // plank
     expect(screen.getByTestId('sets-progress')).toHaveTextContent('0 of 21 sets done');
     expect(screen.getByText(/Do your morning check-in/)).toBeTruthy();
@@ -202,5 +219,46 @@ describe('Train screen', () => {
     await render(<TrainScreen />);
     expect(screen.getByText('Rest day')).toBeTruthy();
     expect(screen.getByText('Next workout: Thu, Upper body B')).toBeTruthy();
+  });
+
+  it('pairs with a smart station by its code', async () => {
+    await render(<TrainScreen />);
+    await fireEvent.changeText(screen.getByTestId('station-code'), '12');
+    await fireEvent.press(screen.getByTestId('station-pair'));
+    expect(screen.getByText(/That code didn't work/)).toBeTruthy();
+    expect(mockPair).not.toHaveBeenCalled();
+    await fireEvent.changeText(screen.getByTestId('station-code'), '١٢٣ ٤٥٦');
+    await fireEvent.press(screen.getByTestId('station-pair'));
+    expect(mockPair).toHaveBeenCalledWith('123456', expect.anything());
+    expect(mockSessionArgs).toHaveBeenLastCalledWith('2026-10-06', 'lower_a', { poll: false });
+  });
+
+  it('while paired, polls for sets and marks the ones the station logged', async () => {
+    mockPairing = {
+      station_id: 'fitzone-rack-3',
+      label: 'Rack 3',
+      gym_name: 'FitZone Olaya',
+      exercise_keys: ['back_squat', 'deadlift'],
+      ends_at: '2026-10-06T18:20:00Z',
+    };
+    const session = squatSets('2026-10-06', 70);
+    session.completed_at = null;
+    session.set_logs = session.set_logs
+      .slice(0, 2)
+      .map((x) => ({ ...x, source: 'station' as const }));
+    mockSession = session;
+    await render(<TrainScreen />);
+    expect(screen.getByTestId('station-paired')).toHaveTextContent(
+      /^At \u2068FitZone Olaya\u2069\. Your sets on Back squat, Deadlift are being logged for you\./,
+    );
+    expect(mockSessionArgs).toHaveBeenLastCalledWith('2026-10-06', 'lower_a', { poll: true });
+    expect(screen.getByTestId('station-set-back_squat-1')).toHaveTextContent('Logged by station');
+    expect(screen.queryByTestId('station-set-back_squat-3')).toBeNull();
+  });
+
+  it('hides station pairing on a workout without station lifts', async () => {
+    mockTodayIndex = 2; // Wednesday: rest
+    await render(<TrainScreen />);
+    expect(screen.queryByTestId('station-code')).toBeNull();
   });
 });

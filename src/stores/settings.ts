@@ -12,8 +12,11 @@ interface SettingsState {
   themePreference: ThemePreference;
   /** The member turned on daily reminders (OS permission is checked separately). */
   remindersEnabled: boolean;
+  /** The member connected Apple Health / Health Connect for sleep and steps. */
+  healthEnabled: boolean;
   hasHydrated: boolean;
   setRemindersEnabled: (enabled: boolean) => void;
+  setHealthEnabled: (enabled: boolean) => void;
   setLanguage: (language: Language) => void;
   setThemePreference: (preference: ThemePreference) => void;
 }
@@ -25,18 +28,21 @@ export const useSettings = create<SettingsState>()(
       language: getDeviceLanguage(),
       themePreference: 'system',
       remindersEnabled: false,
+      healthEnabled: false,
       hasHydrated: false,
       setRemindersEnabled: (remindersEnabled) => set({ remindersEnabled }),
+      setHealthEnabled: (healthEnabled) => set({ healthEnabled }),
       setLanguage: (language) => set({ language }),
       setThemePreference: (themePreference) => set({ themePreference }),
     }),
     {
       name: 'rafiq.settings',
       storage: createJSONStorage(() => secureStorage),
-      partialize: ({ language, themePreference, remindersEnabled }) => ({
+      partialize: ({ language, themePreference, remindersEnabled, healthEnabled }) => ({
         language,
         themePreference,
         remindersEnabled,
+        healthEnabled,
       }),
       onRehydrateStorage: () => () => useSettings.setState({ hasHydrated: true }),
     },

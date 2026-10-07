@@ -19,6 +19,14 @@ module.exports = defineConfig([
     },
   },
   {
-    ignores: ['dist/*', 'reference/*', 'supabase/functions/**', 'src/lib/database.types.ts'],
+    ignores: [
+      'dist/*',
+      'reference/*',
+      'supabase/functions/**',
+      'src/lib/database.types.ts',
+      '.expo/**',
+      'web/coach/dist/**',
+      'web/coach/node_modules/**',
+    ],
   },
 ]);

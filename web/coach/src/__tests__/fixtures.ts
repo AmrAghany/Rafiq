@@ -1,0 +1,117 @@
+import type { Bundle } from '../types';
+
+export const bundle: Bundle = {
+  review: {
+    id: 'r1',
+    period: '2026-10-01',
+    status: 'in_review',
+    member_note: 'Bench has stalled',
+    summary: null,
+    training: null,
+    nutrition: null,
+    focus: null,
+    requested_at: '2026-10-05T10:00:00Z',
+    delivered_at: null,
+  },
+  profile: {
+    first_name: 'Layla',
+    sex: 'female',
+    age: 29,
+    height_cm: 164,
+    weight_kg: 63.5,
+    goal: 'recomp',
+    training_days: 3,
+    experience: 'beginner',
+    health_flags: [],
+    ramadan_mode: false,
+    locale: 'ar',
+  },
+  plan: {
+    version: 2,
+    created_at: '2026-09-01T00:00:00Z',
+    plan: {
+      targetKcal: 1900,
+      proteinG: 127,
+      bmrKcal: 1390,
+      trainingDays: 3,
+      safety: { hideCalories: false, doctorNotice: false },
+      week: [
+        { workoutKey: 'full_body_a', dayType: 'high' },
+        { workoutKey: null, dayType: 'low' },
+        { workoutKey: 'full_body_b', dayType: 'high' },
+        { workoutKey: null, dayType: 'low' },
+        { workoutKey: 'full_body_c', dayType: 'high' },
+        { workoutKey: null, dayType: 'low' },
+        { workoutKey: null, dayType: 'low' },
+      ],
+    },
+  },
+  scans: [
+    {
+      scanned_on: '2026-09-01',
+      weight_kg: 64,
+      body_fat_pct: 27,
+      skeletal_muscle_kg: 25,
+      bmr_kcal: null,
+    },
+  ],
+  days: [
+    { date: '2026-09-28', readiness: 70, sleep_minutes: 420, steps: 8000, water: 8, done: 6 },
+    { date: '2026-09-29', readiness: 90, sleep_minutes: null, steps: 6010, water: 9, done: 7 },
+    { date: '2026-10-05', readiness: 50, sleep_minutes: 300, steps: null, water: 4, done: 2 },
+  ],
+  workouts: [
+    {
+      date: '2026-09-28',
+      workout_key: 'full_body_a',
+      completed: true,
+      sets: [
+        {
+          exercise_key: 'bench_press',
+          set: 1,
+          weight_kg: 30,
+          reps: 8,
+          target_reps: 8,
+          completed: true,
+        },
+        {
+          exercise_key: 'bench_press',
+          set: 2,
+          weight_kg: 30,
+          reps: 6,
+          target_reps: 8,
+          completed: true,
+        },
+        {
+          exercise_key: 'back_squat',
+          set: 1,
+          weight_kg: 40,
+          reps: 8,
+          target_reps: 8,
+          completed: false,
+        },
+      ],
+    },
+    {
+      date: '2026-10-05',
+      workout_key: 'full_body_b',
+      completed: false,
+      sets: [
+        {
+          exercise_key: 'bench_press',
+          set: 1,
+          weight_kg: 32.5,
+          reps: 5,
+          target_reps: 8,
+          completed: true,
+        },
+      ],
+    },
+  ],
+  meals: [
+    { date: '2026-09-28', name: 'Oats', kcal: 500, protein_g: 30, carbs_g: 60, fat_g: 10 },
+    { date: '2026-09-28', name: 'Chicken', kcal: 700, protein_g: 50, carbs_g: 60, fat_g: 20 },
+    { date: '2026-09-29', name: 'Ful', kcal: 600, protein_g: 30, carbs_g: 60, fat_g: 20 },
+    { date: '2026-10-05', name: 'Dates', kcal: null, protein_g: null, carbs_g: null, fat_g: null },
+  ],
+};

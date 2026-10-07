@@ -16,6 +16,8 @@ export interface SetLog {
   actual_reps: number | null;
   actual_weight_kg: number | null;
   completed: boolean;
+  /** 'station' when a partner smart station logged the set. */
+  source?: 'app' | 'station';
 }
 
 export interface WorkoutSession {
@@ -32,12 +34,18 @@ export const sessionKey = (uid: string | undefined, date: string, workoutKey: st
   ['session', uid, date, workoutKey] as const;
 export const historyKey = (uid: string | undefined) => ['history', uid] as const;
 
-export function useTodaySession(date: string, workoutKey: string | null) {
+export function useTodaySession(
+  date: string,
+  workoutKey: string | null,
+  /** While paired with a smart station, sets arrive from the server: poll for them. */
+  { poll = false }: { poll?: boolean } = {},
+) {
   const { session } = useAuth();
   const uid = session?.user.id;
   return useQuery({
     queryKey: sessionKey(uid, date, workoutKey),
     enabled: !!uid && !!workoutKey,
+    refetchInterval: poll ? 10_000 : false,
     queryFn: async (): Promise<WorkoutSession | null> => {
       const { data, error } = await supabase
         .from('workout_sessions')

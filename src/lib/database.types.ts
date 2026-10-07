@@ -105,14 +105,84 @@ export type Database = {
         };
         Relationships: [];
       };
+      coach_reviews: {
+        Row: {
+          claimed_at: string | null;
+          coach_id: string | null;
+          coach_name: string | null;
+          delivered_at: string | null;
+          focus: string | null;
+          id: string;
+          member_id: string;
+          member_note: string | null;
+          nutrition: string | null;
+          period: string;
+          read_at: string | null;
+          requested_at: string;
+          status: Database['public']['Enums']['review_status'];
+          summary: string | null;
+          training: string | null;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          claimed_at?: string | null;
+          coach_id?: string | null;
+          coach_name?: string | null;
+          delivered_at?: string | null;
+          focus?: string | null;
+          id?: string;
+          member_id: string;
+          member_note?: string | null;
+          nutrition?: string | null;
+          period: string;
+          read_at?: string | null;
+          requested_at?: string;
+          status?: Database['public']['Enums']['review_status'];
+          summary?: string | null;
+          training?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          claimed_at?: string | null;
+          coach_id?: string | null;
+          coach_name?: string | null;
+          delivered_at?: string | null;
+          focus?: string | null;
+          id?: string;
+          member_id?: string;
+          member_note?: string | null;
+          nutrition?: string | null;
+          period?: string;
+          read_at?: string | null;
+          requested_at?: string;
+          status?: Database['public']['Enums']['review_status'];
+          summary?: string | null;
+          training?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'coach_reviews_coach_id_fkey';
+            columns: ['coach_id'];
+            isOneToOne: false;
+            referencedRelation: 'staff';
+            referencedColumns: ['user_id'];
+          },
+        ];
+      };
       daily_logs: {
         Row: {
           checkin: Json | null;
           completed_items: string[];
           created_at: string;
+          health_source: string | null;
+          health_synced_at: string | null;
           id: string;
           log_date: string;
           readiness_score: number | null;
+          sleep_minutes: number | null;
+          steps: number | null;
           updated_at: string;
           user_id: string;
           water_glasses: number;
@@ -122,9 +192,13 @@ export type Database = {
           checkin?: Json | null;
           completed_items?: string[];
           created_at?: string;
+          health_source?: string | null;
+          health_synced_at?: string | null;
           id?: string;
           log_date: string;
           readiness_score?: number | null;
+          sleep_minutes?: number | null;
+          steps?: number | null;
           updated_at?: string;
           user_id: string;
           water_glasses?: number;
@@ -133,9 +207,13 @@ export type Database = {
           checkin?: Json | null;
           completed_items?: string[];
           created_at?: string;
+          health_source?: string | null;
+          health_synced_at?: string | null;
           id?: string;
           log_date?: string;
           readiness_score?: number | null;
+          sleep_minutes?: number | null;
+          steps?: number | null;
           updated_at?: string;
           user_id?: string;
           water_glasses?: number;
@@ -458,6 +536,8 @@ export type Database = {
           id: string;
           session_id: string;
           set_number: number;
+          source: string;
+          station_id: string | null;
           swapped_from_key: string | null;
           target_reps: number | null;
           target_weight_kg: number | null;
@@ -474,6 +554,8 @@ export type Database = {
           id?: string;
           session_id: string;
           set_number: number;
+          source?: string;
+          station_id?: string | null;
           swapped_from_key?: string | null;
           target_reps?: number | null;
           target_weight_kg?: number | null;
@@ -489,6 +571,8 @@ export type Database = {
           id?: string;
           session_id?: string;
           set_number?: number;
+          source?: string;
+          station_id?: string | null;
           swapped_from_key?: string | null;
           target_reps?: number | null;
           target_weight_kg?: number | null;
@@ -510,6 +594,13 @@ export type Database = {
             referencedColumns: ['id', 'user_id'];
           },
           {
+            foreignKeyName: 'set_logs_station_id_fkey';
+            columns: ['station_id'];
+            isOneToOne: false;
+            referencedRelation: 'stations';
+            referencedColumns: ['id'];
+          },
+          {
             foreignKeyName: 'set_logs_swapped_from_key_fkey';
             columns: ['swapped_from_key'];
             isOneToOne: false;
@@ -517,6 +608,141 @@ export type Database = {
             referencedColumns: ['key'];
           },
         ];
+      };
+      staff: {
+        Row: {
+          created_at: string;
+          display_name: string;
+          role: Database['public']['Enums']['staff_role'];
+          user_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          display_name: string;
+          role?: Database['public']['Enums']['staff_role'];
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          display_name?: string;
+          role?: Database['public']['Enums']['staff_role'];
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      station_events: {
+        Row: {
+          event_id: string;
+          received_at: string;
+          set_log_id: string | null;
+          station_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          event_id: string;
+          received_at?: string;
+          set_log_id?: string | null;
+          station_id: string;
+        };
+        Update: {
+          event_id?: string;
+          received_at?: string;
+          set_log_id?: string | null;
+          station_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'station_events_set_log_id_fkey';
+            columns: ['set_log_id'];
+            isOneToOne: false;
+            referencedRelation: 'set_logs';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'station_events_station_id_fkey';
+            columns: ['station_id'];
+            isOneToOne: false;
+            referencedRelation: 'stations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      station_pairings: {
+        Row: {
+          code: string;
+          code_expires_at: string;
+          created_at: string;
+          ended_at: string | null;
+          ends_at: string | null;
+          id: string;
+          paired_at: string | null;
+          station_id: string;
+          user_id: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          code: string;
+          code_expires_at: string;
+          created_at?: string;
+          ended_at?: string | null;
+          ends_at?: string | null;
+          id?: string;
+          paired_at?: string | null;
+          station_id: string;
+          user_id?: string | null;
+        };
+        Update: {
+          code?: string;
+          code_expires_at?: string;
+          created_at?: string;
+          ended_at?: string | null;
+          ends_at?: string | null;
+          id?: string;
+          paired_at?: string | null;
+          station_id?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'station_pairings_station_id_fkey';
+            columns: ['station_id'];
+            isOneToOne: false;
+            referencedRelation: 'stations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      stations: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          exercise_keys: string[];
+          gym_name: string;
+          id: string;
+          label: string;
+          secret: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          exercise_keys: string[];
+          gym_name: string;
+          id: string;
+          label: string;
+          secret: string;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          exercise_keys?: string[];
+          gym_name?: string;
+          id?: string;
+          label?: string;
+          secret?: string;
+        };
+        Relationships: [];
       };
       subscriptions: {
         Row: {
@@ -651,6 +877,22 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      claim_coach_review: { Args: { p_id: string }; Returns: undefined };
+      coach_review_bundle: { Args: { p_id: string }; Returns: Json };
+      coach_review_queue: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          claimed_at: string;
+          delivered_at: string;
+          id: string;
+          is_mine: boolean;
+          member_first_name: string;
+          member_note: string;
+          period: string;
+          requested_at: string;
+          status: Database['public']['Enums']['review_status'];
+        }[];
+      };
       complete_onboarding: {
         Args: {
           p_engine_version: string;
@@ -673,6 +915,28 @@ export type Database = {
         Args: { p_user_id: string };
         Returns: Database['public']['Enums']['subscription_tier'];
       };
+      end_station_pairing: { Args: Record<PropertyKey, never>; Returns: undefined };
+      is_coach: { Args: Record<PropertyKey, never>; Returns: boolean };
+      mark_coach_review_read: { Args: { p_id: string }; Returns: undefined };
+      my_coach_reviews: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          coach_name: string;
+          delivered_at: string;
+          focus: string;
+          id: string;
+          member_note: string;
+          nutrition: string;
+          period: string;
+          read_at: string;
+          requested_at: string;
+          status: Database['public']['Enums']['review_status'];
+          summary: string;
+          training: string;
+        }[];
+      };
+      my_station_pairing: { Args: Record<PropertyKey, never>; Returns: Json };
+      pair_station: { Args: { p_code: string }; Returns: Json };
       record_scan: {
         Args: { p_engine_version: string; p_plan: Json; p_plan_inputs: Json; p_scan: Json };
         Returns: string;
@@ -681,6 +945,32 @@ export type Database = {
         Args: { p_feature: Database['public']['Enums']['ai_feature']; p_user_id: string };
         Returns: undefined;
       };
+      release_coach_review: { Args: { p_id: string }; Returns: undefined };
+      request_coach_review: { Args: { p_note: string }; Returns: string };
+      save_coach_review: {
+        Args: {
+          p_deliver: boolean;
+          p_focus: string;
+          p_id: string;
+          p_nutrition: string;
+          p_summary: string;
+          p_training: string;
+        };
+        Returns: undefined;
+      };
+      station_end_pairing: { Args: { p_station_id: string }; Returns: undefined };
+      station_log_set: {
+        Args: {
+          p_event_id: string;
+          p_exercise_key: string;
+          p_performed_at: string;
+          p_reps: number;
+          p_station_id: string;
+          p_weight_kg: number;
+        };
+        Returns: Json;
+      };
+      station_pairing_code: { Args: { p_station_id: string }; Returns: Json };
     };
     Enums: {
       ai_feature: 'coach_chat' | 'meal_estimate' | 'scan_read';
@@ -690,8 +980,10 @@ export type Database = {
       goal: 'lose' | 'build' | 'recomp';
       health_flag: 'injury' | 'heart' | 'diabetes' | 'pregnancy' | 'eating_disorder';
       meal_source: 'plan' | 'text' | 'photo' | 'manual';
+      review_status: 'requested' | 'in_review' | 'delivered';
       scan_source: 'manual' | 'photo';
       sex: 'male' | 'female';
+      staff_role: 'coach' | 'admin';
       subscription_tier: 'free' | 'pro' | 'elite';
     };
     CompositeTypes: {
@@ -811,8 +1103,10 @@ export const Constants = {
       goal: ['lose', 'build', 'recomp'],
       health_flag: ['injury', 'heart', 'diabetes', 'pregnancy', 'eating_disorder'],
       meal_source: ['plan', 'text', 'photo', 'manual'],
+      review_status: ['requested', 'in_review', 'delivered'],
       scan_source: ['manual', 'photo'],
       sex: ['male', 'female'],
+      staff_role: ['coach', 'admin'],
       subscription_tier: ['free', 'pro', 'elite'],
     },
   },

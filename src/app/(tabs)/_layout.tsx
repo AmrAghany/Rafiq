@@ -4,6 +4,7 @@ import { SymbolView, type SymbolViewProps } from 'expo-symbols';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useHealthSync } from '@/features/health/useHealthSync';
 import { useRescanReminder } from '@/features/progress/useRescanReminder';
 import { useReminderSync } from '@/features/reminders/useReminderSync';
 
@@ -24,6 +25,7 @@ export default function TabsLayout() {
   const { colors } = useTheme();
   useReminderSync();
   useRescanReminder();
+  useHealthSync();
 
   // Tapping a reminder opens the screen it is about.
   const response = Notifications.useLastNotificationResponse();

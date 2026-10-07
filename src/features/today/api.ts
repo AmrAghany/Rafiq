@@ -24,12 +24,21 @@ export interface DailyLog {
   completed_items: string[];
 }
 
+/** Read from Apple Health / Health Connect; written only by the health sync. */
+export interface HealthDay {
+  sleep_minutes: number | null;
+  steps: number | null;
+  health_source: 'apple_health' | 'health_connect' | null;
+}
+
 export const emptyDailyLog: DailyLog = {
   checkin: null,
   readiness_score: null,
   water_glasses: 0,
   completed_items: [],
 };
+
+const emptyHealth: HealthDay = { sleep_minutes: null, steps: null, health_source: null };
 
 export const dailyLogKey = (uid: string | undefined, date: string) =>
   ['daily_log', uid, date] as const;
@@ -52,15 +61,21 @@ export function useDailyLog(date: string) {
   return useQuery({
     queryKey: dailyLogKey(uid, date),
     enabled: !!uid,
-    queryFn: async (): Promise<DailyLog> => {
+    queryFn: async (): Promise<DailyLog & HealthDay> => {
       const { data, error } = await supabase
         .from('daily_logs')
-        .select('checkin, readiness_score, water_glasses, completed_items')
+        .select(
+          'checkin, readiness_score, water_glasses, completed_items, sleep_minutes, steps, health_source',
+        )
         .eq('user_id', uid!)
         .eq('log_date', date)
         .maybeSingle();
       if (error) throw error;
-      return data ? { ...emptyDailyLog, ...(data as unknown as DailyLog) } : emptyDailyLog;
+      return {
+        ...emptyDailyLog,
+        ...emptyHealth,
+        ...((data ?? {}) as Partial<DailyLog & HealthDay>),
+      };
     },
   });
 }
@@ -77,12 +92,19 @@ export function useUpdateDailyLog(date: string) {
       // The cache already holds the optimistic state (including earlier quick taps), so
       // send the whole row rather than only this patch.
       const merged = { ...(queryClient.getQueryData<DailyLog>(key) ?? emptyDailyLog), ...patch };
-      const { error } = await supabase
-        .from('daily_logs')
-        .upsert(
-          { user_id: uid!, log_date: date, ...merged, checkin: merged.checkin as unknown as Json },
-          { onConflict: 'user_id,log_date' },
-        );
+      // Only the member's own fields: sleep and steps belong to the health sync.
+      const { checkin, readiness_score, water_glasses, completed_items } = merged;
+      const { error } = await supabase.from('daily_logs').upsert(
+        {
+          user_id: uid!,
+          log_date: date,
+          checkin: checkin as unknown as Json,
+          readiness_score,
+          water_glasses,
+          completed_items,
+        },
+        { onConflict: 'user_id,log_date' },
+      );
       if (error) throw error;
     },
     onMutate: async (patch) => {

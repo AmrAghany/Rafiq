@@ -64,6 +64,10 @@ function RootNavigator() {
             options={{ headerShown: true, title: t('progress.title') }}
           />
           <Stack.Screen name="rescan" options={{ headerShown: true, title: t('rescan.title') }} />
+          <Stack.Screen
+            name="review/[id]"
+            options={{ headerShown: true, title: t('review.title') }}
+          />
         </Stack.Protected>
         <Stack.Protected guard={signedIn && !onboarded}>
           <Stack.Screen name="(onboarding)" />

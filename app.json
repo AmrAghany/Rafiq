@@ -21,7 +21,11 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.rafiq.app"
+      "package": "com.rafiq.app",
+      "permissions": [
+        "android.permission.health.READ_SLEEP",
+        "android.permission.health.READ_STEPS"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -57,6 +61,23 @@
           "photosPermission": "Rafiq uses your photos to read your InBody scan sheet and estimate your meals.",
           "cameraPermission": "Rafiq uses the camera to photograph your InBody scan sheet and your meals.",
           "microphonePermission": false
+        }
+      ],
+      [
+        "@kingstinct/react-native-healthkit",
+        {
+          "NSHealthShareUsageDescription": "Rafiq reads your sleep and steps to suggest your morning check-in and to give your coach the full picture of your day.",
+          "NSHealthUpdateUsageDescription": false,
+          "background": false
+        }
+      ],
+      "react-native-health-connect",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 26
+          }
         }
       ]
     ],

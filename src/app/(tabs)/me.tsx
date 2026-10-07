@@ -4,8 +4,10 @@ import { Alert } from 'react-native';
 
 import { Button, Panel, Screen, Segmented, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
+import { CoachReviewPanel } from '@/features/coachReview/CoachReviewPanel';
 import { MembershipPanel } from '@/features/membership/MembershipPanel';
 import { RescanCard } from '@/features/progress/RescanCard';
+import { HealthSettings } from '@/features/settings/HealthSettings';
 import { PrivacySettings } from '@/features/settings/PrivacySettings';
 import { RamadanSettings } from '@/features/settings/RamadanSettings';
 import { ScheduleSettings } from '@/features/settings/ScheduleSettings';
@@ -45,9 +47,13 @@ export default function MeScreen() {
 
       <MembershipPanel />
 
+      <CoachReviewPanel />
+
       <ScheduleSettings />
 
       <RamadanSettings />
+
+      <HealthSettings />
 
       <Panel>
         <Text variant="heading" accessibilityRole="header">

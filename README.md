@@ -117,6 +117,70 @@ prices in these markets include VAT, so proceeds are lower than the sticker pric
 - **Other countries**: let Apple and Google generate prices from the US price. In lower-income
   markets, review them against the Egypt row.
 
+## Apple Health and Health Connect
+
+Members can connect Apple Health (iOS) or Health Connect (Android) on the Me tab. Rafiq only
+**reads** sleep and steps, never writes. Last night's sleep suggests the morning check-in
+answer, and both appear on Today and in the coach's context. Readings are saved to the day's
+log (`daily_logs.sleep_minutes`, `steps`) when the app opens or comes back to the foreground,
+at most every 15 minutes.
+
+- Native modules: `@kingstinct/react-native-healthkit` (with `react-native-nitro-modules`)
+  and `react-native-health-connect`. Both need a device build; neither works in Expo Go.
+- `app.json` sets up the HealthKit entitlement and read-only usage text, the two Health
+  Connect read permissions, and Android `minSdkVersion` 26 (via `expo-build-properties`).
+- **Before release**:
+  - Google Play needs the Health Connect data declaration in the Play Console. Allow about
+    2 weeks: up to 7 days for approval, then about a week for access to reach Health Connect.
+  - App Store review checks that health data isn't used for advertising, and that the app
+    privacy details list Health and Fitness data.
+
+## Coach console (Elite reviews)
+
+Elite members request one review a month from the Me tab. Coaches work in a separate web
+console in `web/coach` (Vite + React). It uses the same Supabase project with the anon key.
+Every read and write goes through the `coach_*` database functions, which:
+
+- show a coach a member's data only while that coach holds the member's review;
+- keep a coach's draft hidden from the member until it's sent;
+- never include the member's chats.
+
+```bash
+npm --prefix web/coach install
+cp web/coach/.env.example web/coach/.env    # VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
+npm run coach:dev                           # http://localhost:5173
+npm run coach:build                         # static files in web/coach/dist, for any static host
+npm run coach:check                         # typecheck + tests
+```
+
+To make someone a coach, have them sign up (with the app, or any Supabase sign-up), then
+run this with the service role (SQL editor):
+
+```sql
+insert into public.staff (user_id, display_name)
+select id, 'Coach Omar' from auth.users where email = 'omar@example.com';
+```
+
+The console shows the member's first name, health notes (with a warning about calorie
+numbers for careful answers), profile and plan targets, and a week-by-week table of
+readiness, sleep, steps, workouts, sets and meals for the five weeks before the request.
+It also shows lift progress and scans. Coaches can save a draft, send the review (which
+can't be edited after), or give the review back to the queue. The console works in English
+and Arabic.
+
+## Smart stations
+
+Partner racks and benches pair with a member by a 6-digit code, then log barbell sets
+straight into the member's workout. The partner contract (endpoint, HMAC signing, requests
+and errors) is in [docs/smart-stations.md](docs/smart-stations.md).
+
+```bash
+npx supabase functions deploy station-api --no-verify-jwt
+SUPABASE_URL=… SUPABASE_SERVICE_ROLE_KEY=… npm run station:sim -- register <id> "<label>" "<gym>" back_squat,deadlift
+npm run station:sim -- code          # with STATION_ID and STATION_SECRET from register
+npm run station:sim -- set back_squat 100 5
+```
+
 ## Building the Android and iOS apps
 
 Builds run in the cloud with [EAS Build](https://docs.expo.dev/build/introduction/), so no Mac is
@@ -155,6 +219,10 @@ and an iOS build for registered test devices. `production` makes store builds.
 | `npm run fn:check`         | Type-check the Edge Functions (Deno)                           |
 | `npm run fn:test`          | Edge Function tests (Deno; needs the local stack env)          |
 | `npm run fn:serve`         | Serve Edge Functions locally                                   |
+| `npm run coach:dev`        | Coach console dev server (`web/coach`)                         |
+| `npm run coach:build`      | Build the coach console as static files                        |
+| `npm run coach:check`      | Coach console typecheck and tests                              |
+| `npm run station:sim`      | Smart-station simulator (signs requests like a partner)        |
 
 ## Project layout
 
@@ -162,7 +230,7 @@ and an iOS build for registered test devices. `production` makes store builds.
 src/
   app/                 Expo Router routes: (auth) sign-in, (onboarding) 3 steps + summary,
                        (tabs) Today/Train/Food/Coach/Me, plan (my plan), history,
-                       progress (body charts and scans), rescan
+                       progress (body charts and scans), rescan, review/[id] (coach review)
   components/          Shared UI primitives (RTL-safe: start/end, never left/right)
   features/auth/       Session provider, Apple/Google/email sign-in
   features/plan/       Plan engine (pure, tested), exercise/workout/split JSON, plan summary UI
@@ -174,7 +242,10 @@ src/
   features/reminders/  Reminder schedule (pure) and expo-notifications scheduling
   features/progress/   Rescans and plan rebuilds, 4-weekly due date, trend charts (pure
                        geometry drawn with plain Views), rescan reminder
-  features/settings/   Daily schedule, reminders, Ramadan mode, data export and account deletion
+  features/settings/   Daily schedule, reminders, Ramadan mode, Health, data export, deletion
+  features/health/     Apple Health / Health Connect adapters, sleep and steps maths, sync
+  features/coachReview/ Elite review request, status and reading
+  features/stations/   Smart-station pairing
   features/ai/         Edge Function client (JSON + streaming), SSE parser, photo upload
   features/coach/      Chat history and streaming hooks
   features/membership/ Entitlements helper (tier → features), RevenueCat purchases, paywall
@@ -185,11 +256,15 @@ src/
   theme/               Design tokens (light/dark) and ThemeProvider
 supabase/
   migrations/          Database schema, RLS policies, storage buckets, complete_onboarding(),
-                       record_scan()
+                       record_scan(), coach review and smart-station functions
   seed.sql             Generated exercise library, workout and meal templates
   functions/           Edge Functions: coach-chat, meal-estimate, scan-read, export-data,
-                       delete-account, revenuecat-webhook, sync-subscription; _shared/
+                       delete-account, revenuecat-webhook, sync-subscription, station-api;
+                       _shared/
   tests/database/      pgTAP tests
+web/coach/            Coach console (Vite + React web app) for Elite reviews
+docs/                  Partner docs (smart-station API)
+scripts/               Seed generator, smart-station simulator
 reference/             Original HTML prototypes (source of truth for behaviour and UX)
 ```
 
@@ -200,3 +275,6 @@ reference/             Original HTML prototypes (source of truth for behaviour a
 - Every table has Row Level Security; members can only read and write their own rows. Tiers are
   written only by the server.
 - Auth sessions are stored in the device keychain/keystore (expo-secure-store).
+- Smart stations authenticate with a per-station HMAC secret and a 5-minute timestamp window;
+  station secrets are readable only with the service role.
+- Coaches never read tables directly: the `coach_*` functions decide what each coach sees.

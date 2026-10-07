@@ -5,3 +5,4 @@ export { createHandler as deleteHandler } from '../delete-account/handler.ts';
 export { createHandler as exportHandler } from '../export-data/handler.ts';
 export { createHandler as webhookHandler } from '../revenuecat-webhook/handler.ts';
 export { createHandler as syncHandler } from '../sync-subscription/handler.ts';
+export { createHandler as stationHandler } from '../station-api/handler.ts';

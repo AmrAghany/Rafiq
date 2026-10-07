@@ -18,6 +18,7 @@ Target market starts with Arabic- and English-speaking members (Middle East firs
 ## Tech stack
 
 - **App:** React Native with Expo (managed workflow), TypeScript in strict mode, Expo Router for navigation. **Native iOS and Android only; there is no web target** (decided 2026-10-06). Builds go through EAS (`eas.json`).
+- **Coach console:** a separate web app in `web/coach` (Vite, React, TypeScript, TanStack Query, i18next) for staff, not members (decided 2026-10-07). It shares the Supabase project and reads only through the `coach_*` database functions.
 - **State and data fetching:** TanStack Query for server data, Zustand for local UI state.
 - **Backend:** Supabase (Postgres, Auth, Storage, Edge Functions). Row Level Security on every table.
 - **AI:** Anthropic Claude API, called ONLY from Supabase Edge Functions. The API key must never ship in the app bundle.
@@ -109,7 +110,76 @@ Work in this order. Finish, test and summarise each phase before starting the ne
 
 ## Status
 
-### Phase 6: Polish — done (2026-10-07), waiting for approval to start phase 7
+### Phase 7: Health, coach reviews and smart stations — done (2026-10-07)
+
+Scope (your answers): Apple Health / Health Connect, Elite coach review with a **separate web console**, and smart stations with **our own contract**. The gym owner dashboard waits.
+
+**Built**
+
+- **Sleep and steps** (`src/features/health`):
+  - Apple Health on iOS and Health Connect on Android, read only. Connect on Me.
+  - On open and on returning to the app (at most every 15 min), the app reads last night's sleep (18:00–14:00, overlapping sources merged, only asleep stages) and today's steps.
+  - Readings are saved to new `daily_logs` columns. Only those columns are written, so a missing value never erases one.
+  - Sleep pre-selects the check-in's sleep answer (7 h great, 5½ h OK, less badly), and the member can change it. Today shows a sleep and steps card. The coach's context gets both.
+  - Health Connect missing, needing an update, or refused each get their own message.
+  - `app.json` has the HealthKit entitlement, a read-only usage text, the two Health Connect read permissions and `minSdkVersion` 26.
+- **Elite coach review**:
+  - **Database**: `staff`, `coach_reviews`, and functions that are the only way in:
+    - `request_coach_review` (Elite only, one per month), `my_coach_reviews`, `mark_coach_review_read`;
+    - `coach_review_queue`, `claim_coach_review`, `release_coach_review`, `coach_review_bundle`, `save_coach_review`.
+    - A coach sees a member's data only while holding their review: profile, health flags, plan, scans, and the 5 weeks before the request of check-ins, sleep, steps, workouts with sets, and meals. Never chats.
+    - The member sees the coach's text only once it's sent.
+  - **App**:
+    - Me → Coach review: request with an optional note, after a plain-language note on what the coach will see. Status follows requested → in review → ready, with earlier reviews listed.
+    - Today shows a "review ready" card. The review screen marks it read and shows each section in its own text direction.
+    - Pro members see an Elite upsell. Data export now includes reviews.
+  - **Coach console** (`web/coach`):
+    - Sign-in, coaches only. A queue of in-progress, open and delivered reviews (first names only), claim and give back.
+    - The member's month: health-note banners, with a no-calorie-numbers warning for careful answers and body numbers hidden for the eating-disorder answer. Profile, plan targets, a week-by-week table, lift progress and scans.
+    - Write, save a draft, and send (with a confirmation; no edits after).
+    - English and Arabic with RTL. Light and dark.
+- **Smart stations**:
+  - **Contract**: `docs/smart-stations.md`.
+    - `station-api` Edge Function, with no JWT. Requests are signed with HMAC-SHA256 of `timestamp.body`, within a 5-minute window, and checked with a constant-time compare.
+    - Requests: pairing code (6 digits, 2 min), set, and end.
+  - **Database**: `stations` (secret readable only with the service role), `station_pairings`, `station_events` (one set per event id, so retries are safe), and `set_logs.source` / `station_id`.
+    - Sets land in today's planned session, the one Train shows, as the next set number with the plan's target reps. A rest day uses a free-training session.
+    - A station pairs with one member at a time. A pairing ends after 20 minutes without a set.
+  - **App**: a pairing card on Train when today's workout has station lifts. The code accepts Arabic-Indic digits. While paired, Train refreshes every 10 s, and station sets are marked "Logged by station".
+  - **Simulator**: `npm run station:sim` (register, code, set, end).
+- **Fixes found while verifying**:
+  - Set rows: the phase 6 `minWidth` change let the inputs squeeze the "Set 1" label to one letter per line. It's now a fixed 76 px.
+  - Names from outside the app (station, gym, coach) are wrapped in direction isolates inside Arabic sentences.
+- **Tests**:
+  - 799 Jest tests, including sleep and steps maths and the native adapters, check-in pre-fill, Health settings, sync, coach review screens, station pairing and badges, and UI accessibility.
+  - 112 pgTAP tests: 24 for coach reviews (who can request, see, claim, read and write) and 22 for stations (pairing, idempotency, isolation).
+  - 22 Deno tests, 30 steps (signing and replay, request parsing, `station-api` against local Supabase, coach sleep and steps context, export with reviews).
+  - 5 integration tests.
+  - 12 console tests (Vitest: summary maths, sign-in, non-coach, claim, draft and send, careful members, give back, Arabic).
+- **Verified**:
+  - `npm run check`, `npx eslint .`, `npm run coach:check` and `coach:build` pass. The iOS and Android bundles export with the new native modules.
+  - The real `station-api` entry point was served under Deno and driven by the simulator over HTTP: pair, log, refuse an untracked lift, end, then refuse after end and with a wrong secret.
+  - The coach console ran in Chromium against local Supabase with a seeded coach and Elite member: sign in, claim, read the month, draft, send, Arabic, and phone width. Three fixes came out of it: the review window (now the 5 weeks before the request), Arabic units, and bidi for notes and lifts.
+  - In a temporary web preview of the app (not committed), these all worked in English and Arabic: the Health-filled check-in, requesting a review, the "review ready" card and the review screen (written by the coach), and pairing on Train with station sets appearing through polling.
+
+**Not verified**: reading real Apple Health / Health Connect data, permission sheets, and the Android `minSdkVersion` 26 build. These need device builds. Real partner hardware has also not been tested.
+
+**Decisions**
+
+- New dependencies (approved): `@kingstinct/react-native-healthkit` (with its peer `react-native-nitro-modules`), `react-native-health-connect` (ships its own Expo plugin) and `expo-build-properties` (first-party, for minSdk 26).
+- The console is a Vite single-page app, not Next.js: everything goes through Supabase, so there's no server to run. It deploys as static files.
+- Coaches are added with SQL by an admin (README). Any coach can claim any open request; there are no assignments yet.
+- Station sets go into today's planned session. The member can still edit them on Train.
+
+**Open questions for what's next**
+
+1. The gym owner dashboard: should it live in the same web console (a new "owner" staff role) with gym branding and engagement charts?
+2. Coach assignment: should each Elite member keep the same coach every month, and do coaches need notifications (email) when a request arrives?
+3. Should the member get a push notification when a review is ready? Today they see it on next open. Push needs a server-sent notification service.
+4. Station partners: is there a first partner gym? Its rack ids, lift list, and whether stations can measure reps themselves or need the member to confirm.
+5. Still open: prayer-time automation, the Egypt AI limits, rescans changing the goal, terms and privacy URLs, paywall after onboarding, annual plans, bundle id, fonts, `expo-updates`, native Google sign-in, email confirmation, the carb-day letters, and EAS accounts.
+
+### Phase 6: Polish — done (2026-10-07)
 
 **Built**
 
@@ -185,7 +255,7 @@ Work in this order. Finish, test and summarise each phase before starting the ne
 - The body charts are hidden for the eating-disorder answer. Pregnancy keeps them, because weight change is expected and the plan already avoids a deficit.
 - Ramadan times are entered by hand.
 
-**Open questions for phase 7**
+**Open questions from phase 6**
 
 1. Prayer times: should Ramadan mode fill suhoor and iftar automatically from the member's location? That needs `expo-location` and a prayer-time library such as `adhan`.
 2. Do the per-country prices look right? Egypt in particular: at ≈ $5, a heavy coach user can cost more than they pay. Should Egypt get lower daily AI limits?

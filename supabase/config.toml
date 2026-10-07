@@ -428,3 +428,7 @@ enabled = true
 # RevenueCat calls this with its own shared secret, not a Supabase JWT.
 [functions.revenuecat-webhook]
 verify_jwt = false
+
+# Smart stations sign their requests with a shared secret instead of a user JWT.
+[functions.station-api]
+verify_jwt = false

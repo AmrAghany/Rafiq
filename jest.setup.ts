@@ -36,3 +36,32 @@ jest.mock('react-native-purchases', () => ({
     PAYMENT_PENDING_ERROR: '20',
   },
 }));
+
+// Apple Health and Health Connect are native-only; tests use fakes of the few calls made.
+jest.mock('@kingstinct/react-native-healthkit', () => ({
+  CategoryValueSleepAnalysis: {
+    inBed: 0,
+    asleepUnspecified: 1,
+    awake: 2,
+    asleepCore: 3,
+    asleepDeep: 4,
+    asleepREM: 5,
+  },
+  isHealthDataAvailableAsync: jest.fn(async () => true),
+  requestAuthorization: jest.fn(async () => true),
+  queryCategorySamples: jest.fn(async () => []),
+  queryStatisticsForQuantity: jest.fn(async () => ({ sources: [] })),
+}));
+jest.mock('react-native-health-connect', () => ({
+  SdkAvailabilityStatus: {
+    SDK_UNAVAILABLE: 1,
+    SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED: 2,
+    SDK_AVAILABLE: 3,
+  },
+  SleepStageType: { UNKNOWN: 0, AWAKE: 1, SLEEPING: 2, OUT_OF_BED: 3, LIGHT: 4, DEEP: 5, REM: 6 },
+  getSdkStatus: jest.fn(async () => 3),
+  initialize: jest.fn(async () => true),
+  requestPermission: jest.fn(async () => []),
+  readRecords: jest.fn(async () => ({ records: [] })),
+  aggregateRecord: jest.fn(async () => ({ COUNT_TOTAL: 0 })),
+}));

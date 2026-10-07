@@ -13,6 +13,7 @@ jest.mock('expo-router', () => ({ router: { navigate: jest.fn(), push: jest.fn()
 jest.mock('@/features/reminders/notifications', () => ({ requestPermission: jest.fn() }));
 // Covered by its own tests.
 jest.mock('@/features/progress/RescanCard', () => ({ RescanCard: () => null }));
+jest.mock('@/features/coachReview/ReviewReadyCard', () => ({ ReviewReadyCard: () => null }));
 jest.mock('@/features/profile/api', () => ({
   useProfile: () => ({ data: { display_name: 'Sam Haddad' } }),
 }));

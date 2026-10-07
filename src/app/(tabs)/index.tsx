@@ -5,10 +5,12 @@ import { ActivityIndicator, View } from 'react-native';
 import { Button, LinkButton, Notice, Panel, Pill, Screen, Text } from '@/components/ui';
 import { WeekStrip } from '@/features/plan/WeekStrip';
 import { useProfile } from '@/features/profile/api';
+import { ReviewReadyCard } from '@/features/coachReview/ReviewReadyCard';
 import { RescanCard } from '@/features/progress/RescanCard';
 import { useToday, useUpdateDailyLog } from '@/features/today/api';
 import {
   CheckinCard,
+  HealthCard,
   DayCard,
   RemindersCard,
   Timeline,
@@ -110,6 +112,8 @@ export default function TodayScreen() {
         <>
           <CheckinCard
             log={daily}
+            sleepMinutes={daily.sleep_minutes}
+            healthProvider={daily.health_source}
             onSave={(checkin) => {
               const done = daily.completed_items.filter((x) => x !== 'checkin');
               updateLog.mutate({
@@ -124,8 +128,10 @@ export default function TodayScreen() {
             ramadan={ramadan}
             onChange={(water_glasses) => updateLog.mutate({ water_glasses })}
           />
+          <HealthCard health={daily} />
           {remindersEnabled ? null : <RemindersCard />}
           <RescanCard />
+          <ReviewReadyCard />
         </>
       ) : null}
 

@@ -4,7 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { Button, Panel, Text } from '@/components/ui';
 
 /** Shown in place of a paid feature, with a way into the paywall. */
-export function LockedCard({ title, body }: { title: string; body: string }) {
+export function LockedCard({
+  title,
+  body,
+  cta,
+}: {
+  title: string;
+  body: string;
+  /** Button text; defaults to the Pro trial. */
+  cta?: string;
+}) {
   const { t } = useTranslation();
   return (
     <Panel>
@@ -14,7 +23,7 @@ export function LockedCard({ title, body }: { title: string; body: string }) {
       <Text color="muted">{body}</Text>
       <Button
         testID="open-paywall"
-        label={t('paywall.cta')}
+        label={cta ?? t('paywall.cta')}
         onPress={() => router.push('/paywall')}
       />
     </Panel>
