@@ -86,7 +86,7 @@
       "reactCompiler": true
     },
     "platforms": ["ios", "android"],
-    "owner": "amrelgazar",
+    "owner": "amrelgazars-team",
     "extra": {
       "eas": {
         "projectId": "410200ad-40e2-4ede-a6d9-55daf612c6da"
