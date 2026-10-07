@@ -15,9 +15,11 @@ import { buildReminders } from './schedule';
 export function useReminderSync() {
   const { t, i18n } = useTranslation();
   const enabled = useSettings((s) => s.remindersEnabled);
-  const { dateKey, plan, schedule, ramadan, log } = useToday();
+  const { dateKey, plan, schedule, fasting, log } = useToday();
   const { wakeTime, workoutTime } = schedule;
   const planData = plan.data?.plan;
+  const suhoor = fasting ? fasting.suhoorTime : null;
+  const iftar = fasting ? fasting.iftarTime : null;
   const done = log.data?.completed_items.join(',') ?? '';
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export function useReminderSync() {
         plan: planData,
         now: new Date(),
         schedule: { wakeTime, workoutTime },
-        ramadan,
+        ramadan: suhoor && iftar ? { suhoorTime: suhoor, iftarTime: iftar } : false,
         doneToday: done ? done.split(',') : [],
       });
       await syncReminders(reminders, (r) => timelineText(r.item, t, i18n.language));
@@ -39,5 +41,5 @@ export function useReminderSync() {
     return () => {
       cancelled = true;
     };
-  }, [enabled, planData, wakeTime, workoutTime, ramadan, done, dateKey, t, i18n.language]);
+  }, [enabled, planData, wakeTime, workoutTime, suhoor, iftar, done, dateKey, t, i18n.language]);
 }

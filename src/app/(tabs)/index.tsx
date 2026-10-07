@@ -5,6 +5,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { Button, LinkButton, Notice, Panel, Pill, Screen, Text } from '@/components/ui';
 import { WeekStrip } from '@/features/plan/WeekStrip';
 import { useProfile } from '@/features/profile/api';
+import { RescanCard } from '@/features/progress/RescanCard';
 import { useToday, useUpdateDailyLog } from '@/features/today/api';
 import {
   CheckinCard,
@@ -32,7 +33,7 @@ export default function TodayScreen() {
   const { spacing } = useTheme();
   const now = useNow();
   const { data: profile } = useProfile();
-  const { dateKey, todayIndex, plan, schedule, ramadan, log } = useToday();
+  const { dateKey, todayIndex, plan, schedule, ramadan, fasting, log } = useToday();
   const updateLog = useUpdateDailyLog(dateKey);
   const remindersEnabled = useSettings((s) => s.remindersEnabled);
   const [viewIndex, setViewIndex] = useState<number | null>(null);
@@ -63,8 +64,9 @@ export default function TodayScreen() {
   const dayIndex = viewIndex ?? todayIndex;
   const isToday = dayIndex === todayIndex;
   const daily = log.data!;
-  const items = buildTimeline(p, dayIndex, schedule, ramadan);
-  const current = currentItemIndex(items, now, schedule.wakeTime);
+  const items = buildTimeline(p, dayIndex, schedule, fasting);
+  // The day starts at its first item: wake-up, or suhoor in Ramadan.
+  const current = currentItemIndex(items, now, items[0].time);
   const name = profile?.display_name?.split(' ')[0] ?? '';
 
   const toggleDone = (id: string) => {
@@ -123,6 +125,7 @@ export default function TodayScreen() {
             onChange={(water_glasses) => updateLog.mutate({ water_glasses })}
           />
           {remindersEnabled ? null : <RemindersCard />}
+          <RescanCard />
         </>
       ) : null}
 

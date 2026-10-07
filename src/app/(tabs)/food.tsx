@@ -248,6 +248,7 @@ export default function FoodScreen() {
               )}
               <LinkButton
                 label={already ? t('food.loggedThis') : t('food.logThis')}
+                accessibilityLabel={`${name}: ${already ? t('food.loggedThis') : t('food.logThis')}`}
                 onPress={() =>
                   !already &&
                   add.mutate({
@@ -305,7 +306,11 @@ function LoggedMealRow({
           </Text>
         )}
       </View>
-      <LinkButton label={t('common.remove')} onPress={onRemove} />
+      <LinkButton
+        label={t('common.remove')}
+        accessibilityLabel={`${t('common.remove')}: ${meal.name}`}
+        onPress={onRemove}
+      />
     </View>
   );
 }

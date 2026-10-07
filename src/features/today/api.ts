@@ -8,7 +8,14 @@ import { profileKey, useActivePlan, useProfile } from '@/features/profile/api';
 import type { Json } from '@/lib/database.types';
 import { supabase } from '@/lib/supabase';
 
-import { DEFAULT_SCHEDULE, localDateKey, normaliseTime, type DaySchedule } from './timeline';
+import {
+  DEFAULT_RAMADAN,
+  DEFAULT_SCHEDULE,
+  localDateKey,
+  normaliseTime,
+  type DaySchedule,
+  type RamadanTimes,
+} from './timeline';
 
 export interface DailyLog {
   checkin: (Checkin & { score: number }) | null;
@@ -89,8 +96,15 @@ export function useUpdateDailyLog(date: string) {
   });
 }
 
+const timeOr = (raw: string | null | undefined, fallback: string) =>
+  (raw && normaliseTime(raw)) || fallback;
+
 /** The member's schedule and Ramadan setting, with defaults while loading. */
-export function useSchedule(): { schedule: DaySchedule; ramadan: boolean } {
+export function useSchedule(): {
+  schedule: DaySchedule;
+  ramadan: boolean;
+  ramadanTimes: RamadanTimes;
+} {
   const { data } = useProfile();
   return {
     schedule: {
@@ -99,7 +113,37 @@ export function useSchedule(): { schedule: DaySchedule; ramadan: boolean } {
         (data?.workout_time && normaliseTime(data.workout_time)) || DEFAULT_SCHEDULE.workoutTime,
     },
     ramadan: !!data?.ramadan_mode,
+    ramadanTimes: {
+      suhoorTime: timeOr(data?.suhoor_time, DEFAULT_RAMADAN.suhoorTime),
+      iftarTime: timeOr(data?.iftar_time, DEFAULT_RAMADAN.iftarTime),
+    },
   };
+}
+
+/** Turns Ramadan mode on or off and/or saves the suhoor and iftar times. */
+export function useUpdateRamadan() {
+  const { session } = useAuth();
+  const uid = session?.user.id;
+  const queryClient = useQueryClient();
+  const key = profileKey(uid);
+  type Patch = { ramadan_mode?: boolean; suhoor_time?: string; iftar_time?: string };
+  return useMutation({
+    mutationFn: async (patch: Patch) => {
+      const { error } = await supabase.from('profiles').update(patch).eq('id', uid!);
+      if (error) throw error;
+    },
+    // The switch flips at once; it goes back if the save fails.
+    onMutate: async (patch) => {
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData(key);
+      queryClient.setQueryData(key, (old: object | undefined) =>
+        old ? { ...old, ...patch } : old,
+      );
+      return { previous };
+    },
+    onError: (_e, _patch, ctx) => queryClient.setQueryData(key, ctx?.previous),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: key }),
+  });
 }
 
 export function useUpdateSchedule() {
@@ -122,9 +166,11 @@ export function useUpdateSchedule() {
 export function useToday() {
   const dateKey = useTodayKey();
   const plan = useActivePlan();
-  const { schedule, ramadan } = useSchedule();
+  const { schedule, ramadan, ramadanTimes } = useSchedule();
   const log = useDailyLog(dateKey);
   const [y, m, d] = dateKey.split('-').map(Number);
   const todayIndex = weekdayIndex(new Date(y, m - 1, d));
-  return { dateKey, todayIndex, plan, schedule, ramadan, log };
+  /** What buildTimeline() takes: the fasting times in Ramadan, otherwise false. */
+  const fasting = ramadan ? ramadanTimes : (false as const);
+  return { dateKey, todayIndex, plan, schedule, ramadan, fasting, log };
 }

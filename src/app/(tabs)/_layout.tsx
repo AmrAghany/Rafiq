@@ -4,6 +4,7 @@ import { SymbolView, type SymbolViewProps } from 'expo-symbols';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useRescanReminder } from '@/features/progress/useRescanReminder';
 import { useReminderSync } from '@/features/reminders/useReminderSync';
 
 import { useTheme } from '@/theme/ThemeProvider';
@@ -22,12 +23,13 @@ export default function TabsLayout() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   useReminderSync();
+  useRescanReminder();
 
   // Tapping a reminder opens the screen it is about.
   const response = Notifications.useLastNotificationResponse();
   useEffect(() => {
     const url = response?.notification.request.content.data?.url;
-    if (typeof url === 'string' && (url === '/' || url === '/train')) router.navigate(url);
+    if (url === '/' || url === '/train' || url === '/progress') router.navigate(url);
   }, [response]);
 
   const tabs = [

@@ -59,6 +59,11 @@ function RootNavigator() {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="plan" options={{ headerShown: true, title: t('plan.myPlan') }} />
           <Stack.Screen name="history" options={{ headerShown: true, title: t('history.title') }} />
+          <Stack.Screen
+            name="progress"
+            options={{ headerShown: true, title: t('progress.title') }}
+          />
+          <Stack.Screen name="rescan" options={{ headerShown: true, title: t('rescan.title') }} />
         </Stack.Protected>
         <Stack.Protected guard={signedIn && !onboarded}>
           <Stack.Screen name="(onboarding)" />

@@ -458,7 +458,7 @@
       "unauthorized": "Please sign in again.",
       "bad_request": "That didn't work. Please try again.",
       "payload_too_large": "That photo is too large. Try again with a smaller one.",
-      "upgrade_required": "This is part of Pro. Subscriptions arrive in the next update.",
+      "upgrade_required": "This is part of Pro. Try it free from the Me tab.",
       "quota_exceeded": "You've reached today's limit for this. It resets tomorrow.",
       "not_found": "We couldn't find that photo. Please try again.",
       "ai_refused": "I can't help with that one. Try asking another way, or talk to a doctor or physiotherapist.",
@@ -517,5 +517,65 @@
         "Higher daily AI limits"
       ]
     }
+  },
+  "ramadan": {
+    "title": "Ramadan mode",
+    "body": "Moves meals, water and training around suhoor and iftar. Your coach knows you're fasting.",
+    "toggle": "Ramadan mode",
+    "timesHint": "Set these to your local fajr and maghrib times (24-hour, like 03:45). Update them every few days as the times shift.",
+    "suhoor": "Suhoor ends",
+    "iftar": "Iftar time",
+    "save": "Save times",
+    "errors": {
+      "suhoorInvalid": "Enter a suhoor time like 03:45.",
+      "iftarInvalid": "Enter an iftar time like 18:05.",
+      "fastOutOfRange": "Iftar should be 10 to 18 hours after suhoor."
+    }
+  },
+  "progress": {
+    "title": "Progress",
+    "open": "See my progress",
+    "scanTitle": "Body scan",
+    "due": "Time for a new scan. A fresh InBody reading keeps your plan matched to your body.",
+    "dueOn": "Next scan due on {{date}}.",
+    "lastScan": "Last scan: {{date}}",
+    "newScan": "New scan",
+    "history": "All scans",
+    "fatShort": "Fat",
+    "muscleShort": "Muscle",
+    "metric": {
+      "weightKg": "Weight",
+      "bodyFatPct": "Body fat",
+      "skeletalMuscleKg": "Skeletal muscle"
+    },
+    "sinceFirst": "{{change}} since your first scan",
+    "oneScan": "Your chart starts after your next scan.",
+    "noData": "Not recorded yet.",
+    "a11ySingle": "{{title}}: {{value}}, one scan so far.",
+    "a11yTrend": "{{title}} chart: {{from}} on {{fromDate}} to {{to}} on {{toDate}}, {{change}}.",
+    "carefulNotice": "Your progress here is about how you feel and how your training goes. Your scans are saved, and your coach can talk through them with you.",
+    "reminderTitle": "Time for your monthly body scan",
+    "reminderBody": "A new scan keeps your training and nutrition matched to your body."
+  },
+  "rescan": {
+    "title": "New scan",
+    "subtitle": "Enter your latest InBody numbers. Your plan is rebuilt from them, and your earlier scans stay in your progress history.",
+    "weight": "Weight (kg)",
+    "bodyFat": "Body fat (%)",
+    "muscle": "Skeletal muscle (kg)",
+    "bmr": "BMR (kcal)",
+    "lastTime": "Last time: {{value}}",
+    "weightRequired": "Enter your weight to rebuild your plan.",
+    "newPlan": "Your new plan",
+    "change": {
+      "targetKcal": "Daily calories",
+      "proteinG": "Protein (g)",
+      "bmrKcal": "BMR (kcal)",
+      "leanMassKg": "Lean mass (kg)"
+    },
+    "fromTo": "{{from}} → {{to}}",
+    "unchanged": "{{value}} (no change)",
+    "keepsHistory": "Your goal, training days and health answers stay the same. Your logged workout weights carry on.",
+    "save": "Save scan and update my plan"
   }
 }

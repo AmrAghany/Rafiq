@@ -13,7 +13,7 @@ import { useTheme } from '@/theme/ThemeProvider';
 
 import { useOnboarding } from './store';
 
-interface Reading {
+export interface ScanReading {
   weight_kg: number | null;
   body_fat_percent: number | null;
   skeletal_muscle_kg: number | null;
@@ -22,9 +22,14 @@ interface Reading {
 
 /**
  * Reads the InBody sheet from a photo and fills the scan fields. The member always sees
- * and can correct the numbers before continuing.
+ * and can correct the numbers before continuing. Fills the onboarding draft unless
+ * `onRead` is given (the rescan screen keeps its own form).
  */
-export function ScanPhoto() {
+export function ScanPhoto({
+  onRead,
+}: {
+  onRead?: (reading: ScanReading, photoPath: string) => void;
+} = {}) {
   const { t } = useTranslation();
   const { spacing } = useTheme();
   const { session } = useAuth();
@@ -51,20 +56,24 @@ export function ScanPhoto() {
       if (!photo) return;
       setBusy(true);
       const path = await uploadPhoto('scan-photos', session!.user.id, photo.base64);
-      const res = await callFunction<{ reading: Reading | null }>('scan-read', { photoPath: path });
+      const res = await callFunction<{ reading: ScanReading | null }>('scan-read', {
+        photoPath: path,
+      });
       if (!res.reading) {
         setMessage({ tone: 'warn', text: t('onboarding.scan.photoNotRecognised') });
         return;
       }
       const r = res.reading;
       const s = (v: number | null) => (v == null ? '' : String(v));
-      update({
-        bodyFatPct: s(r.body_fat_percent),
-        skeletalMuscleKg: s(r.skeletal_muscle_kg),
-        bmrKcal: s(r.bmr_kcal),
-        scanPhotoPath: path,
-        scanAiReading: { ...r },
-      });
+      if (onRead) onRead(r, path);
+      else
+        update({
+          bodyFatPct: s(r.body_fat_percent),
+          skeletalMuscleKg: s(r.skeletal_muscle_kg),
+          bmrKcal: s(r.bmr_kcal),
+          scanPhotoPath: path,
+          scanAiReading: { ...r },
+        });
       setMessage({ tone: 'ok', text: t('onboarding.scan.photoRead') });
     } catch (e) {
       const key =

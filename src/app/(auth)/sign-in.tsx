@@ -186,7 +186,7 @@ export default function SignInScreen() {
           setFieldErrors({});
           setMessage(null);
         }}
-        style={{ paddingVertical: spacing.sm }}>
+        style={{ paddingVertical: spacing.sm, minHeight: 44, justifyContent: 'center' }}>
         <Text variant="label" color="accent" style={{ textAlign: 'center' }}>
           {mode === 'signIn' ? t('auth.noAccount') : t('auth.haveAccount')}
         </Text>

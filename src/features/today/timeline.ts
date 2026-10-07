@@ -38,7 +38,16 @@ export interface DaySchedule {
   workoutTime: string;
 }
 
+/** Ramadan meal times: suhoor ends before dawn (fajr), iftar is at sunset (maghrib). */
+export interface RamadanTimes {
+  /** "HH:MM", default 03:45 */
+  suhoorTime: string;
+  /** "HH:MM", default 18:05 */
+  iftarTime: string;
+}
+
 export const DEFAULT_SCHEDULE: DaySchedule = { wakeTime: '06:30', workoutTime: '17:30' };
+export const DEFAULT_RAMADAN: RamadanTimes = { suhoorTime: '03:45', iftarTime: '18:05' };
 
 const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
@@ -81,23 +90,25 @@ export function buildTimeline(
   plan: Plan,
   dayIndex: number,
   schedule: DaySchedule = DEFAULT_SCHEDULE,
-  ramadan = false,
+  ramadan: boolean | RamadanTimes = false,
 ): TimelineItem[] {
   const day = plan.week[dayIndex];
   const trains = !!day.workoutKey;
 
   if (ramadan) {
-    // Fixed times from the prototype. Phase 6 replaces these with local prayer times.
+    // Built around the member's suhoor and iftar times. The defaults (03:45 and 18:05)
+    // reproduce the prototype's fixed Ramadan day exactly.
+    const { suhoorTime: suhoor, iftarTime: iftar } = ramadan === true ? DEFAULT_RAMADAN : ramadan;
     return [
-      { id: 'suhoor', time: '03:45', kind: 'meal' },
-      { id: 'checkin', time: '09:00', kind: 'checkin' },
-      { id: 'walk', time: '13:00', kind: 'move' },
-      { id: 'iftar', time: '18:05', kind: 'meal' },
+      { id: 'suhoor', time: suhoor, kind: 'meal' },
+      { id: 'checkin', time: offset(suhoor, 315), kind: 'checkin' },
+      { id: 'walk', time: offset(iftar, -305), kind: 'move' },
+      { id: 'iftar', time: iftar, kind: 'meal' },
       trains
-        ? { id: 'workout', time: '21:00', kind: 'train', workoutKey: day.workoutKey }
-        : { id: 'stretch', time: '21:00', kind: 'recovery' },
-      { id: 'recovery_meal', time: '22:30', kind: 'meal' },
-      { id: 'sleep', time: '23:30', kind: 'rest' },
+        ? { id: 'workout', time: offset(iftar, 175), kind: 'train', workoutKey: day.workoutKey }
+        : { id: 'stretch', time: offset(iftar, 175), kind: 'recovery' },
+      { id: 'recovery_meal', time: offset(iftar, 265), kind: 'meal' },
+      { id: 'sleep', time: offset(iftar, 325), kind: 'rest' },
     ];
   }
 
@@ -134,6 +145,16 @@ export function validateSchedule(schedule: DaySchedule): ScheduleError | null {
   if (!isValidTime(schedule.workoutTime)) return 'workoutInvalid';
   const gap = sinceWake(schedule.workoutTime, schedule.wakeTime);
   return gap < 60 || gap > 900 ? 'workoutOutsideDay' : null;
+}
+
+export type RamadanError = 'suhoorInvalid' | 'iftarInvalid' | 'fastOutOfRange';
+
+/** A fast runs 10–18 hours from suhoor to iftar (covers every Ramadan latitude we serve). */
+export function validateRamadanTimes(times: RamadanTimes): RamadanError | null {
+  if (!isValidTime(times.suhoorTime)) return 'suhoorInvalid';
+  if (!isValidTime(times.iftarTime)) return 'iftarInvalid';
+  const fast = (toMinutes(times.iftarTime) - toMinutes(times.suhoorTime) + 1440) % 1440;
+  return fast < 600 || fast > 1080 ? 'fastOutOfRange' : null;
 }
 
 /** Index of the item happening now: the last one whose time has passed (or -1). */

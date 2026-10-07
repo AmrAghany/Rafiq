@@ -23,11 +23,24 @@ interface TextProps extends RNTextProps {
   color?: keyof Palette;
 }
 
+/**
+ * Dynamic type: body text follows the phone's text size up to 2×. Titles are already
+ * large, so they stop at 1.5× to keep a word per line on small phones.
+ */
+const MAX_SCALE: Record<TypographyVariant, number> = {
+  hero: 1.5,
+  title: 1.5,
+  heading: 1.75,
+  body: 2,
+  label: 2,
+  small: 2,
+};
+
 export function Text({ variant = 'body', color = 'ink', style, ...rest }: TextProps) {
   const { typography, colors } = useTheme();
   return (
     <RNText
-      maxFontSizeMultiplier={2}
+      maxFontSizeMultiplier={MAX_SCALE[variant]}
       style={[typography[variant], { color: colors[color], textAlign: 'auto' }, style]}
       {...rest}
     />
@@ -140,6 +153,8 @@ export function TextField({ label, error, style, ...rest }: TextFieldProps) {
       <Text variant="label">{label}</Text>
       <TextInput
         accessibilityLabel={label}
+        accessibilityHint={error}
+        maxFontSizeMultiplier={2}
         placeholderTextColor={colors.muted}
         style={[
           typography.body,
@@ -224,12 +239,16 @@ export function Segmented<T extends string>({
   );
 }
 
-/** Highlighted notice (prototype .alert). */
+/**
+ * Highlighted notice (prototype .alert). Only warnings are announced as alerts, so
+ * screen readers don't interrupt for every informational note.
+ */
 export function Notice({ children, tone = 'high' }: PropsWithChildren<{ tone?: keyof Palette }>) {
   const { colors, radius, spacing } = useTheme();
   return (
     <View
-      accessibilityRole="alert"
+      accessibilityRole={tone === 'warn' ? 'alert' : undefined}
+      accessibilityLiveRegion={tone === 'warn' ? 'polite' : undefined}
       style={{
         borderStartWidth: 5,
         borderStartColor: colors[tone],
@@ -313,11 +332,21 @@ export function StepHeader({
   );
 }
 
-export function LinkButton({ label, onPress }: { label: string; onPress: () => void }) {
+export function LinkButton({
+  label,
+  onPress,
+  accessibilityLabel,
+}: {
+  label: string;
+  onPress: () => void;
+  /** Defaults to the visible label; set it when the label alone is ambiguous ("Remove"). */
+  accessibilityLabel?: string;
+}) {
   const { spacing } = useTheme();
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel ?? label}
       onPress={onPress}
       style={{
         paddingVertical: spacing.sm,

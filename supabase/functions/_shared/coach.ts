@@ -47,6 +47,8 @@ export interface CoachContext {
   readiness: number | null;
   eatenKcal: number;
   ramadan: boolean;
+  /** "HH:MM" suhoor and iftar times, when Ramadan mode is on. */
+  fastTimes?: { suhoor: string; iftar: string } | null;
   localTime: string | null;
 }
 
@@ -128,7 +130,7 @@ export function buildMemberContext(c: CoachContext): string {
     );
   }
   lines.push(
-    `Readiness this morning: ${c.readiness == null ? 'not checked in yet' : `${c.readiness}/100`}. Ramadan mode: ${c.ramadan ? 'on (fasting)' : 'off'}.${c.localTime ? ` Local time: ${c.localTime}.` : ''}`,
+    `Readiness this morning: ${c.readiness == null ? 'not checked in yet' : `${c.readiness}/100`}. Ramadan mode: ${c.ramadan ? `on (fasting${c.fastTimes ? `; suhoor ${c.fastTimes.suhoor}, iftar ${c.fastTimes.iftar}` : ''})` : 'off'}.${c.localTime ? ` Local time: ${c.localTime}.` : ''}`,
   );
   return lines.join('\n');
 }

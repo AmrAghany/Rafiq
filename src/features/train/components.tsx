@@ -45,10 +45,11 @@ function NumberCell({
       onEndEditing={onCommit}
       keyboardType="decimal-pad"
       selectTextOnFocus
+      maxFontSizeMultiplier={1.5}
       style={[
         typography.body,
         {
-          width: 64,
+          minWidth: 64,
           textAlign: 'center',
           color: colors.ink,
           borderWidth: 1.5,

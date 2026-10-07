@@ -109,7 +109,90 @@ Work in this order. Finish, test and summarise each phase before starting the ne
 
 ## Status
 
-### Phase 5: Monetisation — done (2026-10-06), waiting for approval to start phase 6
+### Phase 6: Polish — done (2026-10-07), waiting for approval to start phase 7
+
+**Built**
+
+- **Ramadan mode** (Me → Ramadan mode):
+  - An on/off switch, plus the member's suhoor and iftar times. The times are stored on the profile (new `suhoor_time` and `iftar_time` columns).
+  - The fasting-day timeline is built around those times. The defaults (03:45 and 18:05) give exactly the prototype's Ramadan day. Meals get their Ramadan names, the water goal is 8 glasses, and reminders follow the new times, including items after midnight.
+  - The coach's context now includes the suhoor and iftar times.
+  - The times are entered by hand, with validation (a fast of 10–18 hours). Automatic prayer times would need location access and a prayer-time library; see the open questions.
+- **Rescan and progress**:
+  - A new `record_scan()` database function (migration `20261007010000`, runs as the member) saves the scan and updates the profile weight. It then switches to a new plan version and keeps every earlier scan and plan.
+  - The plan is rebuilt with the same engine. Goal, training days, experience and health answers carry over, and logged workout weights carry on.
+  - The Rescan screen (`/rescan`): weight is required and the scan numbers are optional. Each field shows last time's value as a hint. Pro members can read the sheet from a photo (`ScanPhoto` now also works outside onboarding). Before saving, the screen shows what changes (calories, protein, BMR, lean mass).
+  - The Progress screen (`/progress`):
+    - One chart each for weight, body fat and skeletal muscle. Tap a dot to read that scan.
+    - Each chart shows the change since the first scan, and the screen lists every scan.
+  - **Charts without a new dependency**: the geometry is pure and tested, drawn with plain Views. Following the data-viz rules:
+    - Single series, 2 px lines, ringed dots, hairline gridlines with whole-number labels and a validated series colour.
+    - A screen-reader summary for each chart and a table of every scan.
+  - **Rescan every 4 weeks**:
+    - A "Body scan" card shows on Today when a scan is due or 3 days away, and always on Me.
+    - One local reminder is scheduled at wake-up + 2 h on the due day. The text has no body numbers.
+  - **Careful flags**: for the eating-disorder answer, Progress shows no body charts or scan numbers, only an encouraging note, and the rescan screen hides past values and the calorie lines.
+- **Accessibility**:
+  - Dynamic type: body text scales up to 2×, titles to 1.5×. Fixed widths that could clip large text are now minimum widths (timeline times, set inputs, the coach send button).
+  - Only warnings are announced as alerts.
+  - Field errors are read as hints.
+  - Repeated buttons now have specific labels ("Remove: <meal>", "<meal>: Log this meal").
+  - The sign-in mode switch now has a 44 pt touch target.
+- **Arabic copy review**:
+  - Consistent units (كغ, غ).
+  - "قياس" (measurement) for the InBody scan, with "فحص" kept for the health check.
+  - Readable weekday names (إثنين…أحد) in place of the clipped abbreviations.
+  - "تقييم الصباح" for the morning check-in.
+  - Grammatically safe counts ("المجموعات المنجزة: 5"), "{{price}} شهريًا", neutral تشغيل/إيقاف switches, and Western digits throughout.
+  - Fixed a stale message in both languages: "subscriptions arrive in the next update" now points to the free trial.
+- **Prices per country**: see the README section "Prices by country". Prices are set in the stores, not in code. Monthly Pro / Elite:
+
+  | Market         | Pro        | Elite      |
+  | -------------- | ---------- | ---------- |
+  | US and default | $12.99     | $49.99     |
+  | Saudi Arabia   | SAR 44.99  | SAR 179.99 |
+  | UAE            | AED 44.99  | AED 179.99 |
+  | Qatar          | QAR 44.99  | QAR 179.99 |
+  | Kuwait         | KWD 3.990  | KWD 14.990 |
+  | Bahrain        | BHD 4.490  | BHD 17.990 |
+  | Oman           | OMR 4.490  | OMR 17.990 |
+  | Jordan         | JOD 5.99   | JOD 24.99  |
+  | Egypt          | EGP 249.99 | EGP 999.99 |
+
+- **Tests**:
+  - 718 Jest tests, including:
+    - The Ramadan timeline, validation and reminders across midnight, and the Ramadan settings.
+    - Rescan due dates, series, payload and plan changes, and chart geometry.
+    - The Progress and Rescan screens and the rescan reminder.
+    - UI accessibility.
+  - 66 pgTAP tests (12 new for `record_scan`, history, other members' photos and the Ramadan columns).
+  - 5 integration tests (onboarding now continues into a rescan).
+  - 18 Deno tests (coach context with fasting times).
+- **Verified**:
+  - `npm run check` and `npx eslint .` pass. The iOS and Android bundles export.
+  - In a temporary web preview (not committed), these all worked in English and Arabic: a due rescan on Today, the rescan with its plan preview, the new plan, the progress charts (including tapping a dot), the Ramadan settings and the fasting-day Today screen.
+  - The preview found two bugs, now fixed: chart axis labels overlapping the first dot, and "kg" instead of "كغ" on Progress.
+
+**Not verified**:
+
+- VoiceOver and TalkBack, and the largest text sizes, on real devices.
+- Delivery of the rescan reminder.
+- These need a device build (`preview`).
+
+**Decisions**
+
+- Charts are drawn with Views rather than adding `react-native-svg`. If you want richer charts later (area fills, more scans), `react-native-svg` is the standard Expo module. Ask before adding it.
+- The body charts are hidden for the eating-disorder answer. Pregnancy keeps them, because weight change is expected and the plan already avoids a deficit.
+- Ramadan times are entered by hand.
+
+**Open questions for phase 7**
+
+1. Prayer times: should Ramadan mode fill suhoor and iftar automatically from the member's location? That needs `expo-location` and a prayer-time library such as `adhan`.
+2. Do the per-country prices look right? Egypt in particular: at ≈ $5, a heavy coach user can cost more than they pay. Should Egypt get lower daily AI limits?
+3. Should a rescan also let the member change their goal or training days? Today that needs onboarding again.
+4. Still open from earlier phases: the terms and privacy URLs, whether to show the paywall once after onboarding, annual plans, the real bundle id and Apple team, fonts (Barlow plus an Arabic pairing), `expo-updates` for the language restart, native Google sign-in, email confirmation in production, the Arabic carb-day letters (ع/و/م), and EAS accounts.
+
+### Phase 5: Monetisation — done (2026-10-06)
 
 **Built**
 

@@ -239,7 +239,8 @@ export function Timeline({
             <Text
               variant="label"
               color={isNow ? 'accent' : 'muted'}
-              style={{ width: 52, fontSize: 17, writingDirection: 'ltr' }}>
+              maxFontSizeMultiplier={1.5}
+              style={{ minWidth: 52, fontSize: 17, writingDirection: 'ltr' }}>
               {item.time}
             </Text>
             <View style={{ flex: 1 }}>

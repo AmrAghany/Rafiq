@@ -381,11 +381,13 @@ export type Database = {
           health_flags: Database['public']['Enums']['health_flag'][];
           height_cm: number | null;
           id: string;
+          iftar_time: string;
           locale: string;
           medical_notice_accepted_at: string | null;
           onboarding_completed_at: string | null;
           ramadan_mode: boolean;
           sex: Database['public']['Enums']['sex'] | null;
+          suhoor_time: string;
           timezone: string;
           training_days: number | null;
           units: string;
@@ -404,11 +406,13 @@ export type Database = {
           health_flags?: Database['public']['Enums']['health_flag'][];
           height_cm?: number | null;
           id: string;
+          iftar_time?: string;
           locale?: string;
           medical_notice_accepted_at?: string | null;
           onboarding_completed_at?: string | null;
           ramadan_mode?: boolean;
           sex?: Database['public']['Enums']['sex'] | null;
+          suhoor_time?: string;
           timezone?: string;
           training_days?: number | null;
           units?: string;
@@ -426,11 +430,13 @@ export type Database = {
           health_flags?: Database['public']['Enums']['health_flag'][];
           height_cm?: number | null;
           id?: string;
+          iftar_time?: string;
           locale?: string;
           medical_notice_accepted_at?: string | null;
           onboarding_completed_at?: string | null;
           ramadan_mode?: boolean;
           sex?: Database['public']['Enums']['sex'] | null;
+          suhoor_time?: string;
           timezone?: string;
           training_days?: number | null;
           units?: string;
@@ -666,6 +672,10 @@ export type Database = {
       current_tier: {
         Args: { p_user_id: string };
         Returns: Database['public']['Enums']['subscription_tier'];
+      };
+      record_scan: {
+        Args: { p_engine_version: string; p_plan: Json; p_plan_inputs: Json; p_scan: Json };
+        Returns: string;
       };
       refund_ai_quota: {
         Args: { p_feature: Database['public']['Enums']['ai_feature']; p_user_id: string };

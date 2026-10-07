@@ -63,3 +63,21 @@ describe('buildReminders', () => {
     expect(windDown.date).toEqual(new Date(2026, 9, 6, 1, 30));
   });
 });
+
+describe('buildReminders in Ramadan', () => {
+  it('dates items after midnight on the next calendar day', () => {
+    const reminders = buildReminders({
+      plan,
+      now,
+      schedule: DEFAULT_SCHEDULE,
+      ramadan: { suhoorTime: '02:50', iftarTime: '20:40' },
+      days: 0,
+    });
+    const meal = reminders.find((r) => r.item.id === 'recovery_meal')!;
+    expect(meal.date).toEqual(new Date(2026, 9, 6, 1, 5));
+    const iftar = reminders.find((r) => r.item.id === 'iftar')!;
+    expect(iftar.date).toEqual(new Date(2026, 9, 5, 20, 40));
+    // Suhoor (02:50) has already passed at noon.
+    expect(reminders.some((r) => r.item.id === 'suhoor')).toBe(false);
+  });
+});

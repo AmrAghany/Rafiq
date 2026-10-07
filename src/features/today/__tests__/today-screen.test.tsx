@@ -11,6 +11,8 @@ let mockFlags: HealthFlag[] = [];
 
 jest.mock('expo-router', () => ({ router: { navigate: jest.fn(), push: jest.fn() } }));
 jest.mock('@/features/reminders/notifications', () => ({ requestPermission: jest.fn() }));
+// Covered by its own tests.
+jest.mock('@/features/progress/RescanCard', () => ({ RescanCard: () => null }));
 jest.mock('@/features/profile/api', () => ({
   useProfile: () => ({ data: { display_name: 'Sam Haddad' } }),
 }));
@@ -39,6 +41,7 @@ jest.mock('../api', () => {
       },
       schedule: { wakeTime: '06:30', workoutTime: '17:30' },
       ramadan: false,
+      fasting: false,
       log: { isPending: false, isError: false, data: mockLog },
     }),
     useUpdateDailyLog: () => ({ mutate: mockUpdate }),

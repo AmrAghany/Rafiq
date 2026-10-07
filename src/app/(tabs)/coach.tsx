@@ -204,7 +204,7 @@ export default function CoachScreen() {
                 textAlign: draft ? (textDirection(draft) === 'rtl' ? 'right' : 'left') : 'auto',
               }}
             />
-            <View style={{ width: 92 }}>
+            <View style={{ minWidth: 92 }}>
               {pending ? (
                 <Button
                   testID="coach-stop"

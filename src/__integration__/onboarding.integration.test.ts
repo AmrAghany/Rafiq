@@ -10,6 +10,8 @@ import type { Plan } from '@/features/plan/engine';
 import type { Database } from '@/lib/database.types';
 
 import { buildOnboardingPayload } from '@/features/onboarding/payload';
+import { toPlanInput } from '@/features/onboarding/validation';
+import { buildRescanPayload, emptyRescan } from '@/features/progress/rescan';
 
 const url = process.env.SUPABASE_INTEGRATION_URL;
 const anonKey = process.env.SUPABASE_INTEGRATION_ANON_KEY;
@@ -67,6 +69,32 @@ describeIfDb('onboarding against local Supabase', () => {
     expect(plan!.version).toBe(1);
     expect(stored.proteinG).toBe(Math.round(63.5 * 0.69 * 2.4)); // >30% body fat → lean-mass protein
     expect(stored.safety.doctorNotice).toBe(true);
+
+    // Four weeks later: a rescan rebuilds the plan and keeps the history.
+    const { args } = buildRescanPayload(toPlanInput(draft), {
+      ...emptyRescan,
+      weightKg: '61',
+      bodyFatPct: '28.5',
+      skeletalMuscleKg: '24.1',
+    });
+    const { error: rescanError } = await client.rpc('record_scan', args);
+    expect(rescanError).toBeNull();
+    const { data: scans } = await client
+      .from('body_scans')
+      .select('weight_kg, body_fat_pct')
+      .order('created_at');
+    expect(scans).toEqual([
+      { weight_kg: 63.5, body_fat_pct: 31 },
+      { weight_kg: 61, body_fat_pct: 28.5 },
+    ]);
+    const { data: plans } = await client
+      .from('plans')
+      .select('version, is_active')
+      .order('version');
+    expect(plans).toEqual([
+      { version: 1, is_active: false },
+      { version: 2, is_active: true },
+    ]);
 
     await client.auth.signOut();
   });

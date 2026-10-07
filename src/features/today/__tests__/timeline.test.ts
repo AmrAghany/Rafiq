@@ -8,6 +8,7 @@ import {
   greetingFor,
   localDateKey,
   normaliseTime,
+  validateRamadanTimes,
   validateSchedule,
   waterGoal,
 } from '../timeline';
@@ -97,6 +98,39 @@ describe('buildTimeline', () => {
       '23:30 sleep',
     ]);
     expect(buildTimeline(plan, 2, DEFAULT_SCHEDULE, true).map((i) => i.id)).toContain('stretch');
+  });
+
+  it("builds the Ramadan day around the member's suhoor and iftar times", () => {
+    const defaults = { suhoorTime: '03:45', iftarTime: '18:05' };
+    expect(buildTimeline(plan, 0, DEFAULT_SCHEDULE, defaults)).toEqual(
+      buildTimeline(plan, 0, DEFAULT_SCHEDULE, true),
+    );
+    // A summer fast further north: late iftar pushes the evening past midnight.
+    expect(
+      view(buildTimeline(plan, 0, DEFAULT_SCHEDULE, { suhoorTime: '02:50', iftarTime: '20:40' })),
+    ).toEqual([
+      '02:50 suhoor',
+      '08:05 checkin',
+      '15:35 walk',
+      '20:40 iftar',
+      '23:35 workout',
+      '01:05 recovery_meal',
+      '02:05 sleep',
+    ]);
+  });
+});
+
+describe('validateRamadanTimes', () => {
+  it('accepts a 10–18 hour fast and rejects anything else', () => {
+    expect(validateRamadanTimes({ suhoorTime: '03:45', iftarTime: '18:05' })).toBeNull();
+    expect(validateRamadanTimes({ suhoorTime: '3:45', iftarTime: '18:05' })).toBe('suhoorInvalid');
+    expect(validateRamadanTimes({ suhoorTime: '03:45', iftarTime: '' })).toBe('iftarInvalid');
+    expect(validateRamadanTimes({ suhoorTime: '03:45', iftarTime: '12:00' })).toBe(
+      'fastOutOfRange',
+    );
+    expect(validateRamadanTimes({ suhoorTime: '03:45', iftarTime: '22:30' })).toBe(
+      'fastOutOfRange',
+    );
   });
 });
 

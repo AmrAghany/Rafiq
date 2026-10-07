@@ -66,6 +66,8 @@ One-time setup:
    `rafiq_pro_monthly` and `rafiq_elite_monthly` (on Google Play, the same product ids with a
    monthly base plan). Add a **7-day free trial** introductory offer to Pro. Trials are set in
    the stores, and the paywall reads them from the store.
+   Set the prices per country from the table below (prices live in the stores, not in the
+   app; the paywall shows whatever the store returns).
 2. **RevenueCat**: add both apps. Create entitlements `pro` (attach both products) and `elite`
    (attach the Elite product). Make a `default` offering with both packages.
 3. **Keys**: put the public SDK keys in `EXPO_PUBLIC_REVENUECAT_IOS_KEY` /
@@ -84,6 +86,36 @@ One-time setup:
 
 Test purchases with App Store sandbox or Play license-test accounts on a `preview` build.
 Purchases don't work in Expo Go.
+
+### Prices by country (monthly)
+
+Anchored on the US prices from the prototype ($12.99 Pro, $49 Elite) and adjusted for local
+purchasing power. Gulf prices sit close to the US price; Jordan and Egypt are lower. Store
+prices in these markets include VAT, so proceeds are lower than the sticker price.
+
+| Market         | Currency | Pro    | Elite  | ≈ USD (Pro / Elite) |
+| -------------- | -------- | ------ | ------ | ------------------- |
+| US and default | USD      | 12.99  | 49.99  | 12.99 / 49.99       |
+| Saudi Arabia   | SAR      | 44.99  | 179.99 | 12.00 / 48.00       |
+| UAE            | AED      | 44.99  | 179.99 | 12.25 / 49.00       |
+| Qatar          | QAR      | 44.99  | 179.99 | 12.35 / 49.45       |
+| Kuwait         | KWD      | 3.990  | 14.990 | 13.00 / 48.75       |
+| Bahrain        | BHD      | 4.490  | 17.990 | 11.95 / 47.85       |
+| Oman           | OMR      | 4.490  | 17.990 | 11.70 / 46.80       |
+| Jordan         | JOD      | 5.99   | 24.99  | 8.45 / 35.25        |
+| Egypt          | EGP      | 249.99 | 999.99 | ≈ 5 / 20            |
+
+- **Elite** is $49.99, not $49: App Store price points end in .99.
+- **USD storefronts.** Some App Store storefronts bill in US dollars rather than local currency
+  (check the price list in App Store Connect). There, use the ≈ USD column rounded to the
+  nearest price point: Kuwait 12.99 / 48.99, Bahrain and Oman 11.99 / 46.99, Jordan
+  8.99 / 34.99. Google Play takes the local-currency prices as they are.
+- **Egypt** is converted at about 50 EGP to the dollar. Check the rate before launch, because
+  the pound moves. At ≈ $5, a Pro member who uses all 50 coach messages every day costs more
+  in Claude usage than they pay. Typical use is far lower, but watch Egypt's AI cost per
+  member after launch.
+- **Other countries**: let Apple and Google generate prices from the US price. In lower-income
+  markets, review them against the Egypt row.
 
 ## Building the Android and iOS apps
 
@@ -129,7 +161,8 @@ and an iOS build for registered test devices. `production` makes store builds.
 ```
 src/
   app/                 Expo Router routes: (auth) sign-in, (onboarding) 3 steps + summary,
-                       (tabs) Today/Train/Food/Coach/Me, plan (my plan), history
+                       (tabs) Today/Train/Food/Coach/Me, plan (my plan), history,
+                       progress (body charts and scans), rescan
   components/          Shared UI primitives (RTL-safe: start/end, never left/right)
   features/auth/       Session provider, Apple/Google/email sign-in
   features/plan/       Plan engine (pure, tested), exercise/workout/split JSON, plan summary UI
@@ -139,7 +172,9 @@ src/
   features/train/      Progression (pure), session/set hooks, exercise card, rest timer
   features/food/       Meal plan and intake maths (pure), meal log hooks
   features/reminders/  Reminder schedule (pure) and expo-notifications scheduling
-  features/settings/   Daily schedule, reminders, data export and account deletion
+  features/progress/   Rescans and plan rebuilds, 4-weekly due date, trend charts (pure
+                       geometry drawn with plain Views), rescan reminder
+  features/settings/   Daily schedule, reminders, Ramadan mode, data export and account deletion
   features/ai/         Edge Function client (JSON + streaming), SSE parser, photo upload
   features/coach/      Chat history and streaming hooks
   features/membership/ Entitlements helper (tier → features), RevenueCat purchases, paywall
@@ -149,7 +184,8 @@ src/
   stores/              Zustand stores for device-local UI state
   theme/               Design tokens (light/dark) and ThemeProvider
 supabase/
-  migrations/          Database schema, RLS policies, storage buckets, complete_onboarding()
+  migrations/          Database schema, RLS policies, storage buckets, complete_onboarding(),
+                       record_scan()
   seed.sql             Generated exercise library, workout and meal templates
   functions/           Edge Functions: coach-chat, meal-estimate, scan-read, export-data,
                        delete-account, revenuecat-webhook, sync-subscription; _shared/

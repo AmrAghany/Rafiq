@@ -47,7 +47,7 @@ export function createHandler(deps: Deps) {
         db
           .from('profiles')
           .select(
-            'display_name, sex, date_of_birth, height_cm, goal, experience, health_flags, ramadan_mode',
+            'display_name, sex, date_of_birth, height_cm, goal, experience, health_flags, ramadan_mode, suhoor_time, iftar_time',
           )
           .eq('id', user.id)
           .single(),
@@ -113,6 +113,10 @@ export function createHandler(deps: Deps) {
           0,
         ),
         ramadan: !!p.ramadan_mode,
+        fastTimes:
+          p.ramadan_mode && p.suhoor_time && p.iftar_time
+            ? { suhoor: p.suhoor_time.slice(0, 5), iftar: p.iftar_time.slice(0, 5) }
+            : null,
         localTime,
       });
 

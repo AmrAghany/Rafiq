@@ -7,6 +7,7 @@ import type { Reminder } from './schedule';
 
 export const REMINDER_PREFIX = 'reminder:';
 export const REST_TIMER_ID = 'rest-timer';
+export const RESCAN_ID = 'rescan-due';
 const CHANNEL_ID = 'daily';
 
 Notifications.setNotificationHandler({
@@ -95,4 +96,23 @@ export async function scheduleRestEnd(seconds: number, text: ReminderText): Prom
 
 export function cancelRestEnd(): Promise<void> {
   return Notifications.cancelScheduledNotificationAsync(REST_TIMER_ID);
+}
+
+/** One reminder on the day the 4-weekly body scan is due; replaces any earlier one. */
+export async function scheduleRescanReminder(date: Date, text: ReminderText): Promise<void> {
+  await ensureChannel();
+  await Notifications.cancelScheduledNotificationAsync(RESCAN_ID);
+  await Notifications.scheduleNotificationAsync({
+    identifier: RESCAN_ID,
+    content: { ...text, data: { url: '/progress' } },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.DATE,
+      date,
+      channelId: CHANNEL_ID,
+    },
+  });
+}
+
+export function cancelRescanReminder(): Promise<void> {
+  return Notifications.cancelScheduledNotificationAsync(RESCAN_ID);
 }

@@ -8,6 +8,7 @@ import {
   localDateKey,
   toMinutes,
   type DaySchedule,
+  type RamadanTimes,
   type TimelineItem,
   type TimelineItemId,
 } from '@/features/today/timeline';
@@ -45,7 +46,8 @@ export function buildReminders(opts: {
   plan: Plan;
   now: Date;
   schedule: DaySchedule;
-  ramadan?: boolean;
+  /** The fasting times in Ramadan (true uses the defaults), otherwise false. */
+  ramadan?: boolean | RamadanTimes;
   /** Item ids already ticked off today; no reminder for those. */
   doneToday?: readonly string[];
   days?: number;
@@ -56,12 +58,16 @@ export function buildReminders(opts: {
   for (let d = 0; d <= days; d++) {
     const day = new Date(now.getFullYear(), now.getMonth(), now.getDate() + d);
     const dayIndex = weekdayIndex(day);
-    for (const item of buildTimeline(plan, dayIndex, schedule, ramadan)) {
+    const items = buildTimeline(plan, dayIndex, schedule, ramadan);
+    // The day starts at its first item (wake-up, or suhoor in Ramadan).
+    const dayStart = toMinutes(items[0].time);
+    for (const item of items) {
       if (!REMINDED.has(item.id)) continue;
       if (d === 0 && doneToday.includes(item.id)) continue;
       const mins = toMinutes(item.time);
-      // Items before wake-up (e.g. a late wind-down past midnight) belong to the next calendar day.
-      const rollsOver = !ramadan && mins < toMinutes(schedule.wakeTime);
+      // Items before the day starts (e.g. a late wind-down past midnight) belong to the
+      // next calendar day.
+      const rollsOver = mins < dayStart;
       const date = new Date(
         day.getFullYear(),
         day.getMonth(),

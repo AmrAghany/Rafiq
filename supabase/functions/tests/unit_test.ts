@@ -109,6 +109,15 @@ Deno.test('member context matches the prototype data', () => {
   );
 });
 
+Deno.test('Ramadan mode gives the coach the suhoor and iftar times', () => {
+  const text = buildMemberContext({
+    ...ctx,
+    ramadan: true,
+    fastTimes: { suhoor: '04:10', iftar: '18:12' },
+  });
+  assertStringIncludes(text, 'Ramadan mode: on (fasting; suhoor 04:10, iftar 18:12).');
+});
+
 Deno.test('a light day lowers sets and loads in the context', () => {
   const text = buildMemberContext({ ...ctx, readiness: 50 });
   assertStringIncludes(text, 'Lower body A (light day: low readiness): Back squat 3 x 6 at 60 kg');

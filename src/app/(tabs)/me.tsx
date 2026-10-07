@@ -5,7 +5,9 @@ import { Alert } from 'react-native';
 import { Button, Panel, Screen, Segmented, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { MembershipPanel } from '@/features/membership/MembershipPanel';
+import { RescanCard } from '@/features/progress/RescanCard';
 import { PrivacySettings } from '@/features/settings/PrivacySettings';
+import { RamadanSettings } from '@/features/settings/RamadanSettings';
 import { ScheduleSettings } from '@/features/settings/ScheduleSettings';
 import type { Language } from '@/i18n/languages';
 import { applyLayoutDirection, reloadApp } from '@/i18n/rtl';
@@ -39,9 +41,13 @@ export default function MeScreen() {
 
       <Button testID="view-plan" label={t('me.viewPlan')} onPress={() => router.push('/plan')} />
 
+      <RescanCard always />
+
       <MembershipPanel />
 
       <ScheduleSettings />
+
+      <RamadanSettings />
 
       <Panel>
         <Text variant="heading" accessibilityRole="header">

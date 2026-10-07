@@ -21,7 +21,7 @@ export function useProfile() {
       const { data, error } = await supabase
         .from('profiles')
         .select(
-          'id, display_name, onboarding_completed_at, health_flags, wake_time, workout_time, ramadan_mode, locale',
+          'id, display_name, onboarding_completed_at, health_flags, wake_time, workout_time, ramadan_mode, suhoor_time, iftar_time, locale',
         )
         .eq('id', uid!)
         .single();
