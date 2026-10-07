@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Rafiq",
-    "slug": "rafiq",
+    "slug": "gazar",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -85,6 +85,12 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "platforms": ["ios", "android"]
+    "platforms": ["ios", "android"],
+    "owner": "amrelgazar",
+    "extra": {
+      "eas": {
+        "projectId": "410200ad-40e2-4ede-a6d9-55daf612c6da"
+      }
+    }
   }
 }
